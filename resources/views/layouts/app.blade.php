@@ -18,7 +18,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Your App Name</a>
+            <a class="navbar-brand" href="{{ url('/') }}">Upload PDF</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -26,18 +26,38 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Home</a>
+                        <a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">About</a>
+                        <a class="nav-link" href="{{ route('isos.index') }}">ISOs</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Contact</a>
+                        <a class="nav-link" href="{{ route('types.index') }}">Types</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('file.list') }}">File List</a>
                     </li>
                     <!-- Tambahkan item navbar sesuai kebutuhan -->
                 </ul>
                 <ul class="navbar-nav ms-auto">
-                    <!-- Tambahkan elemen navbar untuk user login/logout dan lainnya -->
+                    @if (Auth::check())
+                        <!-- Tampilkan user info dan logout button -->
+                        <li class="nav-item">
+                            <form action="{{ route('logout') }}" method="POST" style="display: none;" id="logout-form">
+                                @csrf
+                            </form>
+                            <a class="nav-link" href="#"
+                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+                        </li>
+                    @else
+                        <!-- Tampilkan login/register links -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('login') }}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('register') }}">Register</a>
+                        </li>
+                    @endif
                 </ul>
             </div>
         </div>

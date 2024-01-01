@@ -11,27 +11,31 @@ class FileListController extends Controller
     {
         $folderPath = "uploads/";
 
-        // Read the list of subfolders in the "uploads" folder
+        // Membaca daftar subfolder dalam folder "uploads"
         $folders = Storage::directories($folderPath);
 
-        // Display the list of folders
+        // Menampilkan daftar folder
         return view('file-list.index', compact('folders'));
     }
 
-    public function viewFiles($folder)
-    {
-        $folderPath = "uploads/" . $folder;
+    // public function viewFiles($folder)
+    // {
+    //     // Periksa apakah pengguna sudah login
+    //     if (!auth()->check()) {
+    //         return redirect()->route('login');
+    //     }
 
-        // Periksa apakah folder yang diminta ada
-        if (!Storage::exists($folderPath)) {
-            return redirect()->route('file.list')->with('error', 'Folder not found.');
-        }
+    //     $folderPath = "uploads/" . $folder;
 
-        // Membaca daftar file dan subfolder dalam folder
-        $files = Storage::files($folderPath);
+    //     // Periksa apakah folder yang diminta ada
+    //     if (!Storage::exists($folderPath)) {
+    //         return redirect()->route('file.list')->with('error', 'Folder not found.');
+    //     }
 
-        // Menampilkan daftar file dan subfolder
-        return view('file-list.view-files', compact('folder', 'files'));
-    }
+    //     // Membaca daftar file dan subfolder dalam folder
+    //     $files = Storage::allFiles($folderPath);
 
+    //     // Menampilkan daftar file dan subfolder
+    //     return view('file-list.view-files', compact('folder', 'files'));
+    // }
 }
