@@ -20,6 +20,9 @@ use App\Http\Controllers\ISOController;
 use App\Http\Controllers\FileViewController;
 use App\Http\Controllers\TypeController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\DtHistDocController;
+
+
 
 
 
@@ -37,7 +40,9 @@ Route::post('/types', [TypeController::class, 'store'])->name('types.store');
 Route::get('/documents', [DocumentController::class, 'index'])->name('documents.index');
 Route::get('/documents/create', [DocumentController::class, 'create'])->name('documents.create');
 Route::post('/documents', [DocumentController::class, 'store'])->name('documents.store');
-
+Route::get('dthistdoc', [DtHistDocController::class, 'index'])->name('dthistdoc.index');
+Route::get('dthistdoc/create', [DtHistDocController::class, 'create'])->name('dthistdoc.create');
+Route::post('dthistdoc/store', [DtHistDocController::class, 'store'])->name('dthistdoc.store');
 
 //view
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
