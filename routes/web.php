@@ -47,8 +47,15 @@ Route::post('dthistdoc/store', [DtHistDocController::class, 'store'])->name('dth
 //view
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/file-list', [FileListController::class, 'index'])->name('file.list');
-Route::get('/view-files/{folder}', [FileViewController::class, 'viewFiles'])->name('file.view');
+Route::get('/view-files/{isoId}', [FileViewController::class, 'viewFiles'])->name('view.files');
+Route::get('/view-documents/{isoId}', [FileViewController::class, 'viewDocumentsInISO'])->name('view.documents.in.iso');
+Route::get('/view-files/{isoId}/{folder}', [FileViewController::class, 'viewFolderContents'])->name('view.folder.contents');
+Route::get('/view-document-detail/{isoId}/{documentId}', [FileViewController::class, 'viewDocumentDetail'])->name('view.document.detail');
 Route::get('view-files/{iso}/{folder}', [FileViewController::class, 'showFolderContents']);
+Route::get('/documents/view/{document}', [FileViewController::class, 'viewDocument'])->name('documents.view');
+Route::get('/view-folder-contents/{folder}', [FileViewController::class, 'viewFolderContents'])->name('view.folder.contents');
+
+
 
 
 

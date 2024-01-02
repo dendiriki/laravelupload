@@ -4,43 +4,80 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
+use App\Models\Document;
+use App\Models\ISO;
+use App\Models\DtHistDoc;
+
 
 class FileViewController extends Controller
 {
-    public function viewFiles($folder)
+    public function viewFiles($isoId)
     {
-        // Periksa apakah pengguna sudah login
-        if (!auth()->check()) {
-            return redirect()->route('login');
+        $iso = ISO::find($isoId);
+        if (!$iso) {
+            return redirect()->route('file.list');
         }
 
-        $folderPath = "uploads/" . $folder;
+        $documents = Document::where('iso_id', $isoId)->get();
 
-        // Periksa apakah folder yang diminta ada
-        if (!Storage::exists($folderPath)) {
+        return view('file-list.view-files', compact('documents', 'iso'));
+    }
+
+    public function viewDocumentsInISO($isoId)
+    {
+        $iso = ISO::find($isoId);
+        if (!$iso) {
+            return redirect()->route('file-list'); // Ganti 'index' dengan rute yang sesuai
+        }
+
+        $documents = Document::where('iso_id', $isoId)->get();
+
+        return view('file-list.view-documents', compact('documents', 'iso'));
+    }
+
+    public function viewDocumentDetail($isoId, $documentId)
+    {
+        $document = Document::where('iso_id', $isoId)->where('id', $documentId)->first();
+        if (!$document) {
+            return redirect()->route('file-list.view.documents.in.iso', ['isoId' => $isoId]);
+        }
+
+        // Ambil revisi dokumen atau detail terkait lainnya
+        $revisions = DtHistDoc::where('doc_id', $documentId)->get();
+
+        return view('file-list.view-document-detail', compact('document', 'revisions'));
+    }
+
+    public function viewFolderContents( $folder)
+    {
+        $folderPath = "uploads/$folder"; // Path relatif dari 'storage/app/public'
+
+        if (!Storage::disk('public')->exists($folderPath)) {
             return redirect()->route('file.list')->with('error', 'Folder not found.');
         }
 
-        $files = Storage::allFiles($folderPath);
-        $directories = Storage::directories($folderPath);
+        $files = Storage::disk('public')->files($folderPath); // Mendapatkan semua file dalam folder
 
-        return view('file-view.view-files', compact('folder', 'files', 'directories'));
+        return view('file-list.view-folder-contents', compact('files', 'isoId', 'folder'));
     }
 
-    public function showFolderContents($iso, $folder)
-    {
-        // Membentuk path ke folder
-        $folderPath = "uploads/$iso/$folder";
+    // public function viewDocument(Document $document)
+    // {
+    //     // Pastikan bahwa 'path' di model Document adalah path relatif dari direktori 'public'
+    //     $filePath = 'uploads/' . $document->path; // Misalnya: 'ISO_9001_2015/PT__Ispat_Indo_Quality_Manual_/isi/fae2a2593d7be547.pdf'
 
-        // Periksa apakah folder ada
-        if (Storage::exists($folderPath)) {
-            // Folder ada, tampilkan isinya
-            $files = Storage::files($folderPath);
+    //     if (!Storage::disk('public')->exists($filePath)) {
+    //         abort(404, 'File not found.');
+    //     }
 
-            return view('file-list.file-contents', compact('files', 'iso', 'folder'));
-        } else {
-            // Folder tidak ditemukan, tampilkan pesan error
-            return view('file-list.folder-not-found', compact('iso', 'folder'));
-        }
-    }
+    //     // Dapatkan path absolut file
+    //     $absolutePath = Storage::disk('public')->path($filePath);
+
+    //     return response()->file($absolutePath);
+    // }
+
+
+
+
 }

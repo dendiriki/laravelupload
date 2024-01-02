@@ -1,12 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-
-
     <div class="container mt-5">
         <h2 class="mb-4">ISO Name</h2>
 
-        @if ($folders)
+        @if ($isos->isNotEmpty())
             <table class="table">
                 <thead>
                     <tr>
@@ -16,19 +14,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($folders as $index => $folder)
+                    @foreach ($isos as $index => $iso)
                         <tr>
                             <th scope="row">{{ $index + 1 }}</th>
-                            <td>{{ basename($folder) }}</td>
-                            <td><a href="{{ route('file.view', ['folder' => basename($folder)]) }}"
-                                    class="btn btn-primary">View Files</a></td>
+                            <td>{{ $iso->description }}</td> {{-- Asumsikan kolom ini adalah nama ISO --}}
+                            <td><a href="{{ route('view.files', ['isoId' => $iso->id]) }}" class="btn btn-primary">View
+                                    Files</a></td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
         @else
-            <p>No folders found.</p>
+            <p>No ISOs found.</p>
         @endif
     </div>
-
 @endsection

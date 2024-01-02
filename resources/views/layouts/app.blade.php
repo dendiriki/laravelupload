@@ -37,6 +37,12 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('file.list') }}">File List</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('documents.index') }}">Documents</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('dthistdoc.index') }}">Historical Documents</a>
+                    </li>
                     <!-- Tambahkan item navbar sesuai kebutuhan -->
                 </ul>
                 <ul class="navbar-nav ms-auto">

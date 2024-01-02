@@ -4,18 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Models\ISO;
 
 class FileListController extends Controller
 {
     public function index()
     {
-        $folderPath = "uploads/";
+        $isos = ISO::all(); // Mengambil semua data ISO
 
-        // Membaca daftar subfolder dalam folder "uploads"
-        $folders = Storage::directories($folderPath);
-
-        // Menampilkan daftar folder
-        return view('file-list.index', compact('folders'));
+        return view('file-list.index', compact('isos'));
     }
 
     // public function viewFiles($folder)

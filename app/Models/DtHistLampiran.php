@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class DtHistLampiran extends Model
 {
     protected $table = 'dt_histlampiran';
+    public $timestamps = false; // Menonaktifkan fitur timestamps
+
 
     protected $fillable = [
         'description', 'tgl_perubahan', 'tgl_berlaku', 'doc_id', 'revisi', 'id_sebelum', 'link_document', 'vc_created_user', 'comp_id', 'nodoc'
