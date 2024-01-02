@@ -19,8 +19,8 @@
                             <th scope="row">{{ $index + 1 }}</th>
                             <td>{{ $document->description }}</td>
                             <td>
-                                <a href="{{ route('documents.view', $document) }}" target="_blank" class="btn btn-primary">View
-                                    Document</a>
+                                <a href="{{ route('view.folder.contents', ['folder' => $document->id]) }}" class="btn btn-primary">View Folder Contents</a>
+
                             </td>
                         </tr>
                     @endforeach
@@ -30,7 +30,7 @@
             <p>No documents found for this ISO.</p>
         @endif
 
-        <a href="{{ route('view.folder.contents', ['folder' => $document->path]) }}" class="btn btn-primary">Back to File
+        <a href="{{ route('view.folder.contents', ['folder' => $document->description]) }}" class="btn btn-primary">Back to File
             List</a>
 
 

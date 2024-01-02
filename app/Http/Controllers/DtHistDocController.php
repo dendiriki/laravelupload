@@ -39,7 +39,7 @@ class DtHistDocController extends Controller
     'description' => 'required',
     // Sesuaikan aturan validasi lain yang diperlukan
     ]);
-    $document = Document::where('id', $request->description)->value('path');
+    $document = Document::where('id', $request->doc_id)->value('path');
 
     // Ambil data dari formulir
     $pathupload = $document; // Tentukan path sesuai kebutuhan Anda
@@ -79,7 +79,7 @@ class DtHistDocController extends Controller
             case 'cover':
                 DtHistCover::create([
                     'description' => $request->input('description'),
-                    'doc_id' => $request->input('description'),
+                    'doc_id' => $request->input('doc_id'),
                     'tgl_perubahan' => $request->input('dt_modified_date'),
                     'tgl_berlaku' => $request->input('dt_modified_date'),
                     'vc_created_user' => $request->input('vc_created_user'),
@@ -92,7 +92,7 @@ class DtHistDocController extends Controller
             case 'isi':
                 DtHistDoc::create([
                     'description' => $request->input('description'),
-                    'doc_id' => $request->input('description'),
+                    'doc_id' => $request->input('doc_id'),
                     'tgl_perubahan' => $request->input('dt_modified_date'),
                     'tgl_berlaku' => $request->input('dt_modified_date'),
                     'vc_created_user' => $request->input('vc_created_user'),
@@ -105,7 +105,7 @@ class DtHistDocController extends Controller
             case 'attachment':
                 DtHistLampiran::create([
                     'description' => $request->input('description'),
-                    'doc_id' => $request->input('description'),
+                    'doc_id' => $request->input('doc_id'),
                     'tgl_perubahan' => $request->input('dt_modified_date'),
                     'tgl_berlaku' => $request->input('dt_modified_date'),
                     'vc_created_user' => $request->input('vc_created_user'),
@@ -118,7 +118,7 @@ class DtHistDocController extends Controller
             case 'record':
                 DtHistCatMut::create([
                     'description' => $request->input('description'),
-                    'doc_id' => $request->input('description'),
+                    'doc_id' => $request->input('doc_id'),
                     'tgl_perubahan' => $request->input('dt_modified_date'),
                     'tgl_berlaku' => $request->input('dt_modified_date'),
                     'vc_created_user' => $request->input('vc_created_user'),

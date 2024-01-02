@@ -2,34 +2,73 @@
 
 @section('content')
     <div class="container mt-5">
-        <h2 class="mb-4">Files in '{{ $folder }}'</h2>
+        <h2 class="mb-4">View Document: {{$document->description}} </h2>
 
-        @if (!empty($fileDetails))
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">File Name</th>
-                        <th scope="col">Details</th>
-                        <th scope="col">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($fileDetails as $index => $file)
-                        <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ $file['name'] }}</td>
-                            <td>{{ $file['details']->description ?? 'No additional details' }}</td>
-                            <td><a href="{{ Storage::url($file['link']) }}" target="_blank" class="btn btn-primary">View
-                                    File</a></td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        @else
-            <p>No files found in this folder.</p>
-        @endif
+        <div class="card mb-3">
+            <div class="card-header">
+                Cover
+            </div>
+            <div class="card-body">
+                {{-- Konten untuk Cover --}}
+                @foreach ($coverFiles as $cover)
+                    <p>Description: {{ $cover->description }}</p>
+                    <p>Tanggal Perubahan: {{ $cover->tgl_perubahan }}</p>
+                    <p>Nama Document: {{$cover->document->description}}</p>
+                    <p>Nama Create: {{$cover->createdBy->username}}</p>
+                    <p>Tanggal Berlaku: {{$cover->tgl_berlaku}}</p>
+                    <p>Type : {{$cover->document->type->short}}</p>
+                    {{-- <a href="{{asset('storage/' . $cover->link_document)}}" class="btn btn-primary">View File PDF Cover</a> --}}
 
-        <a href="{{ route('view.files', ['isoId' => $isoId]) }}" class="btn btn-primary">Back to Documents</a>
+                    <object width="100%" height="700px" type="application/pdf" data="{{asset('storage/' . $cover->link_document)}}#toolbar=0" id="pdf_content">
+                        <p>Document load was not successful.</p>
+                         </object>';
+                    {{-- Tambahkan lebih banyak detail sesuai kebutuhan --}}
+                @endforeach
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">
+                Document
+            </div>
+            <div class="card-body">
+                {{-- Konten untuk Document --}}
+                @foreach ($documentFiles as $document)
+                    <p>Description: {{ $document->description }}</p>
+                    <p>Tanggal Perubahan: {{ $document->tgl_perubahan }}</p>
+                    {{-- Tambahkan lebih banyak detail sesuai kebutuhan --}}
+                @endforeach
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">
+                Attachment
+            </div>
+            <div class="card-body">
+                {{-- Konten untuk Attachment --}}
+                @foreach ($attachmentFiles as $attachment)
+                    <p>Description: {{ $attachment->description }}</p>
+                    <p>Tanggal Perubahan: {{ $attachment->tgl_perubahan }}</p>
+                    {{-- Tambahkan lebih banyak detail sesuai kebutuhan --}}
+                @endforeach
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">
+                Record
+            </div>
+            <div class="card-body">
+                {{-- Konten untuk Record --}}
+                @foreach ($recordFiles as $record)
+                    <p>Description: {{ $record->description }}</p>
+                    <p>Tanggal Perubahan: {{ $record->tgl_perubahan }}</p>
+                    {{-- Tambahkan lebih banyak detail sesuai kebutuhan --}}
+                @endforeach
+            </div>
+        </div>
+
+        <a href="{{ route('view.files', ['isoId' => $folder]) }}" class="btn btn-primary">Back to File List</a>
     </div>
 @endsection

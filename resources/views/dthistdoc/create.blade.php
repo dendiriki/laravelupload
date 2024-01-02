@@ -9,18 +9,18 @@
             @csrf
 
             <div class="mb-3">
-                <label for="description" class="form-label">Doc Name</label>
-                <select id="description" name="description" class="form-select">
+                <label for="doc_id" class="form-label">Doc Name</label>
+                <select id="description" name="doc_id" class="form-select">
                     @foreach ($documents as $document)
                         <option value="{{ $document->id }}">{{ $document->description }}</option>
                     @endforeach
                 </select>
             </div>
 
-            {{-- <div class="mb-3">
-            <label for="nodoc" class="form-label">Nomber Doc</label>
-            <input type="text" name="nodoc" class="form-control">
-        </div> --}}
+            <div class="mb-3">
+                <label for="description" class="form-label">No Doc</label>
+                <input type="text" name="description" class="form-control">
+            </div>
 
             <div class="mb-3">
                 <label for="dt_modified_date" class="form-label">Date</label>
