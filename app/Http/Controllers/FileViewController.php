@@ -37,6 +37,53 @@ class FileViewController extends Controller
         return view('file-list.view-folder-contents', compact('coverFiles', 'documentFiles', 'attachmentFiles', 'recordFiles', 'folder','document'));
     }
 
+    public function viewPdf($id)
+    {
+        $cover = DtHistCover::find($id);
+
+        if (!$cover) {
+            return redirect()->route('file.list')->with('error', 'Cover not found.');
+        }
+
+        return view('file-list.view-pdf', compact('cover'));
+    }
+
+    public function viewPdfdoc($id)
+    {
+        $doc = DtHistDoc::find($id);
+
+        if (!$doc) {
+            return redirect()->route('file.list')->with('error', 'doc not found.');
+        }
+
+        return view('file-list.view-pdfdoc', compact('doc'));
+    }
+
+    public function viewPdflampiran($id)
+    {
+        $lampiran = DtHistLampiran::find($id);
+
+        if (!$lampiran) {
+            return redirect()->route('file.list')->with('error', 'lampiran not found.');
+        }
+
+        return view('file-list.view-pdflampiran', compact('lampiran'));
+    }
+
+    public function viewPdfcatmut($id)
+    {
+        $catmut = DtHistCatMut::find($id);
+
+        if (!$catmut) {
+            return redirect()->route('file.list')->with('error', 'catmut not found.');
+        }
+
+        return view('file-list.view-pdfcatmut', compact('catmut'));
+    }
+
+
+
+
 
 
 

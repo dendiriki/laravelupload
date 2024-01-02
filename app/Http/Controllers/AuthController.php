@@ -27,7 +27,7 @@ class AuthController extends Controller
 
         if ($user) {
             Auth::login($user);
-            return redirect()->intended('/dashboard');
+            return redirect()->intended('/');
         }
 
         return back()->withErrors(['login' => 'Invalid login credentials']);
@@ -69,6 +69,6 @@ class AuthController extends Controller
         $request->session()->invalidate(); // Invalidate session
         $request->session()->regenerateToken(); // Regenerate CSRF token
 
-        return redirect('/'); // Redirect ke halaman utama
+        return redirect('/login'); // Redirect ke halaman utama
     }
 }

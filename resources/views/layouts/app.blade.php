@@ -48,12 +48,12 @@
                 <ul class="navbar-nav ms-auto">
                     @if (Auth::check())
                         <!-- Tampilkan user info dan logout button -->
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
+
                         <li class="nav-item">
-                            <form action="{{ route('logout') }}" method="POST" style="display: none;" id="logout-form">
-                                @csrf
-                            </form>
-                            <a class="nav-link" href="#"
-                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+                            <a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
                         </li>
                     @else
                         <!-- Tampilkan login/register links -->
@@ -65,6 +65,7 @@
                         </li>
                     @endif
                 </ul>
+
             </div>
         </div>
     </nav>

@@ -45,17 +45,24 @@ Route::get('dthistdoc/create', [DtHistDocController::class, 'create'])->name('dt
 Route::post('dthistdoc/store', [DtHistDocController::class, 'store'])->name('dthistdoc.store');
 
 //view
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/file-list', [FileListController::class, 'index'])->name('file.list');
 Route::get('/view-files/{isoId}', [FileViewController::class, 'viewFiles'])->name('view.files');
 Route::get('/view-folder-contents/{folder}', [FileViewController::class, 'viewDocument'])->name('view.folder.contents');
 
+Route::get('/view-pdf/{id}', [FileViewController::class, 'viewPdf'])->name('view.pdf');
+Route::get('/view-pdfdoc/{id}', [FileViewController::class, 'viewPdfdoc'])->name('view.pdfdoc');
+Route::get('/view-pdflampiran/{id}', [FileViewController::class, 'viewPdflampiran'])->name('view.pdflampiran');
+Route::get('/view-pdfcatmut/{id}', [FileViewController::class, 'viewPdfcatmut'])->name('view.pdfcatmut');
 
 
 
 
 
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
+
+
+// Route::get('/', function () {
+//     return view('welcome');
+// });
