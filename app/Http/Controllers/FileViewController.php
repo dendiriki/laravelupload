@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Document;
@@ -20,10 +21,17 @@ class FileViewController extends Controller
             return redirect()->route('file.list');
         }
 
-        $documents = Document::where('iso_id', $isoId)->get();
+        $user = Auth::user(); // Mengambil informasi pengguna saat ini
+
+        $documents = Document::whereHas('docDept', function ($query) use ($user) {
+            $query->where('dep_id', $user->dep_id);
+        })->where('iso_id', $isoId)->get();
 
         return view('file-list.view-files', compact('documents', 'iso'));
     }
+
+
+
 
     public function viewDocument($folder)
     {

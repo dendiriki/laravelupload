@@ -9,15 +9,12 @@
                 <tr>
                     <th>No.</th>
                     <th>Description</th>
-                    <th>Tanggal Perubahan</th>
                     <th>Tanggal Berlaku</th>
                     <th>Doc ID</th>
                     <th>Revisi</th>
                     <th>ID Sebelum</th>
-                    <th>Link Document</th>
-                    <th>VC Created User</th>
-                    <th>Company ID</th>
-                    <th>NoDoc</th>
+                    <th>User</th>
+                    <th>Actions</th> <!-- Kolom untuk tombol aksi -->
                 </tr>
             </thead>
             <tbody>
@@ -25,18 +22,35 @@
                     <tr>
                         <td>{{ $key + 1 }}</td>
                         <td>{{ $dtHistDoc->description }}</td>
-                        <td>{{ $dtHistDoc->tgl_perubahan }}</td>
                         <td>{{ $dtHistDoc->tgl_berlaku }}</td>
-                        <td>{{ $dtHistDoc->doc_id }}</td>
+                        <td>{{ $dtHistDoc->document->description }}</td>
                         <td>{{ $dtHistDoc->revisi }}</td>
                         <td>{{ $dtHistDoc->id_sebelum }}</td>
-                        <td>{{ $dtHistDoc->link_document }}</td>
                         <td>{{ $dtHistDoc->vc_created_user }}</td>
-                        <td>{{ $dtHistDoc->comp_id }}</td>
-                        <td>{{ $dtHistDoc->nodoc }}</td>
+                        <td>
+                            <!-- Tombol Edit -->
+                            <a href="" class="btn btn-warning">Edit</a>
+
+                            <!-- Tombol Delete -->
+                            <form action="" method="POST" style="display: inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
 @endsection
+
+{{--
+<a href="{{ route('dthistdoc.edit', $dtHistDoc->id) }}" class="btn btn-warning">Edit</a>
+
+<!-- Tombol Delete -->
+<form action="{{ route('dthistdoc.destroy', $dtHistDoc->id) }}" method="POST" style="display: inline;">
+    @csrf
+    @method('DELETE')
+    <button type="submit" class="btn btn-danger">Delete</button>
+</form> --}}

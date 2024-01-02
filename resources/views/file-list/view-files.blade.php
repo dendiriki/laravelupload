@@ -30,8 +30,6 @@
             <p>No documents found for this ISO.</p>
         @endif
 
-        <a href="{{ route('view.folder.contents', ['folder' => $document->description]) }}" class="btn btn-primary">Back to File
-            List</a>
 
 
     </div>

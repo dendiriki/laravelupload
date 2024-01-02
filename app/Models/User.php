@@ -25,6 +25,18 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function department()
+    {
+        return $this->belongsTo(Dep::class, 'dep_id');
+    }
+
+    public function documents()
+    {
+        return Document::where('id', $this->dep_id)->get();
+    }
+
+
+
     // Definisikan relasi ke tabel departemen
     // public function department()
     // {

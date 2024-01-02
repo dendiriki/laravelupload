@@ -21,6 +21,7 @@ use App\Http\Controllers\FileViewController;
 use App\Http\Controllers\TypeController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\DtHistDocController;
+use App\Http\Controllers\DocDeptController;
 
 
 
@@ -31,29 +32,32 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-Route::get('/isos', [ISOController::class, 'index'])->name('isos.index');
-Route::get('/isos/create', [ISOController::class, 'create'])->name('isos.create');
-Route::post('/isos/store', [ISOController::class, 'store'])->name('isos.store');
-Route::get('/types', [TypeController::class, 'index'])->name('types.index');
-Route::get('/types/create', [TypeController::class, 'create'])->name('types.create');
-Route::post('/types', [TypeController::class, 'store'])->name('types.store');
-Route::get('/documents', [DocumentController::class, 'index'])->name('documents.index');
-Route::get('/documents/create', [DocumentController::class, 'create'])->name('documents.create');
-Route::post('/documents', [DocumentController::class, 'store'])->name('documents.store');
-Route::get('dthistdoc', [DtHistDocController::class, 'index'])->name('dthistdoc.index');
-Route::get('dthistdoc/create', [DtHistDocController::class, 'create'])->name('dthistdoc.create');
-Route::post('dthistdoc/store', [DtHistDocController::class, 'store'])->name('dthistdoc.store');
+Route::get('/isos', [ISOController::class, 'index'])->name('isos.index')->middleware('auth');
+Route::get('/isos/create', [ISOController::class, 'create'])->name('isos.create')->middleware('auth');
+Route::post('/isos/store', [ISOController::class, 'store'])->name('isos.store')->middleware('auth');
+Route::get('/types', [TypeController::class, 'index'])->name('types.index')->middleware('auth');
+Route::get('/types/create', [TypeController::class, 'create'])->name('types.create')->middleware('auth');
+Route::post('/types', [TypeController::class, 'store'])->name('types.store')->middleware('auth');
+Route::get('/documents', [DocumentController::class, 'index'])->name('documents.index')->middleware('auth');
+Route::get('/documents/create', [DocumentController::class, 'create'])->name('documents.create')->middleware('auth');
+Route::post('/documents', [DocumentController::class, 'store'])->name('documents.store')->middleware('auth');
+Route::get('dthistdoc', [DtHistDocController::class, 'index'])->name('dthistdoc.index')->middleware('auth');
+Route::get('dthistdoc/create', [DtHistDocController::class, 'create'])->name('dthistdoc.create')->middleware('auth');
+Route::post('dthistdoc/store', [DtHistDocController::class, 'store'])->name('dthistdoc.store')->middleware('auth');
+Route::get('docdept',[DocDeptController::class, 'index'])->name('docdept.index')->middleware('auth');
+Route::get('docdept/create',[DocDeptController::class, 'create'])->name('docdept.create')->middleware('auth');
+Route::post('docdept/store',[DocDeptController::class, 'store'])->name('docdept.store')->middleware('auth');
 
 //view
-Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-Route::get('/file-list', [FileListController::class, 'index'])->name('file.list');
-Route::get('/view-files/{isoId}', [FileViewController::class, 'viewFiles'])->name('view.files');
-Route::get('/view-folder-contents/{folder}', [FileViewController::class, 'viewDocument'])->name('view.folder.contents');
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
+Route::get('/file-list', [FileListController::class, 'index'])->name('file.list')->middleware('auth');
+Route::get('/view-files/{isoId}', [FileViewController::class, 'viewFiles'])->name('view.files')->middleware('auth');
+Route::get('/view-folder-contents/{folder}', [FileViewController::class, 'viewDocument'])->name('view.folder.contents')->middleware('auth');
 
-Route::get('/view-pdf/{id}', [FileViewController::class, 'viewPdf'])->name('view.pdf');
-Route::get('/view-pdfdoc/{id}', [FileViewController::class, 'viewPdfdoc'])->name('view.pdfdoc');
-Route::get('/view-pdflampiran/{id}', [FileViewController::class, 'viewPdflampiran'])->name('view.pdflampiran');
-Route::get('/view-pdfcatmut/{id}', [FileViewController::class, 'viewPdfcatmut'])->name('view.pdfcatmut');
+Route::get('/view-pdf/{id}', [FileViewController::class, 'viewPdf'])->name('view.pdf')->middleware('auth');
+Route::get('/view-pdfdoc/{id}', [FileViewController::class, 'viewPdfdoc'])->name('view.pdfdoc')->middleware('auth');
+Route::get('/view-pdflampiran/{id}', [FileViewController::class, 'viewPdflampiran'])->name('view.pdflampiran')->middleware('auth');
+Route::get('/view-pdfcatmut/{id}', [FileViewController::class, 'viewPdfcatmut'])->name('view.pdfcatmut')->middleware('auth');
 
 
 

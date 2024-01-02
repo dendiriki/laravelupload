@@ -34,4 +34,10 @@ class Document extends Model
     {
         return $this->belongsTo(Company::class, 'comp_id');
     }
+
+    public function docDept()
+    {
+        return $this->hasOne(DocDept::class, 'doc_id', 'id');
+    }
+
 }
