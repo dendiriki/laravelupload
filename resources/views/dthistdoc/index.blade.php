@@ -7,7 +7,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>No.</th>
+                    <th>Id.</th>
                     <th>Description</th>
                     <th>Tanggal Berlaku</th>
                     <th>Doc ID</th>
@@ -20,7 +20,7 @@
             <tbody>
                 @foreach ($dtHistDocs as $key => $dtHistDoc)
                     <tr>
-                        <td>{{ $key + 1 }}</td>
+                        <td>{{ $dtHistDoc->id }}</td>
                         <td>{{ $dtHistDoc->description }}</td>
                         <td>{{ $dtHistDoc->tgl_berlaku }}</td>
                         <td>{{ $dtHistDoc->document->description }}</td>
@@ -29,10 +29,11 @@
                         <td>{{ $dtHistDoc->vc_created_user }}</td>
                         <td>
                             <!-- Tombol Edit -->
-                            <a href="" class="btn btn-warning">Edit</a>
+                            <a href="{{ route('dthistdoc.edit', $dtHistDoc->id) }}" class="btn btn-warning">Edit</a>
 
                             <!-- Tombol Delete -->
-                            <form action="" method="POST" style="display: inline;">
+                            <form action="{{ route('dthistdoc.destroy', $dtHistDoc->id) }}" method="POST"
+                                style="display: inline;">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger">Delete</button>

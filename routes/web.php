@@ -44,6 +44,9 @@ Route::post('/documents', [DocumentController::class, 'store'])->name('documents
 Route::get('dthistdoc', [DtHistDocController::class, 'index'])->name('dthistdoc.index')->middleware('auth');
 Route::get('dthistdoc/create', [DtHistDocController::class, 'create'])->name('dthistdoc.create')->middleware('auth');
 Route::post('dthistdoc/store', [DtHistDocController::class, 'store'])->name('dthistdoc.store')->middleware('auth');
+Route::get('dthistdoc/edit/{id}', [DtHistDocController::class, 'edit'])->name('dthistdoc.edit')->middleware('auth');
+Route::post('dthistdoc/update/{id}', [DtHistDocController::class, 'update'])->name('dthistdoc.update')->middleware('auth');
+Route::delete('dthistdoc/destroy/{id}', [DtHistDocController::class, 'destroy'])->name('dthistdoc.destroy')->middleware('auth');
 Route::get('docdept',[DocDeptController::class, 'index'])->name('docdept.index')->middleware('auth');
 Route::get('docdept/create',[DocDeptController::class, 'create'])->name('docdept.create')->middleware('auth');
 Route::post('docdept/store',[DocDeptController::class, 'store'])->name('docdept.store')->middleware('auth');
