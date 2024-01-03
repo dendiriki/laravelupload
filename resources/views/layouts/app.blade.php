@@ -49,12 +49,15 @@
                     <!-- Tambahkan item navbar sesuai kebutuhan -->
                 </ul>
                 <ul class="navbar-nav ms-auto">
+
                     @if (Auth::check())
                         <!-- Tampilkan user info dan logout button -->
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                             @csrf
                         </form>
-
+                        <li class="nav-item">
+                                    <p class="nav-link" > username : {{ Auth::user()->username }}</p>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
                         </li>

@@ -12,11 +12,9 @@
                 {{-- Konten untuk Cover --}}
                 @foreach ($coverFiles as $cover)
                     <p>Description: {{ $cover->description }}</p>
-                    <p>Tanggal Perubahan: {{ $cover->tgl_perubahan }}</p>
-                    <p>Nama Document: {{$cover->document->description}}</p>
-                    <p>Nama Create: {{$cover->createdBy->username}}</p>
-                    <p>Tanggal Berlaku: {{$cover->tgl_berlaku}}</p>
-                    <p>Type : {{$cover->document->type->short}}</p>
+                    <p>Tanggal Perubahan: {{ $cover->created_at }}</p>
+                    <p>Create By : {{$cover->createdBy->username}}</p>
+                    <p>Revisi : {{$cover->revisi}}</p>
                     <a href="{{ route('view.pdf', ['id' => $cover->id]) }}" class="btn btn-primary" target="_blank">View File PDF Cover</a>
 
                     {{-- Tambahkan lebih banyak detail sesuai kebutuhan --}}
@@ -31,12 +29,10 @@
             <div class="card-body">
                 {{-- Konten untuk Document --}}
                 @foreach ($documentFiles as $document)
-                <p>Description: {{ $document->description }}</p>
-                    <p>Tanggal Perubahan: {{ $document->tgl_perubahan }}</p>
-                    <p>Nama Document: {{$document->document->description}}</p>
-                    <p>Nama Create: {{$document->createdBy->username}}</p>
-                    <p>Tanggal Berlaku: {{$document->tgl_berlaku}}</p>
-                    <p>Type : {{$document->document->type->short}}</p>
+                    <p>Description: {{ $document->description }}</p>
+                    <p>Tanggal Perubahan: {{ $document->created_at }}</p>
+                    <p>Create By : {{$document->createdBy->username}}</p>
+                    <p>Revisi : {{$document->revisi}}</p>
                     <a href="{{ route('view.pdfdoc', ['id' => $document->id]) }}" class="btn btn-primary" target="_blank">View File PDF Cover</a>
                 @endforeach
             </div>
@@ -49,12 +45,10 @@
             <div class="card-body">
                 {{-- Konten untuk Attachment --}}
                 @foreach ($attachmentFiles as $attachment)
-                <p>Description: {{ $attachment->description }}</p>
-                    <p>Tanggal Perubahan: {{ $attachment->tgl_perubahan }}</p>
-                    <p>Nama Document: {{$attachment->document->description}}</p>
-                    <p>Nama Create: {{$attachment->createdBy->username}}</p>
-                    <p>Tanggal Berlaku: {{$attachment->tgl_berlaku}}</p>
-                    <p>Type : {{$attachment->document->type->short}}</p>
+                    <p>Description: {{ $attachment->description }}</p>
+                    <p>Tanggal Perubahan: {{ $attachment->created_at }}</p>
+                    <p>Create By : {{$attachment->createdBy->username}}</p>
+                    <p>Revisi : {{$attachment->revisi}}</p>
                     <a href="{{ route('view.pdflampiran', ['id' => $attachment->id]) }}" class="btn btn-primary" target="_blank">View File PDF Cover</a>
                 @endforeach
             </div>
@@ -68,11 +62,9 @@
                 {{-- Konten untuk Record --}}
                 @foreach ($recordFiles as $record)
                 <p>Description: {{ $record->description }}</p>
-                <p>Tanggal Perubahan: {{ $record->tgl_perubahan }}</p>
-                <p>Nama Document: {{$record->document->description}}</p>
-                <p>Nama Create: {{$record->createdBy->username}}</p>
-                <p>Tanggal Berlaku: {{$record->tgl_berlaku}}</p>
-                <p>Type : {{$record->document->type->short}}</p>
+                <p>Tanggal Perubahan: {{ $record->created_at }}</p>
+                <p>Create By : {{$record->createdBy->username}}</p>
+                <p>Revisi : {{$record->revisi}}</p>
                 <a href="{{ route('view.pdfcatmut', ['id' => $record->id]) }}" class="btn btn-primary" target="_blank">View File PDF Cover</a>
                 @endforeach
             </div>

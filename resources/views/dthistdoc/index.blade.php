@@ -10,10 +10,9 @@
                     <th>Id.</th>
                     <th>Description</th>
                     <th>Tanggal Berlaku</th>
-                    <th>Doc ID</th>
                     <th>Revisi</th>
                     <th>ID Sebelum</th>
-                    <th>User</th>
+                    <th>Create</th>
                     <th>Actions</th> <!-- Kolom untuk tombol aksi -->
                 </tr>
             </thead>
@@ -22,14 +21,13 @@
                     <tr>
                         <td>{{ $dtHistDoc->id }}</td>
                         <td>{{ $dtHistDoc->description }}</td>
-                        <td>{{ $dtHistDoc->tgl_berlaku }}</td>
-                        <td>{{ $dtHistDoc->document->description }}</td>
+                        <td>{{ $dtHistDoc->created_at }}</td>
                         <td>{{ $dtHistDoc->revisi }}</td>
                         <td>{{ $dtHistDoc->id_sebelum }}</td>
-                        <td>{{ $dtHistDoc->vc_created_user }}</td>
+                        <td>{{ $dtHistDoc->createdBy->username }}</td>
                         <td>
                             <!-- Tombol Edit -->
-                            <a href="{{ route('dthistdoc.edit', $dtHistDoc->id) }}" class="btn btn-warning">Edit</a>
+                            <a href="{{ route('dthistdoc.edit', $dtHistDoc->id) }}" class="btn btn-warning">Revisi</a>
 
                             <!-- Tombol Delete -->
                             <form action="{{ route('dthistdoc.destroy', $dtHistDoc->id) }}" method="POST"

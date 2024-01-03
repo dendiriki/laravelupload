@@ -27,11 +27,6 @@
 
 
             <div class="mb-3">
-                <label for="dt_modified_date" class="form-label">Date</label>
-                <input type="date" name="dt_modified_date" class="form-control">
-            </div>
-
-            <div class="mb-3">
                 <label for="vc_created_user" class="form-label">User Create</label>
                 <select id="vc_created_user" name="vc_created_user" class="form-select">
                     @foreach ($users as $user)
@@ -129,13 +124,5 @@
             </div>
 
             <button type="submit" class="btn btn-primary">Perbarui</button>
-        </form>
-
-        <!-- Tombol Delete -->
-        <form action="{{ route('dthistdoc.destroy', $dtHistDoc->id) }}" method="POST">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="btn btn-danger">Hapus</button>
-        </form>
     </div>
 @endsection

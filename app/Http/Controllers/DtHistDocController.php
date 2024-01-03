@@ -83,8 +83,6 @@ class DtHistDocController extends Controller
                     DtHistCover::create([
                         'description' => $request->input('description'),
                         'doc_id' => $request->input('doc_id'),
-                        'tgl_perubahan' => $request->input('dt_modified_date'),
-                        'tgl_berlaku' => $request->input('dt_modified_date'),
                         'vc_created_user' => $request->input('vc_created_user'),
                         'comp_id' => $request->input('comp_id'),
                         'revisi' => $request->input('revisi_cover'),
@@ -96,8 +94,6 @@ class DtHistDocController extends Controller
                     DtHistDoc::create([
                         'description' => $request->input('description'),
                         'doc_id' => $request->input('doc_id'),
-                        'tgl_perubahan' => $request->input('dt_modified_date'),
-                        'tgl_berlaku' => $request->input('dt_modified_date'),
                         'vc_created_user' => $request->input('vc_created_user'),
                         'comp_id' => $request->input('comp_id'),
                         'revisi' => $request->input('revisi_isi'),
@@ -109,8 +105,6 @@ class DtHistDocController extends Controller
                     DtHistLampiran::create([
                         'description' => $request->input('description'),
                         'doc_id' => $request->input('doc_id'),
-                        'tgl_perubahan' => $request->input('dt_modified_date'),
-                        'tgl_berlaku' => $request->input('dt_modified_date'),
                         'vc_created_user' => $request->input('vc_created_user'),
                         'comp_id' => $request->input('comp_id'),
                         'revisi' => $request->input('revisi_attachment'),
@@ -122,8 +116,6 @@ class DtHistDocController extends Controller
                     DtHistCatMut::create([
                         'description' => $request->input('description'),
                         'doc_id' => $request->input('doc_id'),
-                        'tgl_perubahan' => $request->input('dt_modified_date'),
-                        'tgl_berlaku' => $request->input('dt_modified_date'),
                         'vc_created_user' => $request->input('vc_created_user'),
                         'comp_id' => $request->input('comp_id'),
                         'revisi' => $request->input('revisi_record'),
@@ -208,8 +200,6 @@ class DtHistDocController extends Controller
                         DtHistCover::where('doc_id', $id)->create([
                             'description' => $request->input('description'),
                             'doc_id' => $request->input('doc_id'),
-                            'tgl_perubahan' => $request->input('dt_modified_date'),
-                            'tgl_berlaku' => $request->input('dt_modified_date'),
                             'vc_created_user' => $request->input('vc_created_user'),
                             'comp_id' => $request->input('comp_id'),
                             'revisi' => $request->input('revisi_cover'),
@@ -223,8 +213,6 @@ class DtHistDocController extends Controller
                         DtHistDoc::where('id', $id)->create([
                             'description' => $request->input('description'),
                             'doc_id' => $request->input('doc_id'),
-                            'tgl_perubahan' => $request->input('dt_modified_date'),
-                            'tgl_berlaku' => $request->input('dt_modified_date'),
                             'vc_created_user' => $request->input('vc_created_user'),
                             'comp_id' => $request->input('comp_id'),
                             'revisi' => $request->input('revisi_isi'),
@@ -238,8 +226,6 @@ class DtHistDocController extends Controller
                         DtHistLampiran::where('doc_id', $id)->create([
                             'description' => $request->input('description'),
                             'doc_id' => $request->input('doc_id'),
-                            'tgl_perubahan' => $request->input('dt_modified_date'),
-                            'tgl_berlaku' => $request->input('dt_modified_date'),
                             'vc_created_user' => $request->input('vc_created_user'),
                             'comp_id' => $request->input('comp_id'),
                             'revisi' => $request->input('revisi_attachment'),
@@ -253,8 +239,6 @@ class DtHistDocController extends Controller
                         DtHistCatMut::where('doc_id', $id)->create([
                             'description' => $request->input('description'),
                             'doc_id' => $request->input('doc_id'),
-                            'tgl_perubahan' => $request->input('dt_modified_date'),
-                            'tgl_berlaku' => $request->input('dt_modified_date'),
                             'vc_created_user' => $request->input('vc_created_user'),
                             'comp_id' => $request->input('comp_id'),
                             'revisi' => $request->input('revisi_record'),

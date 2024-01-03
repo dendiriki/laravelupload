@@ -10,7 +10,7 @@
 
             <div class="mb-3">
                 <label for="doc_id" class="form-label">Doc Name</label>
-                <select id="description" name="doc_id" class="form-select">
+                <select id="doc-select" name="doc_id" class="form-select">
                     @foreach ($documents as $document)
                         <option value="{{ $document->id }}">{{ $document->description }}</option>
                     @endforeach
@@ -18,13 +18,8 @@
             </div>
 
             <div class="mb-3">
-                <label for="description" class="form-label">Doc Name</label>
-                <input type="text" name="description" class="form-control">
-            </div>
-
-            <div class="mb-3">
-                <label for="dt_modified_date" class="form-label">Date</label>
-                <input type="date" name="dt_modified_date" class="form-control">
+                <label for="description" class="form-label">Konfirmasi Doc Name</label>
+                <input type="text" id="confirmation-input" name="description" class="form-control">
             </div>
 
             <div class="mb-3">
@@ -88,4 +83,18 @@
             <button type="submit" class="btn btn-primary">Simpan</button>
         </form>
     </div>
+
+    <script>
+        document.getElementById('doc-select').addEventListener('change', function() {
+            var selectedOption = this.options[this.selectedIndex];
+            var confirmationInput = document.getElementById('confirmation-input');
+
+            if (selectedOption) {
+                confirmationInput.value = selectedOption.textContent;
+            } else {
+                confirmationInput.value = ''; // Atau nilai default jika tidak ada pilihan yang dipilih.
+            }
+        });
+    </script>
+
 @endsection

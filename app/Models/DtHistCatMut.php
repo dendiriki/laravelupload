@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class DtHistCatMut extends Model
 {
     protected $table = 'dt_histcatmut';
-    public $timestamps = false; // Menonaktifkan fitur timestamps
 
 
     protected $fillable = [
