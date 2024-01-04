@@ -11,7 +11,7 @@ class DtHistCover extends Model
 
 
     protected $fillable = [
-        'description', 'tgl_perubahan', 'tgl_berlaku', 'doc_id', 'revisi', 'id_sebelum', 'link_document', 'vc_created_user', 'comp_id', 'nodoc'
+        'description', 'tgl_perubahan', 'tgl_berlaku', 'doc_id', 'revisi', 'id_sebelum', 'link_document', 'vc_created_user', 'comp_id', 'nodoc','doc_name'
     ];
 
     public function previousRevision()

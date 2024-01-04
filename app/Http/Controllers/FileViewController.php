@@ -84,7 +84,7 @@ class FileViewController extends Controller
                 ->on('dt_histcover.created_at', '=', 'b.max_lastdate');
         })
         ->join('users', 'dt_histcover.vc_created_user', '=', 'users.code_emp')
-        ->where('dt_histcover.doc_id', 33)
+        ->where('dt_histcover.doc_id', $document->id)
         ->select('dt_histcover.*')
         ->get();
 
@@ -94,7 +94,7 @@ class FileViewController extends Controller
                 ->on('dt_histdoc.created_at', '=', 'b.max_lastdate');
         })
         ->join('users', 'dt_histdoc.vc_created_user', '=', 'users.code_emp')
-        ->where('dt_histdoc.doc_id', 33)
+        ->where('dt_histdoc.doc_id', $document->id)
         ->select('dt_histdoc.*')
         ->get();
 
@@ -104,7 +104,7 @@ class FileViewController extends Controller
                 ->on('dt_histlampiran.created_at', '=', 'b.max_lastdate');
         })
         ->join('users', 'dt_histlampiran.vc_created_user', '=', 'users.code_emp')
-        ->where('dt_histlampiran.doc_id', 33)
+        ->where('dt_histlampiran.doc_id', $document->id)
         ->select('dt_histlampiran.*')
         ->get();
 
@@ -114,28 +114,14 @@ class FileViewController extends Controller
                 ->on('dt_histcatmut.created_at', '=', 'b.max_lastdate');
         })
         ->join('users', 'dt_histcatmut.vc_created_user', '=', 'users.code_emp')
-        ->where('dt_histcatmut.doc_id', 33)
+        ->where('dt_histcatmut.doc_id', $document->id)
         ->select('dt_histcatmut.*')
         ->get();
 
-        // foreach ($hasil as $row) {
-        //     $revisi = $row->revisi;
-        //     // Lakukan sesuatu dengan nilai revisi
-        //     dd($revisi);
-        // }
-
-
-        // $attachmentFiles = DtHistLampiran::where('doc_id', $document->id)->whereDate('created_at',$lams)->last();
-        // $recordFiles = DtHistCatMut::where('doc_id', $document->id)->whereDate('created_at',$recs)->last();
-
-        // $histDocBaru = Histdocbaru::where('doc_id', $document->id)
-        // ->where('lastdate', $document->created_at)
-        // ->get();
-
-        // $document = Document::where('id', $folder)->first();
-        // $histDocBaru = Histdocbaru::where('doc_id', $document->id)
-        //     ->where('lastdate', $document->created_at)
-        //     ->first();
+        // $coverFiles = DtHistCover::where('doc_id', $document->id)->get();
+        // $documentFiles = DtHistDoc::where('doc_id', $document->id)->get();
+        // $attachmentFiles = DtHistLampiran::where('doc_id', $document->id)->get();
+        // $recordFiles = DtHistCatMut::where('doc_id', $document->id)->get();
 
 
         return view('file-list.view-folder-contents', compact('coverFiles','documentFiles', 'attachmentFiles', 'recordFiles', 'folder','document'));

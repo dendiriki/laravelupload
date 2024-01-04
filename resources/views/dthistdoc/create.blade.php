@@ -23,6 +23,11 @@
             </div>
 
             <div class="mb-3">
+                <label for="doc_name" class="form-label">Nomer Doc Name</label>
+                <input type="text" id="doc_name" name="doc_name" class="form-control">
+            </div>
+
+            <div class="mb-3">
                 <label for="vc_created_user" class="form-label">User Create</label>
                 <select id="vc_created_user" name="vc_created_user" class="form-select">
                     @foreach ($users as $user)

@@ -14,8 +14,8 @@
                     <p class="mb-1">Modified By: {{ $iso->modifiedBy->username }}</p>
                     <p class="mb-1">Company: {{ $iso->company->short }}</p>
                     <p class="mb-1">Path: {{ $iso->path }}</p>
-                    <p class="mb-1">Created At: {{ $iso->created_at }}</p>
-                    <p class="mb-1">Updated At: {{ $iso->updated_at }}</p>
+                    <p class="mb-1">Created At: {{ $iso->dt_created_date}}</p>
+                    <p class="mb-1">Updated At: {{ $iso->dt_modified_date}}</p>
                     <hr>
                 </li>
             @endforeach

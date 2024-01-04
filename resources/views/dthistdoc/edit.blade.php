@@ -25,7 +25,6 @@
                 <input type="text" name="description" class="form-control" value="{{ $documents->description }}">
             </div>
 
-
             <div class="mb-3">
                 <label for="vc_created_user" class="form-label">User Create</label>
                 <select id="vc_created_user" name="vc_created_user" class="form-select">

@@ -87,7 +87,8 @@ class DtHistDocController extends Controller
                         'comp_id' => $request->input('comp_id'),
                         'revisi' => $request->input('revisi_cover'),
                         'link_document' => $pdfFilePath,
-                        'nodoc' => $nodoc, // Simpan nama file acak di kolom nodoc
+                        'nodoc' => $nodoc,
+                        'doc_name' => $request->input('doc_name'),
                     ]);
                     break;
                 case 'isi':
@@ -98,7 +99,8 @@ class DtHistDocController extends Controller
                         'comp_id' => $request->input('comp_id'),
                         'revisi' => $request->input('revisi_isi'),
                         'link_document' => $pdfFilePath,
-                        'nodoc' => $nodoc, // Simpan nama file acak di kolom nodoc
+                        'nodoc' => $nodoc,
+                        'doc_name' => $request->input('doc_name'),
                     ]);
                     break;
                 case 'attachment':
@@ -109,7 +111,8 @@ class DtHistDocController extends Controller
                         'comp_id' => $request->input('comp_id'),
                         'revisi' => $request->input('revisi_attachment'),
                         'link_document' => $pdfFilePath,
-                        'nodoc' => $nodoc, // Simpan nama file acak di kolom nodoc
+                        'nodoc' => $nodoc,
+                        'doc_name' => $request->input('doc_name'),
                     ]);
                     break;
                 case 'record':
@@ -120,7 +123,8 @@ class DtHistDocController extends Controller
                         'comp_id' => $request->input('comp_id'),
                         'revisi' => $request->input('revisi_record'),
                         'link_document' => $pdfFilePath,
-                        'nodoc' => $nodoc, // Simpan nama file acak di kolom nodoc
+                        'nodoc' => $nodoc,
+                        'doc_name' => $request->input('doc_name'),
                     ]);
                     break;
                     default:
@@ -206,6 +210,7 @@ class DtHistDocController extends Controller
                             'id_sebelum' => $request->input('cover'),
                             'link_document' => $pdfFilePath,
                             'nodoc' => $nodoc,
+                            'doc_name' => $nomerdoc,
                             // Sisanya seperti sebelumnya
                         ]);
                         break;
@@ -219,6 +224,7 @@ class DtHistDocController extends Controller
                             'id_sebelum' => $request->input('doc'),
                             'link_document' => $pdfFilePath,
                             'nodoc' => $nodoc,
+                            'doc_name' => $nomerdoc,
                             // Sisanya seperti sebelumnya
                         ]);
                         break;
@@ -232,6 +238,7 @@ class DtHistDocController extends Controller
                             'id_sebelum' => $request->input('lampiran'),
                             'link_document' => $pdfFilePath,
                             'nodoc' => $nodoc,
+                            'doc_name' => $nomerdoc,
                             // Sisanya seperti sebelumnya
                         ]);
                         break;
@@ -245,6 +252,7 @@ class DtHistDocController extends Controller
                             'id_sebelum' => $request->input('catmut'),
                             'link_document' => $pdfFilePath,
                             'nodoc' => $nodoc,
+                            'doc_name' => $nomerdoc,
                             // Sisanya seperti sebelumnya
                         ]);
                         break;

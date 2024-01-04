@@ -9,7 +9,7 @@ class DtHistDoc extends Model
     protected $table = 'dt_histdoc'; // Nama tabel sesuai dengan database Anda
 
     protected $fillable = [
-        'description', 'tgl_perubahan', 'tgl_berlaku', 'doc_id', 'revisi', 'id_sebelum', 'link_document', 'vc_created_user', 'comp_id', 'nodoc'
+        'description', 'tgl_perubahan', 'tgl_berlaku', 'doc_id', 'revisi', 'id_sebelum', 'link_document', 'vc_created_user', 'comp_id', 'nodoc','doc_name'
     ];
 
     // Relasi self-join ke revisi sebelumnya
