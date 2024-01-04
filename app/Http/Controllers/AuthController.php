@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Dep;
+use App\Models\Company;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -35,7 +37,9 @@ class AuthController extends Controller
 
     public function showRegisterForm()
     {
-        return view('auth.register');
+        $departments = Dep::all();
+        $companys = Company::all();
+        return view('auth.register', compact('departments','companys'));
     }
 
     public function register(Request $request)

@@ -78,4 +78,57 @@ class DocumentController extends Controller
         // Redirect ke index dengan pesan sukses
         return redirect()->route('documents.index')->with('success', 'Document created successfully!');
     }
+
+    public function edit($id)
+    {
+        $document = Document::findOrFail($id);
+        $types = Type::all();
+        $isos = ISO::all();
+        $users = User::all();
+        $companies = Company::all();
+
+        return view('documents.edit', compact('document', 'types', 'isos', 'users', 'companies'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $document = Document::findOrFail($id);
+
+        // Lakukan perubahan pada $document sesuai dengan $request
+        $document->description = $request->input('description');
+        $document->doctype_id = $request->input('doctype_id');
+        $document->iso_id = $request->input('iso_id');
+        $document->dt_created_date = $request->input('dt_created_date');
+        $document->vc_created_user = $request->input('vc_modified_user');
+        $document->dt_modified_date = $request->input('dt_modified_date');
+        $document->vc_modified_user = $request->input('vc_modified_user');
+        $document->comp_id = $request->input('comp_id');
+
+        // Simpan perubahan
+        $document->save();
+
+        return redirect()->route('documents.index')->with('success', 'Document updated successfully!');
+    }
+
+
+    public function destroy($id)
+    {
+        // Ambil data dokumen berdasarkan ID
+        $document = Document::findOrFail($id);
+
+        // Ambil path folder dokumen
+        $folderPath = $document->path;
+
+        // Hapus folder dan isinya
+        if (Storage::exists($folderPath)) {
+            Storage::deleteDirectory($folderPath);
+        }
+
+        // Hapus data dokumen dari database
+        $document->delete();
+
+        // Redirect ke index dengan pesan sukses
+        return redirect()->route('documents.index')->with('success', 'Document deleted successfully!');
+    }
+
 }

@@ -2,33 +2,32 @@
 
 @section('content')
     <div class="container mt-5">
-        <h2 class="mb-4">List of Types</h2>
+        <h1>Types</h1>
 
-        <a href="{{ route('types.create') }}" class="btn btn-primary mb-3">Create New Type</a>
+        <a href="{{ route('types.create') }}" class="btn btn-primary">Create New Type</a>
 
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Description</th>
-                    <th>Short Name</th>
-                    <th>Created At</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($types as $type)
-                    <tr>
-                        <td>{{ $type->id }}</td>
-                        <td>{{ $type->description }}</td>
-                        <td>{{ $type->short }}</td>
-                        <td>{{ $type->dt_created_date }}</td>
-                        <td>
-                            <!-- Tambahkan tombol aksi jika diperlukan, seperti edit atau delete -->
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+        <ul class="list-group mt-3">
+            @foreach ($types as $type)
+                <li class="list-group-item">
+                    <h5 class="mb-1">Description: {{ $type->description }}</h5>
+                    <p class="mb-1">Created By: {{ $type->createdBy->username }}</p>
+                    <p class="mb-1">Modified By: {{ $type->modifiedBy->username }}</p>
+                    <p class="mb-1">Company: {{ $type->company->short }}</p>
+                    <p class="mb-1">Created At: {{ $type->dt_created_date }}</p>
+                    <p class="mb-1">Updated At: {{ $type->dt_modified_date }}</p>
+
+                    <div class="d-flex justify-content-end mt-2">
+                        <a href="{{ route('types.edit', $type->id) }}" class="btn btn-warning mr-2">Edit</a>
+                        <form action="{{ route('types.destroy', $type->id) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </div>
+
+                    <hr>
+                </li>
+            @endforeach
+        </ul>
     </div>
 @endsection

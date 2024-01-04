@@ -57,4 +57,38 @@ class ISOController extends Controller
 
         return redirect()->route('isos.index')->with('success', 'ISO created successfully!');
     }
+    public function edit($id)
+    {
+        $iso = ISO::findOrFail($id);
+        $users = User::all();
+        $companies = Company::all();
+
+        return view('isos.edit', compact('iso', 'users', 'companies'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $iso = ISO::findOrFail($id);
+
+        $iso->update($request->all());
+
+        return redirect()->route('isos.index')->with('success', 'ISO updated successfully!');
+    }
+
+    public function destroy($id)
+    {
+        $iso = ISO::findOrFail($id);
+
+        // Hapus folder terkait
+        $folderPath = "uploads/" . str_replace(' ', '_', $iso->path);
+
+        if (Storage::exists($folderPath)) {
+            Storage::deleteDirectory($folderPath);
+        }
+
+        // Hapus ISO dari database
+        $iso->delete();
+
+        return redirect()->route('isos.index')->with('success', 'ISO deleted successfully!');
+    }
 }

@@ -10,6 +10,7 @@
                     <th>ID</th>
                     <th>Document</th>
                     <th>Department</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -18,6 +19,13 @@
                         <td>{{ $docDept->id }}</td>
                         <td>{{ $docDept->document->description }}</td>
                         <td>{{ $docDept->dep->name }}</td>
+                        <td>
+                            <form action="{{ route('docdept.destroy', $docDept->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>

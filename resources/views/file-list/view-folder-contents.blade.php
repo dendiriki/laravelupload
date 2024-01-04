@@ -15,6 +15,7 @@
                     <p>Tanggal Perubahan: {{ $cover->created_at }}</p>
                     <p>Create By : {{$cover->createdBy->username}}</p>
                     <p>Revisi : {{$cover->revisi}}</p>
+                    <p>Number Doc : {{$cover->doc_name}}</p>
                     <a href="{{ route('view.pdf', ['id' => $cover->id]) }}" class="btn btn-primary" target="_blank">View File PDF Cover</a>
 
                     {{-- Tambahkan lebih banyak detail sesuai kebutuhan --}}
@@ -33,6 +34,7 @@
                     <p>Tanggal Perubahan: {{ $document->created_at }}</p>
                     <p>Create By : {{$document->createdBy->username}}</p>
                     <p>Revisi : {{$document->revisi}}</p>
+                    <p>Number Doc : {{$cover->doc_name}}</p>
                     <a href="{{ route('view.pdfdoc', ['id' => $document->id]) }}" class="btn btn-primary" target="_blank">View File PDF Cover</a>
                 @endforeach
             </div>
@@ -49,6 +51,7 @@
                     <p>Tanggal Perubahan: {{ $attachment->created_at }}</p>
                     <p>Create By : {{$attachment->createdBy->username}}</p>
                     <p>Revisi : {{$attachment->revisi}}</p>
+                    <p>Number Doc : {{$cover->doc_name}}</p>
                     <a href="{{ route('view.pdflampiran', ['id' => $attachment->id]) }}" class="btn btn-primary" target="_blank">View File PDF Cover</a>
                 @endforeach
             </div>
@@ -65,6 +68,7 @@
                 <p>Tanggal Perubahan: {{ $record->created_at }}</p>
                 <p>Create By : {{$record->createdBy->username}}</p>
                 <p>Revisi : {{$record->revisi}}</p>
+                <p>Number Doc : {{$cover->doc_name}}</p>
                 <a href="{{ route('view.pdfcatmut', ['id' => $record->id]) }}" class="btn btn-primary" target="_blank">View File PDF Cover</a>
                 @endforeach
             </div>

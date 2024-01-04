@@ -10,6 +10,7 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Document Name</th>
+                        <th scope="col">Type</th>
                         <th scope="col">Actions</th>
                     </tr>
                 </thead>
@@ -18,6 +19,7 @@
                         <tr>
                             <th scope="row">{{ $index + 1 }}</th>
                             <td>{{ $document->description }}</td>
+                            <td>{{$document->type->short}}</td>
                             <td>
                                 <a href="{{ route('view.folder.contents', ['folder' => $document->id]) }}" class="btn btn-primary">View Folder Contents</a>
 

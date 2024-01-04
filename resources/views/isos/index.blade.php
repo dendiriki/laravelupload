@@ -16,6 +16,16 @@
                     <p class="mb-1">Path: {{ $iso->path }}</p>
                     <p class="mb-1">Created At: {{ $iso->dt_created_date}}</p>
                     <p class="mb-1">Updated At: {{ $iso->dt_modified_date}}</p>
+
+                    <div class="d-flex justify-content-end mt-2">
+                        <a href="{{ route('isos.edit', $iso->id) }}" class="btn btn-warning mr-2">Edit</a>
+                        <form action="{{ route('isos.destroy', $iso->id) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </div>
+
                     <hr>
                 </li>
             @endforeach

@@ -21,7 +21,7 @@
                     <th>Date Modified</th>
                     <th>Created By</th>
                     <th>Company</th>
-                    <th>Path</th>
+                    <th>Action</th> <!-- Tambah kolom untuk Action -->
                 </tr>
             </thead>
             <tbody>
@@ -34,7 +34,14 @@
                         <td>{{ $document->dt_modified_date }}</td>
                         <td>{{ $document->createdBy->username }}</td>
                         <td>{{ $document->company->short }}</td>
-                        <td>{{ $document->path }}</td>
+                        <td>
+                            <a href="{{ route('documents.edit', ['id' => $document->id]) }}" class="btn btn-primary">Edit</a>
+                            <form action="{{ route('documents.destroy', ['id' => $document->id]) }}" method="POST" style="display: inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>

@@ -41,4 +41,36 @@ class TypeController extends Controller
 
         return redirect()->route('types.index')->with('success', 'Type created successfully!');
     }
+
+    // Tambahkan fungsi edit
+    public function edit($id)
+    {
+        $type = Type::find($id);
+        $users = User::all();
+        $companies = Company::all();
+        return view('types.edit', compact('type', 'users', 'companies'));
+    }
+
+    // Tambahkan fungsi update
+    public function update(Request $request, $id)
+    {
+        $type = Type::find($id);
+        $type->update([
+            'description' => $request->description,
+            'short' => $request->short,
+            'dt_modified_date' => now(),
+            'vc_modified_user' => $request->vc_created_user,
+            'comp_id' => $request->comp_id,
+        ]);
+
+        return redirect()->route('types.index')->with('success', 'Type updated successfully!');
+    }
+
+    // Tambahkan fungsi destroy
+    public function destroy($id)
+    {
+        Type::destroy($id);
+        return redirect()->route('types.index')->with('success', 'Type deleted successfully!');
+    }
+
 }

@@ -33,4 +33,12 @@ class DocDeptController extends Controller
 
         return redirect()->route('docdept.index')->with('success', 'Doc Dept created successfully.');
     }
+
+    public function destroy($id)
+    {
+        $docDept = DocDept::findOrFail($id);
+        $docDept->delete();
+
+        return redirect()->route('docdept.index')->with('success', 'Doc Dept deleted successfully.');
+    }
 }
