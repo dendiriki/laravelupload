@@ -25,26 +25,41 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('isos.index') }}">ISOs</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('types.index') }}">Types</a>
+                    @can('admin')
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('isos.index') }}">ISOs</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('types.index') }}">Types</a>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('documents.index') }}">Documents</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('dthistdoc.index') }}">Historical Documents</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('docdept.index') }}">Doc Dept</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('dep.index') }}">Dept</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('register') }}">Register</a>
+                        </li>
+                    @endcan
+
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('file.list') }}">File List</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('documents.index') }}">Documents</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('dthistdoc.index') }}">Historical Documents</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('docdept.index') }}">Doc Dept</a>
                     </li>
                     <!-- Tambahkan item navbar sesuai kebutuhan -->
                 </ul>
@@ -52,22 +67,21 @@
 
                     @if (Auth::check())
                         <!-- Tampilkan user info dan logout button -->
+
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                             @csrf
                         </form>
                         <li class="nav-item">
-                                    <p class="nav-link" > username : {{ Auth::user()->username }}</p>
+                            <p class="nav-link"> username : {{ Auth::user()->username }}</p>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+                            <a class="nav-link" href="#"
+                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
                         </li>
                     @else
                         <!-- Tampilkan login/register links -->
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('login') }}">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('register') }}">Register</a>
                         </li>
                     @endif
                 </ul>
