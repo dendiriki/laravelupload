@@ -162,7 +162,11 @@ class DtHistDocController extends Controller
         ]);
 
         $document = Document::where('id', $request->doc_id)->value('path');
+        $name = DtHistDoc::where('doc_id', $request->doc_id)->value('doc_name');
 
+
+
+        // dd($name);
         // Ambil data dari formulir
         $pathupload = $document; // Tentukan path sesuai kebutuhan Anda
 
@@ -210,7 +214,7 @@ class DtHistDocController extends Controller
                             'id_sebelum' => $request->input('cover'),
                             'link_document' => $pdfFilePath,
                             'nodoc' => $nodoc,
-                            'doc_name' => $nomerdoc,
+                            'doc_name' => $name,
                             // Sisanya seperti sebelumnya
                         ]);
                         break;
@@ -224,7 +228,7 @@ class DtHistDocController extends Controller
                             'id_sebelum' => $request->input('doc'),
                             'link_document' => $pdfFilePath,
                             'nodoc' => $nodoc,
-                            'doc_name' => $nomerdoc,
+                            'doc_name' => $name,
                             // Sisanya seperti sebelumnya
                         ]);
                         break;
@@ -238,7 +242,7 @@ class DtHistDocController extends Controller
                             'id_sebelum' => $request->input('lampiran'),
                             'link_document' => $pdfFilePath,
                             'nodoc' => $nodoc,
-                            'doc_name' => $nomerdoc,
+                            'doc_name' => $name,
                             // Sisanya seperti sebelumnya
                         ]);
                         break;
@@ -252,7 +256,7 @@ class DtHistDocController extends Controller
                             'id_sebelum' => $request->input('catmut'),
                             'link_document' => $pdfFilePath,
                             'nodoc' => $nodoc,
-                            'doc_name' => $nomerdoc,
+                            'doc_name' => $name,
                             // Sisanya seperti sebelumnya
                         ]);
                         break;
@@ -270,20 +274,24 @@ class DtHistDocController extends Controller
     {
         $dtHistDoc = DtHistDoc::findOrFail($id);
 
+        // Ambil nodoc dari DtHistDoc
+        $nodoc = $dtHistDoc->nodoc;
+
         // Menghapus entri terkait dari tabel DtHistCover, DtHistLampiran, dan DtHistCatMut
         DtHistCover::where('doc_id', $dtHistDoc->doc_id)->delete();
         DtHistLampiran::where('doc_id', $dtHistDoc->doc_id)->delete();
         DtHistCatMut::where('doc_id', $dtHistDoc->doc_id)->delete();
 
-        // Menghapus file dan folder terkait
+        // Menghapus file dari setiap folder yang sesuai dengan nodoc
         $document = Document::where('id', $dtHistDoc->doc_id)->value('path');
         $expectedFiles = ['cover', 'isi', 'attachment', 'record'];
 
         foreach ($expectedFiles as $expectedFile) {
-            $folderPath = "$document/$expectedFile";
+            $filePath = "$document/$expectedFile/$nodoc.pdf";
 
-            if (Storage::exists($folderPath)) {
-                Storage::deleteDirectory($folderPath);
+            // Hapus file jika ada
+            if (Storage::exists($filePath)) {
+                Storage::delete($filePath);
             }
         }
 
@@ -295,6 +303,7 @@ class DtHistDocController extends Controller
 
         return redirect()->route('dthistdoc.index')->with('success', 'Data dan file terkait berhasil dihapus.');
     }
+
 
 
 

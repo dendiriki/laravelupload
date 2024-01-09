@@ -42,7 +42,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('dthistdoc.index') }}">Historical Documents</a>
+                            <a class="nav-link" href="{{ route('dthistdoc.index') }}">Isi Documents</a>
                         </li>
 
                         <li class="nav-item">
