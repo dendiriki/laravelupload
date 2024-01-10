@@ -18,7 +18,7 @@ class DtHistDocController extends Controller
 {
     public function index()
     {
-        $dtHistDocs = DtHistDoc::all(); // Sesuaikan dengan model yang Anda gunakan
+        $dtHistDocs = DtHistDoc::where('id_sebelum', null)->get();
 
         return view('dthistdoc.index', compact('dtHistDocs'));
     }
@@ -30,6 +30,16 @@ class DtHistDocController extends Controller
         $companies = Company::all();
 
         return view('dthistdoc.create', compact('documents', 'users', 'companies'));
+    }
+
+    public function detail ($id){
+       $document = Document::find($id);
+       $dtHistDoc = DtHistDoc::where('doc_id', $id)->get();
+       $dtHistCover = DtHistCover::where('doc_id', $id)->get();
+       $dtHistLampiran = DtHistLampiran::where('doc_id', $id)->get();
+       $dtHistCatMut = DtHistCatMut::where('doc_id', $id)->get();
+
+       return view('dthistdoc.detail', compact ('dtHistDoc', 'dtHistCover', 'dtHistLampiran','dtHistCatMut','document'));
     }
 
     public function store(Request $request)
@@ -274,24 +284,20 @@ class DtHistDocController extends Controller
     {
         $dtHistDoc = DtHistDoc::findOrFail($id);
 
-        // Ambil nodoc dari DtHistDoc
-        $nodoc = $dtHistDoc->nodoc;
-
         // Menghapus entri terkait dari tabel DtHistCover, DtHistLampiran, dan DtHistCatMut
         DtHistCover::where('doc_id', $dtHistDoc->doc_id)->delete();
         DtHistLampiran::where('doc_id', $dtHistDoc->doc_id)->delete();
         DtHistCatMut::where('doc_id', $dtHistDoc->doc_id)->delete();
 
-        // Menghapus file dari setiap folder yang sesuai dengan nodoc
+        // Menghapus file dan folder terkait
         $document = Document::where('id', $dtHistDoc->doc_id)->value('path');
         $expectedFiles = ['cover', 'isi', 'attachment', 'record'];
 
         foreach ($expectedFiles as $expectedFile) {
-            $filePath = "$document/$expectedFile/$nodoc.pdf";
+            $folderPath = "$document/$expectedFile";
 
-            // Hapus file jika ada
-            if (Storage::exists($filePath)) {
-                Storage::delete($filePath);
+            if (Storage::exists($folderPath)) {
+                Storage::deleteDirectory($folderPath);
             }
         }
 
@@ -303,10 +309,6 @@ class DtHistDocController extends Controller
 
         return redirect()->route('dthistdoc.index')->with('success', 'Data dan file terkait berhasil dihapus.');
     }
-
-
-
-
 
 
 }
