@@ -18,9 +18,9 @@
                     <th>Description</th>
                     <th>Type</th>
                     <th>ISO</th>
+                    <th>Date Created</th>
                     <th>Date Modified</th>
                     <th>Created By</th>
-                    <th>Company</th>
                     <th>Action</th> <!-- Tambah kolom untuk Action -->
                 </tr>
             </thead>
@@ -29,14 +29,15 @@
                     <tr>
                         <td>{{ $document->id }}</td>
                         <td>{{ $document->description }}</td>
-                        <td>{{ $document->type->description }}</td>
+                        <td>{{ $document->type->short }}</td>
                         <td>{{ $document->iso->description }}</td>
+                        <td>{{ $document->dt_created_date }}</td>
                         <td>{{ $document->dt_modified_date }}</td>
                         <td>{{ $document->createdBy->username }}</td>
-                        <td>{{ $document->company->short }}</td>
                         <td>
                             <a href="{{ route('documents.edit', ['id' => $document->id]) }}" class="btn btn-primary">Edit</a>
-                            <form action="{{ route('documents.destroy', ['id' => $document->id]) }}" method="POST" style="display: inline;">
+                            <form action="{{ route('documents.destroy', ['id' => $document->id]) }}" method="POST"
+                                style="display: inline;">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger">Delete</button>

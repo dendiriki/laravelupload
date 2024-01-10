@@ -69,6 +69,7 @@ Route::get('dthistdoc/edit/{id}', [DtHistDocController::class, 'edit'])->name('d
 Route::post('dthistdoc/update/{id}', [DtHistDocController::class, 'update'])->name('dthistdoc.update')->middleware('auth');
 Route::delete('dthistdoc/destroy/{id}', [DtHistDocController::class, 'destroy'])->name('dthistdoc.destroy')->middleware('auth');
 
+Route::delete('/detaildelete/{id}/{type}', [DtHistDocController::class, 'detaildelete'])->name('dthistdoc.detaildelete');
 
 Route::get('docdept',[DocDeptController::class, 'index'])->name('docdept.index')->middleware('auth');
 Route::get('docdept/create',[DocDeptController::class, 'create'])->name('docdept.create')->middleware('auth');

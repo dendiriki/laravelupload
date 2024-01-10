@@ -22,25 +22,33 @@
                         <td>{{ $dtHistDoc->description }}</td>
                         <td>{{ $dtHistDoc->created_at }}</td>
                         <td>{{ $dtHistDoc->createdBy->username }}</td>
-                        <td>{{$dtHistDoc->doc_name}}</td>
+                        <td>{{ $dtHistDoc->doc_name }}</td>
                         <td>
                             <!-- Tombol Edit -->
                             <a href="{{ route('dthistdoc.edit', $dtHistDoc->id) }}" class="btn btn-warning">Revisi</a>
 
                             <!-- Tombol Delete -->
                             <form action="{{ route('dthistdoc.destroy', $dtHistDoc->id) }}" method="POST"
-                                style="display: inline;">
+                                style="display: inline;" onsubmit="return confirmDelete()">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger">Delete</button>
                             </form>
-                            <a href="{{route('dthistdoc.detail', $dtHistDoc->doc_id)}}" class="btn btn-success">Detail</a>
+                            <a href="{{ route('dthistdoc.detail', $dtHistDoc->doc_id) }}" class="btn btn-success">Detail</a>
                         </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
+
+    <script>
+        function confirmDelete() {
+            return confirm(
+                'Apakah Anda yakin menghapus dokumen ini? Ini akan menghapus semua folder yang berkaitan dengan dokumen ini.'
+                );
+        }
+    </script>
 @endsection
 
 {{--

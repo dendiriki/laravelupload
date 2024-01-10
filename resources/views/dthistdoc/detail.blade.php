@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="container">
-        <h2>Detail Data PDF "{{$document->description}}"</h2>
+        <h2>Detail Data PDF "{{ $document->description }}"</h2>
 
         <!-- Detail DtHistDoc -->
         <div class="card mb-3">
@@ -21,6 +21,7 @@
                             <th>Create</th>
                             <th>revisi</th>
                             <th>Nomer Document</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -30,8 +31,19 @@
                                 <td>{{ $doc->description }}</td>
                                 <td>{{ $doc->created_at }}</td>
                                 <td>{{ $doc->createdBy->username }}</td>
-                                <td>{{$doc->revisi}}</td>
+                                <td>{{ $doc->revisi }}</td>
                                 <td>{{ $doc->doc_name }}</td>
+                                <td>
+
+                                    <!-- Tombol Delete -->
+                                    <form
+                                        action="{{ route('dthistdoc.detaildelete', ['id' => $doc->id, 'type' => 'dtHistDoc']) }}"
+                                        method="POST" style="display: inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -54,7 +66,7 @@
                             <th>Create</th>
                             <th>Revisi</th>
                             <th>Nomer Document</th>
-                            <!-- Tambahkan kolom lain sesuai kebutuhan -->
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -64,9 +76,19 @@
                                 <td>{{ $cover->description }}</td>
                                 <td>{{ $cover->created_at }}</td>
                                 <td>{{ $cover->createdBy->username }}</td>
-                                <td>{{$cover->revisi}}</td>
+                                <td>{{ $cover->revisi }}</td>
                                 <td>{{ $cover->doc_name }}</td>
-                                <!-- Tambahkan kolom lain sesuai kebutuhan -->
+                                <td>
+
+                                    <!-- Tombol Delete -->
+                                    <form
+                                        action="{{ route('dthistdoc.detaildelete', ['id' => $cover->id, 'type' => 'dtHistCover']) }}"
+                                        method="POST" style="display: inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -89,7 +111,7 @@
                             <th>Create</th>
                             <th>revisi</th>
                             <th>Nomer Document</th>
-                            <!-- Tambahkan kolom lain sesuai kebutuhan -->
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -99,9 +121,19 @@
                                 <td>{{ $lampiran->description }}</td>
                                 <td>{{ $lampiran->created_at }}</td>
                                 <td>{{ $lampiran->createdBy->username }}</td>
-                                <td>{{$lampiran->revisi}}</td>
+                                <td>{{ $lampiran->revisi }}</td>
                                 <td>{{ $lampiran->doc_name }}</td>
-                                <!-- Tambahkan kolom lain sesuai kebutuhan -->
+                                <td>
+
+                                    <!-- Tombol Delete -->
+                                    <form
+                                        action="{{ route('dthistdoc.detaildelete', ['id' => $lampiran->id, 'type' => 'dtHistLampiran']) }}"
+                                        method="POST" style="display: inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -124,7 +156,7 @@
                             <th>Create</th>
                             <th>Revisi</th>
                             <th>Nomer Document</th>
-                            <!-- Tambahkan kolom lain sesuai kebutuhan -->
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -134,9 +166,19 @@
                                 <td>{{ $catmut->description }}</td>
                                 <td>{{ $catmut->created_at }}</td>
                                 <td>{{ $catmut->createdBy->username }}</td>
-                                <td>{{$catmut->revisi}}</td>
+                                <td>{{ $catmut->revisi }}</td>
                                 <td>{{ $catmut->doc_name }}</td>
-                                <!-- Tambahkan kolom lain sesuai kebutuhan -->
+                                <td>
+
+                                    <!-- Tombol Delete -->
+                                    <form
+                                        action="{{ route('dthistdoc.detaildelete', ['id' => $catmut->id, 'type' => 'dtHistCatMut']) }}"
+                                        method="POST" style="display: inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>

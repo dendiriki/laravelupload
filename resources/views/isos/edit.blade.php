@@ -14,15 +14,11 @@
             </div>
 
             <div class="mb-3">
-                <label for="dt_created_date" class="form-label">Created Date:</label>
-                <input type="date" name="dt_created_date" class="form-control" value="{{ $iso->dt_created_date }}" required>
-            </div>
-
-            <div class="mb-3">
                 <label for="vc_created_user" class="form-label">Created User:</label>
                 <select name="vc_created_user" class="form-select" required>
                     @foreach ($users as $user)
-                        <option value="{{ $user->code_emp }}" {{ $iso->vc_created_user == $user->code_emp ? 'selected' : '' }}>
+                        <option value="{{ $user->code_emp }}"
+                            {{ $iso->vc_created_user == $user->code_emp ? 'selected' : '' }}>
                             {{ $user->username }}
                         </option>
                     @endforeach
@@ -31,14 +27,16 @@
 
             <div class="mb-3">
                 <label for="dt_modified_date" class="form-label">Modified Date:</label>
-                <input type="date" name="dt_modified_date" class="form-control" value="{{ $iso->dt_modified_date }}" required>
+                <input type="date" name="dt_modified_date" class="form-control" value="{{ $iso->dt_modified_date }}"
+                    required>
             </div>
 
             <div class="mb-3">
                 <label for="vc_modified_user" class="form-label">Modified User:</label>
                 <select name="vc_modified_user" class="form-select" required>
                     @foreach ($users as $user)
-                        <option value="{{ $user->code_emp }}" {{ $iso->vc_modified_user == $user->code_emp ? 'selected' : '' }}>
+                        <option value="{{ $user->code_emp }}"
+                            {{ $iso->vc_modified_user == $user->code_emp ? 'selected' : '' }}>
                             {{ $user->username }}
                         </option>
                     @endforeach

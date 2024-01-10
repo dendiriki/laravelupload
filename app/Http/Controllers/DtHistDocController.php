@@ -310,5 +310,56 @@ class DtHistDocController extends Controller
         return redirect()->route('dthistdoc.index')->with('success', 'Data dan file terkait berhasil dihapus.');
     }
 
+    public function detaildelete($id, $type)
+{
+    // Variabel untuk menyimpan nama tabel dan jenis dokumen
+    $tableName = '';
+    $pdfFolder = '';
+
+    // Tentukan tabel dan folder/file PDF berdasarkan jenis dokumen
+    switch ($type) {
+        case 'dtHistDoc':
+            $tableName = DtHistDoc::findOrFail($id);
+            $expectedFiles = 'isi';
+            break;
+
+        case 'dtHistCover':
+            $tableName = DtHistCover::findOrFail($id);
+            $expectedFiles = 'cover';
+            break;
+
+        case 'dtHistLampiran':
+            $tableName = DtHistLampiran::findOrFail($id);
+            $expectedFiles = 'attachment';
+            break;
+
+        case 'dtHistCatMut':
+            $tableName = DtHistCatMut::findOrFail($id);
+            $expectedFiles = 'record';
+            break;
+
+        default:
+            // Tindakan default jika jenis dokumen tidak dikenali
+            return redirect()->route('dthistdoc.index')->with('error', 'Jenis dokumen tidak valid.');
+    }
+
+        $document = Document::where('id', $tableName->doc_id)->value('path');
+        $nodoc = $tableName->nodoc;
+
+        $filePath = "$document/$expectedFiles/$nodoc.pdf";
+
+         // Hapus file jika ada
+         if (Storage::exists($filePath)) {
+           Storage::delete($filePath);
+      }
+
+        $tableName->delete();
+
+    return redirect()->route('dthistdoc.index')->with('success', 'Data dan file terkait berhasil dihapus.');
+}
+
+
+
+
 
 }

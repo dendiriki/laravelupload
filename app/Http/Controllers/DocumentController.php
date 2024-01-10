@@ -98,7 +98,6 @@ class DocumentController extends Controller
         $document->description = $request->input('description');
         $document->doctype_id = $request->input('doctype_id');
         $document->iso_id = $request->input('iso_id');
-        $document->dt_created_date = $request->input('dt_created_date');
         $document->vc_created_user = $request->input('vc_modified_user');
         $document->dt_modified_date = $request->input('dt_modified_date');
         $document->vc_modified_user = $request->input('vc_modified_user');
