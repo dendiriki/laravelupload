@@ -20,7 +20,7 @@
                             <th>Tanggal Berlaku</th>
                             <th>Create</th>
                             <th>revisi</th>
-                            <th>Nomer Document</th>
+                            <th>Id Sebelum</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -32,7 +32,7 @@
                                 <td>{{ $doc->created_at }}</td>
                                 <td>{{ $doc->createdBy->username }}</td>
                                 <td>{{ $doc->revisi }}</td>
-                                <td>{{ $doc->doc_name }}</td>
+                                <td>{{ $doc->id_sebelum }}</td>
                                 <td>
 
                                     <!-- Tombol Delete -->
@@ -65,7 +65,7 @@
                             <th>Tanggal Berlaku</th>
                             <th>Create</th>
                             <th>Revisi</th>
-                            <th>Nomer Document</th>
+                            <th>Id Sebelum</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -77,7 +77,7 @@
                                 <td>{{ $cover->created_at }}</td>
                                 <td>{{ $cover->createdBy->username }}</td>
                                 <td>{{ $cover->revisi }}</td>
-                                <td>{{ $cover->doc_name }}</td>
+                                <td>{{ $cover->id_sebelum }}</td>
                                 <td>
 
                                     <!-- Tombol Delete -->
@@ -110,7 +110,7 @@
                             <th>Tanggal Berlaku</th>
                             <th>Create</th>
                             <th>revisi</th>
-                            <th>Nomer Document</th>
+                            <th>Id Sebelum</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -122,7 +122,7 @@
                                 <td>{{ $lampiran->created_at }}</td>
                                 <td>{{ $lampiran->createdBy->username }}</td>
                                 <td>{{ $lampiran->revisi }}</td>
-                                <td>{{ $lampiran->doc_name }}</td>
+                                <td>{{ $lampiran->id_sebelum }}</td>
                                 <td>
 
                                     <!-- Tombol Delete -->
@@ -155,7 +155,7 @@
                             <th>Tanggal Berlaku</th>
                             <th>Create</th>
                             <th>Revisi</th>
-                            <th>Nomer Document</th>
+                            <th>Id Sebelum</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -167,7 +167,7 @@
                                 <td>{{ $catmut->created_at }}</td>
                                 <td>{{ $catmut->createdBy->username }}</td>
                                 <td>{{ $catmut->revisi }}</td>
-                                <td>{{ $catmut->doc_name }}</td>
+                                <td>{{ $catmut->id_sebelum }}</td>
                                 <td>
 
                                     <!-- Tombol Delete -->

@@ -7,7 +7,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>Id.</th>
+                    <th>No.</th>
                     <th>Description</th>
                     <th>Tanggal Berlaku</th>
                     <th>Create</th>
@@ -18,7 +18,7 @@
             <tbody>
                 @foreach ($dtHistDocs as $key => $dtHistDoc)
                     <tr>
-                        <td>{{ $dtHistDoc->id }}</td>
+                        <td>{{ $loop->iteration }}</td>
                         <td>{{ $dtHistDoc->description }}</td>
                         <td>{{ $dtHistDoc->created_at }}</td>
                         <td>{{ $dtHistDoc->createdBy->username }}</td>
@@ -46,7 +46,7 @@
         function confirmDelete() {
             return confirm(
                 'Apakah Anda yakin menghapus dokumen ini? Ini akan menghapus semua folder yang berkaitan dengan dokumen ini.'
-                );
+            );
         }
     </script>
 @endsection
