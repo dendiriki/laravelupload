@@ -4,13 +4,6 @@
     <div class="container mt-5">
         <h2 class="mb-4">View Document: {{ $document->description }} </h2>
 
-        <div class="d-flex justify-content-between mb-3">
-            <div></div>
-            <a href="{{ route('view.folder.all', ['folder' => $document->id]) }}" class="btn btn-success ml-auto"
-                target="_blank">View All
-                File PDF</a>
-        </div>
-
         <div class="card mb-3">
             <div class="card-header">
                 Cover
@@ -26,7 +19,7 @@
                     <a href="{{ route('view.pdf', ['id' => $cover->id]) }}" class="btn btn-primary" target="_blank">View File
                         PDF Cover</a>
 
-                    {{-- Tambahkan lebih banyak detail sesuai kebutuhan --}}
+                    <hr>
                 @endforeach
             </div>
         </div>
@@ -42,9 +35,11 @@
                     <p>Tanggal Perubahan: {{ $document->created_at }}</p>
                     <p>Create By : {{ $document->createdBy->username }}</p>
                     <p>Revisi : {{ $document->revisi }}</p>
-                    <p>Number Doc : {{ $document->doc_name }}</p>
+                    <p>Number Doc : {{ $cover->doc_name }}</p>
                     <a href="{{ route('view.pdfdoc', ['id' => $document->id]) }}" class="btn btn-primary"
                         target="_blank">View File PDF Cover</a>
+
+                    <hr>
                 @endforeach
             </div>
         </div>
@@ -60,9 +55,11 @@
                     <p>Tanggal Perubahan: {{ $attachment->created_at }}</p>
                     <p>Create By : {{ $attachment->createdBy->username }}</p>
                     <p>Revisi : {{ $attachment->revisi }}</p>
-                    <p>Number Doc : {{ $document->doc_name }}</p>
+                    <p>Number Doc : {{ $cover->doc_name }}</p>
                     <a href="{{ route('view.pdflampiran', ['id' => $attachment->id]) }}" class="btn btn-primary"
                         target="_blank">View File PDF Cover</a>
+
+                    <hr>
                 @endforeach
             </div>
         </div>
@@ -78,9 +75,11 @@
                     <p>Tanggal Perubahan: {{ $record->created_at }}</p>
                     <p>Create By : {{ $record->createdBy->username }}</p>
                     <p>Revisi : {{ $record->revisi }}</p>
-                    <p>Number Doc : {{ $document->doc_name }}</p>
+                    <p>Number Doc : {{ $cover->doc_name }}</p>
                     <a href="{{ route('view.pdfcatmut', ['id' => $record->id]) }}" class="btn btn-primary"
                         target="_blank">View File PDF Cover</a>
+
+                    <hr>
                 @endforeach
             </div>
         </div>

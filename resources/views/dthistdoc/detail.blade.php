@@ -35,7 +35,8 @@
                                 <td>{{ $doc->id_sebelum }}</td>
                                 <td>
 
-                                    <!-- Tombol Delete -->
+                                    <a href="{{ route('view.pdfdoc', ['id' => $doc->id]) }}" class="btn btn-primary"
+                                        target="_blank">View File</a>
                                     <form
                                         action="{{ route('dthistdoc.detaildelete', ['id' => $doc->id, 'type' => 'dtHistDoc']) }}"
                                         method="POST" style="display: inline;">
@@ -80,7 +81,8 @@
                                 <td>{{ $cover->id_sebelum }}</td>
                                 <td>
 
-                                    <!-- Tombol Delete -->
+                                    <a href="{{ route('view.pdf', ['id' => $cover->id]) }}" class="btn btn-primary"
+                                        target="_blank">View File</a>
                                     <form
                                         action="{{ route('dthistdoc.detaildelete', ['id' => $cover->id, 'type' => 'dtHistCover']) }}"
                                         method="POST" style="display: inline;">
@@ -125,7 +127,8 @@
                                 <td>{{ $lampiran->id_sebelum }}</td>
                                 <td>
 
-                                    <!-- Tombol Delete -->
+                                    <a href="{{ route('view.pdflampiran', ['id' => $lampiran->id]) }}"
+                                        class="btn btn-primary" target="_blank">View File</a>
                                     <form
                                         action="{{ route('dthistdoc.detaildelete', ['id' => $lampiran->id, 'type' => 'dtHistLampiran']) }}"
                                         method="POST" style="display: inline;">
@@ -170,7 +173,8 @@
                                 <td>{{ $catmut->id_sebelum }}</td>
                                 <td>
 
-                                    <!-- Tombol Delete -->
+                                    <a href="{{ route('view.pdfcatmut', ['id' => $catmut->id]) }}" class="btn btn-primary"
+                                        target="_blank">View File</a>
                                     <form
                                         action="{{ route('dthistdoc.detaildelete', ['id' => $catmut->id, 'type' => 'dtHistCatMut']) }}"
                                         method="POST" style="display: inline;">

@@ -50,13 +50,3 @@
         }
     </script>
 @endsection
-
-{{--
-<a href="{{ route('dthistdoc.edit', $dtHistDoc->id) }}" class="btn btn-warning">Edit</a>
-
-<!-- Tombol Delete -->
-<form action="{{ route('dthistdoc.destroy', $dtHistDoc->id) }}" method="POST" style="display: inline;">
-    @csrf
-    @method('DELETE')
-    <button type="submit" class="btn btn-danger">Delete</button>
-</form> --}}

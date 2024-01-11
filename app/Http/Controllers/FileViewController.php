@@ -40,46 +40,9 @@ class FileViewController extends Controller
     {
         $document = Document::where('id', $folder)->first();
 
-        // // dd($baru->lastdate);
-        // $doc =  DtHistDoc::where('doc_id', $document->id)->first();
-        // $lam = DtHistLampiran::where('doc_id', $document->id)->first();
-        // $rec = DtHistCatMut::where('doc_id', $document->id)->first();
-
-        // $docs = $doc->created_at;
-        // $lams = $lam->created_at;
-        // $recs = $doc->created_at;
-
-
-        // dd($doc->created_at);
-
-
-
-
-
-        // $hasil = DtHistDoc::with(['document', 'createdBy'])
-        //     ->join(DB::raw('(SELECT doc_id, MAX(lastdate) as max_lastdate FROM histdocbaru GROUP BY doc_id) as b'), function ($join) {
-        //         $join->on('dt_histdoc.doc_id', '=', 'b.doc_id')
-        //             ->on('dt_histdoc.created_at', '=', 'b.max_lastdate');
-        //     })
-        //     ->join('users', 'dt_histdoc.vc_created_user', '=', 'users.code_emp')
-        //     ->where('dt_histdoc.doc_id', 33)
-        //     ->select('dt_histdoc.*')
-        //     ->get();
-
-        // // Mengakses properti "description" dari model "Document" dan "username" dari model "User"
-        // foreach ($hasil as $row) {
-        //     $description = $row->document->description;
-        //     $userName = $row->createdBy->username;
-        //     // Lakukan sesuatu dengan nilai description dan userName
-        //     dd($description, $userName);
-        // }
-
-
-
-
         // $documentFiles = DtHistDoc::where('doc_id', $document->id)->whereDate('created_at',$docs)->last();
         $coverFiles =  DtHistCover::with(['document', 'createdBy'])
-        ->join(DB::raw('(SELECT doc_id, MAX(lastdate) as max_lastdate FROM histdocbaru GROUP BY doc_id) as b'), function ($join) {
+        ->join(DB::raw('(SELECT doc_id, MAX(lastdate) as max_lastdate FROM histcoverbaru GROUP BY doc_id) as b'), function ($join) {
             $join->on('dt_histcover.doc_id', '=', 'b.doc_id')
                 ->on('dt_histcover.created_at', '=', 'b.max_lastdate');
         })
@@ -99,7 +62,7 @@ class FileViewController extends Controller
         ->get();
 
         $attachmentFiles = DtHistLampiran::with(['document', 'createdBy'])
-        ->join(DB::raw('(SELECT doc_id, MAX(lastdate) as max_lastdate FROM histdocbaru GROUP BY doc_id) as b'), function ($join) {
+        ->join(DB::raw('(SELECT doc_id, MAX(lastdate) as max_lastdate FROM histlambaru GROUP BY doc_id) as b'), function ($join) {
             $join->on('dt_histlampiran.doc_id', '=', 'b.doc_id')
                 ->on('dt_histlampiran.created_at', '=', 'b.max_lastdate');
         })
@@ -109,7 +72,7 @@ class FileViewController extends Controller
         ->get();
 
         $recordFiles = DtHistCatMut::with(['document', 'createdBy'])
-        ->join(DB::raw('(SELECT doc_id, MAX(lastdate) as max_lastdate FROM histdocbaru GROUP BY doc_id) as b'), function ($join) {
+        ->join(DB::raw('(SELECT doc_id, MAX(lastdate) as max_lastdate FROM histcatmutbaru GROUP BY doc_id) as b'), function ($join) {
             $join->on('dt_histcatmut.doc_id', '=', 'b.doc_id')
                 ->on('dt_histcatmut.created_at', '=', 'b.max_lastdate');
         })
@@ -125,6 +88,19 @@ class FileViewController extends Controller
 
 
         return view('file-list.view-folder-contents', compact('coverFiles','documentFiles', 'attachmentFiles', 'recordFiles', 'folder','document'));
+    }
+
+    public function viewDocumentall($folder)
+    {
+        $document = Document::where('id', $folder)->first();
+
+        $coverFiles = DtHistCover::where('doc_id', $document->id)->get();
+        $documentFiles = DtHistDoc::where('doc_id', $document->id)->get();
+        $attachmentFiles = DtHistLampiran::where('doc_id', $document->id)->get();
+        $recordFiles = DtHistCatMut::where('doc_id', $document->id)->get();
+
+
+        return view('file-list.view-folder-all', compact('coverFiles','documentFiles', 'attachmentFiles', 'recordFiles', 'folder','document'));
     }
 
     public function viewPdf($id)

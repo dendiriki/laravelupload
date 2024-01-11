@@ -90,6 +90,7 @@ Route::get('/', [DashboardController::class, 'index'])->name('dashboard')->middl
 Route::get('/file-list', [FileListController::class, 'index'])->name('file.list')->middleware('auth');
 Route::get('/view-files/{isoId}', [FileViewController::class, 'viewFiles'])->name('view.files')->middleware('auth');
 Route::get('/view-folder-contents/{folder}', [FileViewController::class, 'viewDocument'])->name('view.folder.contents')->middleware('auth');
+Route::get('/view-folder-all/{folder}', [FileViewController::class, 'viewDocumentall'])->name('view.folder.all')->middleware('auth');
 
 Route::get('/view-pdf/{id}', [FileViewController::class, 'viewPdf'])->name('view.pdf')->middleware('auth');
 Route::get('/view-pdfdoc/{id}', [FileViewController::class, 'viewPdfdoc'])->name('view.pdfdoc')->middleware('auth');

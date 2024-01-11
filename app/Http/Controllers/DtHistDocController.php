@@ -358,8 +358,4 @@ class DtHistDocController extends Controller
     return redirect()->route('dthistdoc.index')->with('success', 'Data dan file terkait berhasil dihapus.');
 }
 
-
-
-
-
 }
