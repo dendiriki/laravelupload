@@ -9,7 +9,7 @@
                 <tr>
                     <th>No.</th>
                     <th>Description</th>
-                    <th>Tanggal Berlaku</th>
+                    <th>Created</th>
                     <th>Create</th>
                     <th>Nomer document</th>
                     <th>Actions</th> <!-- Kolom untuk tombol aksi -->

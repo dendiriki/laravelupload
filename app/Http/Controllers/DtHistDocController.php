@@ -99,6 +99,7 @@ class DtHistDocController extends Controller
                         'link_document' => $pdfFilePath,
                         'nodoc' => $nodoc,
                         'doc_name' => $request->input('doc_name'),
+                        'tgl_berlaku' => $request->input('tgl_berlaku'),
                     ]);
                     break;
                 case 'isi':
@@ -111,6 +112,7 @@ class DtHistDocController extends Controller
                         'link_document' => $pdfFilePath,
                         'nodoc' => $nodoc,
                         'doc_name' => $request->input('doc_name'),
+                        'tgl_berlaku' => $request->input('tgl_berlaku'),
                     ]);
                     break;
                 case 'attachment':
@@ -123,6 +125,7 @@ class DtHistDocController extends Controller
                         'link_document' => $pdfFilePath,
                         'nodoc' => $nodoc,
                         'doc_name' => $request->input('doc_name'),
+                        'tgl_berlaku' => $request->input('tgl_berlaku'),
                     ]);
                     break;
                 case 'record':
@@ -135,6 +138,7 @@ class DtHistDocController extends Controller
                         'link_document' => $pdfFilePath,
                         'nodoc' => $nodoc,
                         'doc_name' => $request->input('doc_name'),
+                        'tgl_berlaku' => $request->input('tgl_berlaku'),
                     ]);
                     break;
                     default:
@@ -225,6 +229,7 @@ class DtHistDocController extends Controller
                             'link_document' => $pdfFilePath,
                             'nodoc' => $nodoc,
                             'doc_name' => $name,
+                            'tgl_berlaku' => $request->input('tgl_berlaku'),
                             // Sisanya seperti sebelumnya
                         ]);
                         break;
@@ -239,6 +244,7 @@ class DtHistDocController extends Controller
                             'link_document' => $pdfFilePath,
                             'nodoc' => $nodoc,
                             'doc_name' => $name,
+                            'tgl_berlaku' => $request->input('tgl_berlaku'),
                             // Sisanya seperti sebelumnya
                         ]);
                         break;
@@ -253,6 +259,7 @@ class DtHistDocController extends Controller
                             'link_document' => $pdfFilePath,
                             'nodoc' => $nodoc,
                             'doc_name' => $name,
+                            'tgl_berlaku' => $request->input('tgl_berlaku'),
                             // Sisanya seperti sebelumnya
                         ]);
                         break;
@@ -267,6 +274,7 @@ class DtHistDocController extends Controller
                             'link_document' => $pdfFilePath,
                             'nodoc' => $nodoc,
                             'doc_name' => $name,
+                            'tgl_berlaku' => $request->input('tgl_berlaku'),
                             // Sisanya seperti sebelumnya
                         ]);
                         break;
@@ -285,9 +293,7 @@ class DtHistDocController extends Controller
         $dtHistDoc = DtHistDoc::findOrFail($id);
 
         // Menghapus entri terkait dari tabel DtHistCover, DtHistLampiran, dan DtHistCatMut
-        DtHistCover::where('doc_id', $dtHistDoc->doc_id)->delete();
-        DtHistLampiran::where('doc_id', $dtHistDoc->doc_id)->delete();
-        DtHistCatMut::where('doc_id', $dtHistDoc->doc_id)->delete();
+
 
         // Menghapus file dan folder terkait
         $document = Document::where('id', $dtHistDoc->doc_id)->value('path');
@@ -300,6 +306,11 @@ class DtHistDocController extends Controller
                 Storage::deleteDirectory($folderPath);
             }
         }
+
+        DtHistCover::where('doc_id', $dtHistDoc->doc_id)->delete();
+        DtHistLampiran::where('doc_id', $dtHistDoc->doc_id)->delete();
+        DtHistCatMut::where('doc_id', $dtHistDoc->doc_id)->delete();
+        DtHistDoc::where('doc_id', $dtHistDoc->doc_id)->delete();
 
         // Mengatur id_sebelum menjadi NULL pada baris yang merujuk ke baris ini
         DtHistDoc::where('id_sebelum', $id)->update(['id_sebelum' => null]);

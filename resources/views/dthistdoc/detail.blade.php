@@ -9,7 +9,7 @@
         <!-- Detail DtHistDoc -->
         <div class="card mb-3">
             <div class="card-header">
-                Detail DtHistDoc
+                Detail Document
             </div>
             <div class="card-body">
                 <table class="table">
@@ -29,7 +29,7 @@
                             <tr>
                                 <td>{{ $doc->id }}</td>
                                 <td>{{ $doc->description }}</td>
-                                <td>{{ $doc->created_at }}</td>
+                                <td>{{ $doc->tgl_berlaku }}</td>
                                 <td>{{ $doc->createdBy->username }}</td>
                                 <td>{{ $doc->revisi }}</td>
                                 <td>{{ $doc->id_sebelum }}</td>
@@ -55,7 +55,7 @@
         <!-- Detail DtHistCover -->
         <div class="card mb-3">
             <div class="card-header">
-                Detail DtHistCover
+                Detail Cover
             </div>
             <div class="card-body">
                 <table class="table">
@@ -75,7 +75,7 @@
                             <tr>
                                 <td>{{ $cover->id }}</td>
                                 <td>{{ $cover->description }}</td>
-                                <td>{{ $cover->created_at }}</td>
+                                <td>{{ $cover->tgl_berlaku }}</td>
                                 <td>{{ $cover->createdBy->username }}</td>
                                 <td>{{ $cover->revisi }}</td>
                                 <td>{{ $cover->id_sebelum }}</td>
@@ -101,7 +101,7 @@
         <!-- Detail DtHistLampiran -->
         <div class="card mb-3">
             <div class="card-header">
-                Detail DtHistLampiran
+                Detail Attachment
             </div>
             <div class="card-body">
                 <table class="table">
@@ -121,7 +121,7 @@
                             <tr>
                                 <td>{{ $lampiran->id }}</td>
                                 <td>{{ $lampiran->description }}</td>
-                                <td>{{ $lampiran->created_at }}</td>
+                                <td>{{ $lampiran->tgl_berlaku }}</td>
                                 <td>{{ $lampiran->createdBy->username }}</td>
                                 <td>{{ $lampiran->revisi }}</td>
                                 <td>{{ $lampiran->id_sebelum }}</td>
@@ -147,7 +147,7 @@
         <!-- Detail DtHistCatMut -->
         <div class="card mb-3">
             <div class="card-header">
-                Detail DtHistCatMut
+                Detail Record
             </div>
             <div class="card-body">
                 <table class="table">
@@ -167,7 +167,7 @@
                             <tr>
                                 <td>{{ $catmut->id }}</td>
                                 <td>{{ $catmut->description }}</td>
-                                <td>{{ $catmut->created_at }}</td>
+                                <td>{{ $catmut->tgl_berlaku }}</td>
                                 <td>{{ $catmut->createdBy->username }}</td>
                                 <td>{{ $catmut->revisi }}</td>
                                 <td>{{ $catmut->id_sebelum }}</td>

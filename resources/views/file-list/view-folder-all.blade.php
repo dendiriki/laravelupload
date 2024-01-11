@@ -12,7 +12,7 @@
                 {{-- Konten untuk Cover --}}
                 @foreach ($coverFiles as $cover)
                     <p>Description: {{ $cover->description }}</p>
-                    <p>Tanggal Perubahan: {{ $cover->created_at }}</p>
+                    <p>Tanggal Berlaku: {{ $cover->tgl_berlaku }}</p>
                     <p>Create By : {{ $cover->createdBy->username }}</p>
                     <p>Revisi : {{ $cover->revisi }}</p>
                     <p>Number Doc : {{ $cover->doc_name }}</p>
@@ -32,7 +32,7 @@
                 {{-- Konten untuk Document --}}
                 @foreach ($documentFiles as $document)
                     <p>Description: {{ $document->description }}</p>
-                    <p>Tanggal Perubahan: {{ $document->created_at }}</p>
+                    <p>Tanggal Berlaku: {{ $document->tgl_berlaku }}</p>
                     <p>Create By : {{ $document->createdBy->username }}</p>
                     <p>Revisi : {{ $document->revisi }}</p>
                     <p>Number Doc : {{ $cover->doc_name }}</p>
@@ -52,7 +52,7 @@
                 {{-- Konten untuk Attachment --}}
                 @foreach ($attachmentFiles as $attachment)
                     <p>Description: {{ $attachment->description }}</p>
-                    <p>Tanggal Perubahan: {{ $attachment->created_at }}</p>
+                    <p>Tanggal Berlaku: {{ $attachment->tgl_berlaku }}</p>
                     <p>Create By : {{ $attachment->createdBy->username }}</p>
                     <p>Revisi : {{ $attachment->revisi }}</p>
                     <p>Number Doc : {{ $cover->doc_name }}</p>
@@ -72,7 +72,7 @@
                 {{-- Konten untuk Record --}}
                 @foreach ($recordFiles as $record)
                     <p>Description: {{ $record->description }}</p>
-                    <p>Tanggal Perubahan: {{ $record->created_at }}</p>
+                    <p>Tanggal Berlaku: {{ $record->tgl_berlaku }}</p>
                     <p>Create By : {{ $record->createdBy->username }}</p>
                     <p>Revisi : {{ $record->revisi }}</p>
                     <p>Number Doc : {{ $cover->doc_name }}</p>

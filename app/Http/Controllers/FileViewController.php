@@ -40,11 +40,11 @@ class FileViewController extends Controller
     {
         $document = Document::where('id', $folder)->first();
 
-        // $documentFiles = DtHistDoc::where('doc_id', $document->id)->whereDate('created_at',$docs)->last();
+        // $documentFiles = DtHistDoc::where('doc_id', $document->id)->whereDate('tgl_berlaku',$docs)->last();
         $coverFiles =  DtHistCover::with(['document', 'createdBy'])
-        ->join(DB::raw('(SELECT doc_id, MAX(lastdate) as max_lastdate FROM histcoverbaru GROUP BY doc_id) as b'), function ($join) {
+        ->join(DB::raw('(SELECT doc_id, MAX(lastdate) as max_lastdate FROM histcoverlast GROUP BY doc_id) as b'), function ($join) {
             $join->on('dt_histcover.doc_id', '=', 'b.doc_id')
-                ->on('dt_histcover.created_at', '=', 'b.max_lastdate');
+                ->on('dt_histcover.tgl_berlaku', '=', 'b.max_lastdate');
         })
         ->join('users', 'dt_histcover.vc_created_user', '=', 'users.code_emp')
         ->where('dt_histcover.doc_id', $document->id)
@@ -52,9 +52,9 @@ class FileViewController extends Controller
         ->get();
 
         $documentFiles =  DtHistDoc::with(['document', 'createdBy'])
-        ->join(DB::raw('(SELECT doc_id, MAX(lastdate) as max_lastdate FROM histdocbaru GROUP BY doc_id) as b'), function ($join) {
+        ->join(DB::raw('(SELECT doc_id, MAX(lastdate) as max_lastdate FROM histdoclast GROUP BY doc_id) as b'), function ($join) {
             $join->on('dt_histdoc.doc_id', '=', 'b.doc_id')
-                ->on('dt_histdoc.created_at', '=', 'b.max_lastdate');
+                ->on('dt_histdoc.tgl_berlaku', '=', 'b.max_lastdate');
         })
         ->join('users', 'dt_histdoc.vc_created_user', '=', 'users.code_emp')
         ->where('dt_histdoc.doc_id', $document->id)
@@ -62,9 +62,9 @@ class FileViewController extends Controller
         ->get();
 
         $attachmentFiles = DtHistLampiran::with(['document', 'createdBy'])
-        ->join(DB::raw('(SELECT doc_id, MAX(lastdate) as max_lastdate FROM histlambaru GROUP BY doc_id) as b'), function ($join) {
+        ->join(DB::raw('(SELECT doc_id, MAX(lastdate) as max_lastdate FROM histlamlast GROUP BY doc_id) as b'), function ($join) {
             $join->on('dt_histlampiran.doc_id', '=', 'b.doc_id')
-                ->on('dt_histlampiran.created_at', '=', 'b.max_lastdate');
+                ->on('dt_histlampiran.tgl_berlaku', '=', 'b.max_lastdate');
         })
         ->join('users', 'dt_histlampiran.vc_created_user', '=', 'users.code_emp')
         ->where('dt_histlampiran.doc_id', $document->id)
@@ -72,9 +72,9 @@ class FileViewController extends Controller
         ->get();
 
         $recordFiles = DtHistCatMut::with(['document', 'createdBy'])
-        ->join(DB::raw('(SELECT doc_id, MAX(lastdate) as max_lastdate FROM histcatmutbaru GROUP BY doc_id) as b'), function ($join) {
+        ->join(DB::raw('(SELECT doc_id, MAX(lastdate) as max_lastdate FROM histcatmutlast GROUP BY doc_id) as b'), function ($join) {
             $join->on('dt_histcatmut.doc_id', '=', 'b.doc_id')
-                ->on('dt_histcatmut.created_at', '=', 'b.max_lastdate');
+                ->on('dt_histcatmut.tgl_berlaku', '=', 'b.max_lastdate');
         })
         ->join('users', 'dt_histcatmut.vc_created_user', '=', 'users.code_emp')
         ->where('dt_histcatmut.doc_id', $document->id)

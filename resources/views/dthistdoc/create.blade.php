@@ -46,6 +46,11 @@
             </div>
 
             <div class="mb-3">
+                <label for="tgl_berlaku" class="form-label">Tanggal Berlaku</label>
+                <input type="date" name="tgl_berlaku" class="form-control" id="tgl_berlaku">
+            </div>
+
+            <div class="mb-3">
                 <label for="coverFile" class="form-label">Select Cover PDF:</label>
                 <input type="file" name="coverFile" class="form-control" accept=".pdf">
             </div>
@@ -56,7 +61,7 @@
             </div>
 
             <div class="mb-3">
-                <label for="isiFile" class="form-label">Select Isi PDF:</label>
+                <label for="isiFile" class="form-label">Select Doc PDF:</label>
                 <input type="file" name="isiFile" class="form-control" accept=".pdf" required>
             </div>
 
