@@ -28,7 +28,7 @@ class FileViewController extends Controller
 
         $documents = Document::whereHas('docDept', function ($query) use ($user) {
             $query->where('dep_id', $user->dep_id);
-        })->where('iso_id', $isoId)->get();
+        })->where('iso_id', $isoId)->orderBy('dt_created_date', 'desc')->filter()->paginate(6);
 
         return view('file-list.view-files', compact('documents', 'iso'));
     }

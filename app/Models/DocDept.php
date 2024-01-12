@@ -10,6 +10,16 @@ class DocDept extends Model
     protected $fillable = ['doc_id', 'dep_id'];
     public $timestamps = false; // Menonaktifkan fitur timestamps
 
+    public function scopeFilter($query)
+{
+    if (request('search')) {
+        return $query->whereHas('document', function ($subquery) {
+            $subquery->where('description', 'like', '%' . request('search') . '%');
+        });
+    }
+}
+
+
     public function document()
     {
         return $this->belongsTo(Document::class, 'doc_id');

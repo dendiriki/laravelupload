@@ -11,7 +11,7 @@ class DocDeptController extends Controller
 {
     public function index()
     {
-        $docDepts = DocDept::with(['document', 'dep'])->orderBy('id', 'desc')->paginate(6);
+        $docDepts = DocDept::with(['document', 'dep'])->orderBy('id', 'desc')->filter()->paginate(6); // Urutkan berdasarkan dt_created_date secara descending
         return view('docdept.index', compact('docDepts'));
     }
 
