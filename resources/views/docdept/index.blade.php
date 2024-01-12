@@ -31,4 +31,5 @@
             </tbody>
         </table>
     </div>
+    {{ $docDepts->links() }}
 @endsection

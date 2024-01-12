@@ -3,6 +3,19 @@
 @section('content')
     <div class="container mt-5">
         <h2>Documents</h2>
+
+        <div class="row">
+            <div class="col-md-6" style="margin-left: auto;">
+                <form action="/documents">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Search Documents..." name="search"
+                            value="{{ request('search') }}">
+                        <button class="btn btn-primary" type="submit">Search</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <a href="{{ route('documents.create') }}" class="btn btn-primary mb-3">Create New Document</a>
 
         @if (session('success'))
@@ -35,7 +48,8 @@
                         <td>{{ $document->dt_modified_date }}</td>
                         <td>{{ $document->createdBy->username }}</td>
                         <td>
-                            <a href="{{ route('documents.edit', ['id' => $document->id]) }}" class="btn btn-primary">Edit</a>
+                            <a href="{{ route('documents.edit', ['id' => $document->id]) }}"
+                                class="btn btn-primary">Edit</a>
                             <form action="{{ route('documents.destroy', ['id' => $document->id]) }}" method="POST"
                                 style="display: inline;">
                                 @csrf
@@ -48,4 +62,5 @@
             </tbody>
         </table>
     </div>
+    {{ $documents->links() }}
 @endsection

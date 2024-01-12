@@ -18,7 +18,7 @@ class DtHistDocController extends Controller
 {
     public function index()
     {
-        $dtHistDocs = DtHistDoc::where('id_sebelum', null)->get();
+        $dtHistDocs = DtHistDoc::where('id_sebelum', null)->latest()->filter()->paginate(6);
 
         return view('dthistdoc.index', compact('dtHistDocs'));
     }

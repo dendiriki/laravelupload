@@ -14,7 +14,10 @@ class DocumentController extends Controller
 {
     public function index()
     {
-        $documents = Document::with(['type', 'iso', 'createdBy', 'company'])->get();
+        $documents = Document::with(['type', 'iso', 'createdBy', 'company'])
+            ->orderBy('dt_created_date', 'desc')->filter() // Urutkan berdasarkan dt_created_date secara descending
+            ->paginate(6);
+
         return view('documents.index', compact('documents'));
     }
 

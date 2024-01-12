@@ -11,7 +11,7 @@ class DocDeptController extends Controller
 {
     public function index()
     {
-        $docDepts = DocDept::with(['document', 'dep'])->get();
+        $docDepts = DocDept::with(['document', 'dep'])->orderBy('id', 'desc')->paginate(6);
         return view('docdept.index', compact('docDepts'));
     }
 

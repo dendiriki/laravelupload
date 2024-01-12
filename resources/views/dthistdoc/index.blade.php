@@ -3,6 +3,19 @@
 @section('content')
     <div class="container">
         <h2>Data DtHistDoc</h2>
+
+        <div class="row">
+            <div class="col-md-6" style="margin-left: auto;">
+                <form action="/dthistdoc">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Search Documents..." name="search"
+                            value="{{ request('search') }}">
+                        <button class="btn btn-primary" type="submit">Search</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <a href="{{ route('dthistdoc.create') }}" class="btn btn-primary">Tambah Data</a>
         <table class="table">
             <thead>
@@ -18,7 +31,7 @@
             <tbody>
                 @foreach ($dtHistDocs as $key => $dtHistDoc)
                     <tr>
-                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $loop->iteration + ($dtHistDocs->currentPage() - 1) * $dtHistDocs->perPage() }}</td>
                         <td>{{ $dtHistDoc->description }}</td>
                         <td>{{ $dtHistDoc->created_at }}</td>
                         <td>{{ $dtHistDoc->createdBy->username }}</td>
@@ -41,6 +54,7 @@
             </tbody>
         </table>
     </div>
+    {{ $dtHistDocs->appends(request()->input())->links() }}
 
     <script>
         function confirmDelete() {
