@@ -36,53 +36,53 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
-Route::get('/isos', [ISOController::class, 'index'])->name('isos.index')->middleware('auth');
-Route::get('/isos/create', [ISOController::class, 'create'])->name('isos.create')->middleware('auth');
-Route::post('/isos/store', [ISOController::class, 'store'])->name('isos.store')->middleware('auth');
-Route::get('/isos/edit/{id}', [ISOController::class, 'edit'])->name('isos.edit')->middleware('auth');
-Route::put('/isos/update/{id}', [ISOController::class, 'update'])->name('isos.update')->middleware('auth');
-Route::delete('/isos/destroy/{id}', [ISOController::class, 'destroy'])->name('isos.destroy')->middleware('auth');
+Route::get('/isos', [ISOController::class, 'index'])->name('isos.index')->middleware('admin');
+Route::get('/isos/create', [ISOController::class, 'create'])->name('isos.create')->middleware('admin');
+Route::post('/isos/store', [ISOController::class, 'store'])->name('isos.store')->middleware('admin');
+Route::get('/isos/edit/{id}', [ISOController::class, 'edit'])->name('isos.edit')->middleware('admin');
+Route::put('/isos/update/{id}', [ISOController::class, 'update'])->name('isos.update')->middleware('admin');
+Route::delete('/isos/destroy/{id}', [ISOController::class, 'destroy'])->name('isos.destroy')->middleware('admin');
 
 
-Route::get('/types', [TypeController::class, 'index'])->name('types.index')->middleware('auth');
-Route::get('/types/create', [TypeController::class, 'create'])->name('types.create')->middleware('auth');
-Route::post('/types', [TypeController::class, 'store'])->name('types.store')->middleware('auth');
-Route::get('/types/edit/{id}', [TypeController::class, 'edit'])->name('types.edit')->middleware('auth');
-Route::put('/types/update/{id}', [TypeController::class, 'update'])->name('types.update')->middleware('auth');
-Route::delete('/types/destroy/{id}', [TypeController::class, 'destroy'])->name('types.destroy')->middleware('auth');
+Route::get('/types', [TypeController::class, 'index'])->name('types.index')->middleware('admin');
+Route::get('/types/create', [TypeController::class, 'create'])->name('types.create')->middleware('admin');
+Route::post('/types', [TypeController::class, 'store'])->name('types.store')->middleware('admin');
+Route::get('/types/edit/{id}', [TypeController::class, 'edit'])->name('types.edit')->middleware('admin');
+Route::put('/types/update/{id}', [TypeController::class, 'update'])->name('types.update')->middleware('admin');
+Route::delete('/types/destroy/{id}', [TypeController::class, 'destroy'])->name('types.destroy')->middleware('admin');
 
 
 
-Route::get('/documents', [DocumentController::class, 'index'])->name('documents.index')->middleware('auth');
-Route::get('/documents/create', [DocumentController::class, 'create'])->name('documents.create')->middleware('auth');
-Route::post('/documents', [DocumentController::class, 'store'])->name('documents.store')->middleware('auth');
-Route::get('/documents/edit/{id}', [DocumentController::class, 'edit'])->name('documents.edit')->middleware('auth');
-Route::put('/documents/update/{id}', [DocumentController::class, 'update'])->name('documents.update')->middleware('auth');
-Route::delete('/documents/destroy/{id}', [DocumentController::class, 'destroy'])->name('documents.destroy')->middleware('auth');
+Route::get('/documents', [DocumentController::class, 'index'])->name('documents.index')->middleware('admin');
+Route::get('/documents/create', [DocumentController::class, 'create'])->name('documents.create')->middleware('admin');
+Route::post('/documents', [DocumentController::class, 'store'])->name('documents.store')->middleware('admin');
+Route::get('/documents/edit/{id}', [DocumentController::class, 'edit'])->name('documents.edit')->middleware('admin');
+Route::put('/documents/update/{id}', [DocumentController::class, 'update'])->name('documents.update')->middleware('admin');
+Route::delete('/documents/destroy/{id}', [DocumentController::class, 'destroy'])->name('documents.destroy')->middleware('admin');
 
 
-Route::get('dthistdoc', [DtHistDocController::class, 'index'])->name('dthistdoc.index')->middleware('auth');
-Route::get('dthistdoc/create', [DtHistDocController::class, 'create'])->name('dthistdoc.create')->middleware('auth');
-Route::post('dthistdoc/store', [DtHistDocController::class, 'store'])->name('dthistdoc.store')->middleware('auth');
-Route::get ('dthistdoc/detail{id}', [DtHistDocController::class, 'detail'])->name('dthistdoc.detail')->middleware('auth');
-Route::get('dthistdoc/edit/{id}', [DtHistDocController::class, 'edit'])->name('dthistdoc.edit')->middleware('auth');
-Route::post('dthistdoc/update/{id}', [DtHistDocController::class, 'update'])->name('dthistdoc.update')->middleware('auth');
-Route::delete('dthistdoc/destroy/{id}', [DtHistDocController::class, 'destroy'])->name('dthistdoc.destroy')->middleware('auth');
+Route::get('dthistdoc', [DtHistDocController::class, 'index'])->name('dthistdoc.index')->middleware('admin');
+Route::get('dthistdoc/create', [DtHistDocController::class, 'create'])->name('dthistdoc.create')->middleware('admin');
+Route::post('dthistdoc/store', [DtHistDocController::class, 'store'])->name('dthistdoc.store')->middleware('admin');
+Route::get ('dthistdoc/detail{id}', [DtHistDocController::class, 'detail'])->name('dthistdoc.detail')->middleware('admin');
+Route::get('dthistdoc/edit/{id}', [DtHistDocController::class, 'edit'])->name('dthistdoc.edit')->middleware('admin');
+Route::post('dthistdoc/update/{id}', [DtHistDocController::class, 'update'])->name('dthistdoc.update')->middleware('admin');
+Route::delete('dthistdoc/destroy/{id}', [DtHistDocController::class, 'destroy'])->name('dthistdoc.destroy')->middleware('admin');
 
 Route::delete('/detaildelete/{id}/{type}', [DtHistDocController::class, 'detaildelete'])->name('dthistdoc.detaildelete');
 
-Route::get('docdept',[DocDeptController::class, 'index'])->name('docdept.index')->middleware('auth');
-Route::get('docdept/create',[DocDeptController::class, 'create'])->name('docdept.create')->middleware('auth');
-Route::post('docdept/store',[DocDeptController::class, 'store'])->name('docdept.store')->middleware('auth');
-Route::delete('/docdept/destroy/{id}', [DocDeptController::class, 'destroy'])->name('docdept.destroy')->middleware('auth');
+Route::get('docdept',[DocDeptController::class, 'index'])->name('docdept.index')->middleware('admin');
+Route::get('docdept/create',[DocDeptController::class, 'create'])->name('docdept.create')->middleware('admin');
+Route::post('docdept/store',[DocDeptController::class, 'store'])->name('docdept.store')->middleware('admin');
+Route::delete('/docdept/destroy/{id}', [DocDeptController::class, 'destroy'])->name('docdept.destroy')->middleware('admin');
 
 
-Route::get('dep', [DepController::class, 'index'])->name('dep.index')->middleware('auth');
-Route::get('dep/create', [DepController::class, 'create'])->name('dep.create')->middleware('auth');
-Route::post('dep/store', [DepController::class, 'store'])->name('dep.store')->middleware('auth');
-Route::get('dep/edit/{id}', [DepController::class, 'edit'])->name('dep.edit')->middleware('auth');
-Route::put('dep/update/{id}', [DepController::class, 'update'])->name('dep.update')->middleware('auth');
-Route::delete('dep/destroy/{id}', [DepController::class, 'destroy'])->name('dep.destroy')->middleware('auth');
+Route::get('dep', [DepController::class, 'index'])->name('dep.index')->middleware('admin');
+Route::get('dep/create', [DepController::class, 'create'])->name('dep.create')->middleware('admin');
+Route::post('dep/store', [DepController::class, 'store'])->name('dep.store')->middleware('admin');
+Route::get('dep/edit/{id}', [DepController::class, 'edit'])->name('dep.edit')->middleware('admin');
+Route::put('dep/update/{id}', [DepController::class, 'update'])->name('dep.update')->middleware('admin');
+Route::delete('dep/destroy/{id}', [DepController::class, 'destroy'])->name('dep.destroy')->middleware('admin');
 
 
 //view
