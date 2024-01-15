@@ -10,12 +10,14 @@ class Document extends Model
     protected $guarded = [];
     public $timestamps = false; // Menonaktifkan fitur timestamps
 
-    public function scopeFilter($query){
-
-        if(request('search')){
-            return $query->where('description','like', '%' . request('search') . '%');
-        }
-
+    public function scopeFilter($query)
+    {
+        return $query->when(request('search'), function ($query) {
+            $query->where('description', 'like', '%' . request('search') . '%');
+        })
+        ->when(request('type'), function ($query) {
+            $query->where('doctype_id', request('type'));
+        });
     }
 
 

@@ -50,8 +50,10 @@
                         <td>
                             <a href="{{ route('documents.edit', ['id' => $document->id]) }}"
                                 class="btn btn-primary">Edit</a>
+
+                            <!-- Tombol Delete -->
                             <form action="{{ route('documents.destroy', ['id' => $document->id]) }}" method="POST"
-                                style="display: inline;">
+                                style="display: inline;" onsubmit="return confirmDelete()">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger">Delete</button>
@@ -63,4 +65,10 @@
         </table>
     </div>
     {{ $documents->links() }}
+
+    <script>
+        function confirmDelete() {
+            return confirm('Apakah Anda yakin menghapus dokumen ini?. sebelum menghapus dokumen ini pastikan tidak ada isi dokumen yang berkaitan data yang anda hapus ini');
+        }
+    </script>
 @endsection

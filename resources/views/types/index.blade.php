@@ -18,7 +18,9 @@
 
                     <div class="d-flex justify-content-end mt-2">
                         <a href="{{ route('types.edit', $type->id) }}" class="btn btn-warning mr-2">Edit</a>
-                        <form action="{{ route('types.destroy', $type->id) }}" method="POST">
+
+                        <!-- Tombol Delete -->
+                        <form action="{{ route('types.destroy', $type->id) }}" method="POST" onsubmit="return confirmDelete()">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger">Delete</button>
@@ -30,4 +32,10 @@
             @endforeach
         </ul>
     </div>
+
+    <script>
+        function confirmDelete() {
+            return confirm('Apakah Anda yakin menghapus tipe ini, sebelum menghapus data ini pastikan tidak ada document yang berkaitan degan type ini karena akan membuat data menjadi error nantinya?');
+        }
+    </script>
 @endsection

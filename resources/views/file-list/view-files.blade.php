@@ -10,6 +10,14 @@
                     <div class="input-group mb-3">
                         <input type="text" class="form-control" placeholder="Search Documents..." name="search"
                             value="{{ request('search') }}">
+                        <select class="form-select" name="type">
+                            <option value="" selected>All Type</option>
+                            @foreach ($types as $type)
+                                <option value="{{ $type->id }}" {{ request('type') == $type->id ? 'selected' : '' }}>
+                                    {{ $type->short }}
+                                </option>
+                            @endforeach
+                        </select>
                         <button class="btn btn-primary" type="submit">Search</button>
                     </div>
                 </form>
@@ -34,7 +42,6 @@
                             <td>{{$document->type->short}}</td>
                             <td>
                                 <a href="{{ route('view.folder.contents', ['folder' => $document->id]) }}" class="btn btn-primary">View Folder Contents</a>
-
                             </td>
                         </tr>
                     @endforeach
@@ -44,8 +51,5 @@
         @else
             <p>No documents found for this ISO.</p>
         @endif
-
-
-
     </div>
 @endsection

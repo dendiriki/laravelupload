@@ -14,12 +14,14 @@
                     <p class="mb-1">Modified By: {{ $iso->modifiedBy->username }}</p>
                     <p class="mb-1">Company: {{ $iso->company->short }}</p>
                     <p class="mb-1">Path: {{ $iso->path }}</p>
-                    <p class="mb-1">Created At: {{ $iso->dt_created_date}}</p>
-                    <p class="mb-1">Updated At: {{ $iso->dt_modified_date}}</p>
+                    <p class="mb-1">Created At: {{ $iso->dt_created_date }}</p>
+                    <p class="mb-1">Updated At: {{ $iso->dt_modified_date }}</p>
 
                     <div class="d-flex justify-content-end mt-2">
                         <a href="{{ route('isos.edit', $iso->id) }}" class="btn btn-warning mr-2">Edit</a>
-                        <form action="{{ route('isos.destroy', $iso->id) }}" method="POST">
+
+                        <!-- Tombol Delete -->
+                        <form action="{{ route('isos.destroy', $iso->id) }}" method="POST" onsubmit="return confirmDelete()">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger">Delete</button>
@@ -31,4 +33,10 @@
             @endforeach
         </ul>
     </div>
+
+    <script>
+        function confirmDelete() {
+            return confirm('Apakah Anda yakin menghapus ISO ini ?. sebelum menghapus data ini pastikan tidak ada document atau docdep yang berkaitan dengan iso ini karena akan menyebabkan error nantinya');
+        }
+    </script>
 @endsection

@@ -22,7 +22,7 @@
                         <td>
                             <!-- Tambahkan tombol untuk mengedit dan menghapus data -->
                             <a href="{{ route('dep.edit', $dep->id) }}" class="btn btn-primary">Edit</a>
-                            <form action="{{ route('dep.destroy', $dep->id) }}" method="POST" style="display: inline">
+                            <form action="{{ route('dep.destroy', $dep->id) }}" method="POST" style="display: inline" onsubmit="return confirmDelete()">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger">Delete</button>
@@ -33,4 +33,10 @@
             </tbody>
         </table>
     </div>
+
+    <script>
+        function confirmDelete() {
+            return confirm('Apakah anda yakin untuk menghapus departement ini ?. sebelum menghapus data ini tolong pastikan tidak ada tabel docdep yang berkaitan dengan depertemnet ini');
+        }
+    </script>
 @endsection

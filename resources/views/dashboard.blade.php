@@ -6,7 +6,7 @@
 
 @section('content')
     <div class="mt-4">
-        <h2>Welcome to the Dashboard!</h2>
+        <h2>Welcome to the Dashboard Mr. {{ Auth::user()->username }}</h2>
         <p>This is your dashboard content.</p>
         <!-- Tambahkan elemen HTML atau komponen lain sesuai kebutuhan -->
     </div>

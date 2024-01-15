@@ -13,7 +13,9 @@ use App\Models\DtHistCover;
 use App\Models\DtHistLampiran;
 use App\Models\DtHistCatMut;
 use App\Models\Histdocbaru;
+use App\Models\Type;
 use Illuminate\Support\Facades\DB;
+
 
 class FileViewController extends Controller
 {
@@ -24,13 +26,18 @@ class FileViewController extends Controller
             return redirect()->route('file.list');
         }
 
-        $user = Auth::user(); // Mengambil informasi pengguna saat ini
+        $user = Auth::user();
+        $types = Type::all();
 
         $documents = Document::whereHas('docDept', function ($query) use ($user) {
             $query->where('dep_id', $user->dep_id);
-        })->where('iso_id', $isoId)->orderBy('dt_created_date', 'desc')->filter()->paginate(6);
+        })
+        ->where('iso_id', $isoId)
+        ->filter() // Menggunakan method filter() untuk memasukkan kriteria pencarian
+        ->orderBy('dt_created_date', 'desc')
+        ->paginate(6);
 
-        return view('file-list.view-files', compact('documents', 'iso'));
+        return view('file-list.view-files', compact('documents', 'iso', 'types'));
     }
 
 
