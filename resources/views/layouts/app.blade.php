@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Your App Title')</title>
     <!-- Tambahkan link Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
     <!-- Tambahkan CSS kustom atau gayakan sesuai kebutuhan -->
     <style>
         /* Your custom styles go here */
@@ -95,7 +95,7 @@
     </div>
 
     <!-- Tambahkan script Bootstrap JS (Opsional) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
     <!-- Tambahkan script JavaScript kustom atau sesuai kebutuhan -->
     <script>
         // Your custom scripts go here

@@ -13,10 +13,10 @@
         </object>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.207/pdf.min.js"></script>
+
 
    <!-- Tambahkan script Bootstrap JS (Opsional) -->
-   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+
    <script>
      window.addEventListener('keydown', function (event) {
         if ((event.ctrlKey || event.metaKey) && event.keyCode === 80 && !event.altKey && (!event.shiftKey || window.chrome || window.opera)) {

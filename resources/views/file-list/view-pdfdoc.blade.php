@@ -15,10 +15,8 @@
 
     <div class="print-message" style="display: none;">You are not authorized to print this document</div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.207/pdf.min.js"></script>
-
    <!-- Tambahkan script Bootstrap JS (Opsional) -->
-   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+
    <script>
   // Mendeteksi peristiwa tombol pintasan cetak (Ctrl + P di Windows/Linux, Command + P di Mac)
   window.addEventListener('keydown', function (event) {
