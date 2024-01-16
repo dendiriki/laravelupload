@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Type;
 use App\Models\User;
 use App\Models\Company;
+use Illuminate\Support\Facades\Auth; // Pastikan ini diimpor
 
 class TypeController extends Controller
 {
@@ -25,18 +26,16 @@ class TypeController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            // Tambahkan validasi yang diperlukan
-        ]);
+        $user = Auth::user();
 
         Type::create([
             'description' => $request->description,
             'short' => $request->short,
             'dt_created_date' => now(),
-            'vc_created_user' => $request->vc_created_user,
+            'vc_created_user' => $user->code_emp, // Menggunakan username dari user yang login
             'dt_modified_date' => now(),
-            'vc_modified_user' => $request->vc_created_user,
-            'comp_id' => $request->comp_id,
+            'vc_modified_user' => $user->code_emp, // Menggunakan username dari user yang login
+            'comp_id' => $user->comp_id, // Menggunakan comp_id dari user yang login
         ]);
 
         return redirect()->route('types.index')->with('success', 'Type created successfully!');
@@ -54,13 +53,16 @@ class TypeController extends Controller
     // Tambahkan fungsi update
     public function update(Request $request, $id)
     {
+
+        $user = Auth::user();
         $type = Type::find($id);
+
         $type->update([
             'description' => $request->description,
             'short' => $request->short,
             'dt_modified_date' => now(),
-            'vc_modified_user' => $request->vc_created_user,
-            'comp_id' => $request->comp_id,
+            'vc_modified_user' => $user->code_emp, // Menggunakan username dari user yang login
+            'comp_id' => $user->comp_id, // Menggunakan comp_id dari user yang login
         ]);
 
         return redirect()->route('types.index')->with('success', 'Type updated successfully!');

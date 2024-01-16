@@ -33,22 +33,6 @@
                 <label for="dt_modified_date" class="form-label">Date</label>
                 <input type="date" name="dt_modified_date" class="form-control" id="dt_modified_date">
             </div>
-            <div class="mb-3">
-                <label for="vc_created_user" class="form-label">User Create</label>
-                <select id="vc_created_user" name="vc_created_user" class="form-select">
-                    @foreach ($users as $user)
-                        <option value="{{ $user->code_emp }}">{{ $user->username }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="comp_id" class="form-label">Company</label>
-                <select id="comp_id" name="comp_id" class="form-select">
-                    @foreach ($companies as $company)
-                        <option value="{{ $company->id }}">{{ $company->short }}</option>
-                    @endforeach
-                </select>
-            </div>
             <button type="submit" class="btn btn-primary" name="submit">Create</button>
         </form>
     </div>
