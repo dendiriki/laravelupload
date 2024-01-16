@@ -24,6 +24,7 @@ use App\Http\Controllers\DtHistDocController;
 use App\Http\Controllers\DocDeptController;
 use App\Http\Controllers\DocTypeController;
 use App\Http\Controllers\DepController;
+use App\Http\Controllers\CompanyController;
 
 
 
@@ -83,6 +84,13 @@ Route::post('dep/store', [DepController::class, 'store'])->name('dep.store')->mi
 Route::get('dep/edit/{id}', [DepController::class, 'edit'])->name('dep.edit')->middleware('admin');
 Route::put('dep/update/{id}', [DepController::class, 'update'])->name('dep.update')->middleware('admin');
 Route::delete('dep/destroy/{id}', [DepController::class, 'destroy'])->name('dep.destroy')->middleware('admin');
+
+Route::get('/companies', [CompanyController::class, 'index'])->name('company.index')->middleware('admin');
+Route::get('/companies/create', [CompanyController::class, 'create'])->name('company.create')->middleware('admin');
+Route::post('/companies/store', [CompanyController::class, 'store'])->name('company.store')->middleware('admin');
+Route::get('/companies/edit/{id}', [CompanyController::class, 'edit'])->name('company.edit')->middleware('admin');
+Route::put('/companies/update/{id}', [CompanyController::class, 'update'])->name('company.update')->middleware('admin');
+Route::delete('/companies/destroy/{id}', [CompanyController::class, 'destroy'])->name('company.destroy')->middleware('admin');
 
 
 //view
