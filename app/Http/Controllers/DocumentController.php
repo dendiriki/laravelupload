@@ -138,4 +138,15 @@ class DocumentController extends Controller
         return redirect()->route('documents.index')->with('success', 'Document deleted successfully!');
     }
 
+    public function fetchDataForApi()
+    {
+        $documents = Document::all();
+
+
+            return response()->json($documents)
+        ->header('Access-Control-Allow-Origin', '*')
+        ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+
+    }
+
 }

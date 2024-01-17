@@ -60,6 +60,8 @@ Route::post('/documents', [DocumentController::class, 'store'])->name('documents
 Route::get('/documents/edit/{id}', [DocumentController::class, 'edit'])->name('documents.edit')->middleware('admin');
 Route::put('/documents/update/{id}', [DocumentController::class, 'update'])->name('documents.update')->middleware('admin');
 Route::delete('/documents/destroy/{id}', [DocumentController::class, 'destroy'])->name('documents.destroy')->middleware('admin');
+Route::get('/api/fetch-data', [DocumentController::class, 'fetchDataForApi']);
+
 
 
 Route::get('dthistdoc', [DtHistDocController::class, 'index'])->name('dthistdoc.index')->middleware('admin');
