@@ -13,6 +13,7 @@ use App\Models\DtHistLampiran;
 use App\Models\DtHistCatMut;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth; // Pastikan ini diimpor
 
 class DtHistDocController extends Controller
 {
@@ -44,6 +45,7 @@ class DtHistDocController extends Controller
 
     public function store(Request $request)
     {
+        $user = Auth::user();
         // Validasi request
         $request->validate([
             'description' => 'required',
@@ -93,8 +95,8 @@ class DtHistDocController extends Controller
                     DtHistCover::create([
                         'description' => $request->input('description'),
                         'doc_id' => $request->input('doc_id'),
-                        'vc_created_user' => $request->input('vc_created_user'),
-                        'comp_id' => $request->input('comp_id'),
+                        'vc_created_user' => $user->code_emp,
+                        'comp_id' => $user->comp_id,
                         'revisi' => $request->input('revisi_cover'),
                         'link_document' => $pdfFilePath,
                         'nodoc' => $nodoc,
@@ -106,8 +108,8 @@ class DtHistDocController extends Controller
                     DtHistDoc::create([
                         'description' => $request->input('description'),
                         'doc_id' => $request->input('doc_id'),
-                        'vc_created_user' => $request->input('vc_created_user'),
-                        'comp_id' => $request->input('comp_id'),
+                        'vc_created_user' => $user->code_emp,
+                        'comp_id' => $user->comp_id,
                         'revisi' => $request->input('revisi_isi'),
                         'link_document' => $pdfFilePath,
                         'nodoc' => $nodoc,
@@ -119,8 +121,8 @@ class DtHistDocController extends Controller
                     DtHistLampiran::create([
                         'description' => $request->input('description'),
                         'doc_id' => $request->input('doc_id'),
-                        'vc_created_user' => $request->input('vc_created_user'),
-                        'comp_id' => $request->input('comp_id'),
+                        'vc_created_user' => $user->code_emp,
+                        'comp_id' => $user->comp_id,
                         'revisi' => $request->input('revisi_attachment'),
                         'link_document' => $pdfFilePath,
                         'nodoc' => $nodoc,
@@ -132,8 +134,8 @@ class DtHistDocController extends Controller
                     DtHistCatMut::create([
                         'description' => $request->input('description'),
                         'doc_id' => $request->input('doc_id'),
-                        'vc_created_user' => $request->input('vc_created_user'),
-                        'comp_id' => $request->input('comp_id'),
+                        'vc_created_user' => $user->code_emp,
+                        'comp_id' => $user->comp_id,
                         'revisi' => $request->input('revisi_record'),
                         'link_document' => $pdfFilePath,
                         'nodoc' => $nodoc,
@@ -169,6 +171,8 @@ class DtHistDocController extends Controller
 
     public function update(Request $request, $id)
     {
+
+        $user = Auth::user();
         // Validasi request
         $request->validate([
             'description' => 'required',
@@ -222,8 +226,8 @@ class DtHistDocController extends Controller
                         DtHistCover::where('doc_id', $id)->create([
                             'description' => $request->input('description'),
                             'doc_id' => $request->input('doc_id'),
-                            'vc_created_user' => $request->input('vc_created_user'),
-                            'comp_id' => $request->input('comp_id'),
+                            'vc_created_user' => $user->code_emp,
+                            'comp_id' => $user->comp_id,
                             'revisi' => $request->input('revisi_cover'),
                             'id_sebelum' => $request->input('cover'),
                             'link_document' => $pdfFilePath,
@@ -237,8 +241,8 @@ class DtHistDocController extends Controller
                         DtHistDoc::where('id', $id)->create([
                             'description' => $request->input('description'),
                             'doc_id' => $request->input('doc_id'),
-                            'vc_created_user' => $request->input('vc_created_user'),
-                            'comp_id' => $request->input('comp_id'),
+                            'vc_created_user' => $user->code_emp,
+                            'comp_id' => $user->comp_id,
                             'revisi' => $request->input('revisi_isi'),
                             'id_sebelum' => $request->input('doc'),
                             'link_document' => $pdfFilePath,
@@ -252,8 +256,8 @@ class DtHistDocController extends Controller
                         DtHistLampiran::where('doc_id', $id)->create([
                             'description' => $request->input('description'),
                             'doc_id' => $request->input('doc_id'),
-                            'vc_created_user' => $request->input('vc_created_user'),
-                            'comp_id' => $request->input('comp_id'),
+                            'vc_created_user' => $user->code_emp,
+                            'comp_id' => $user->comp_id,
                             'revisi' => $request->input('revisi_attachment'),
                             'id_sebelum' => $request->input('lampiran'),
                             'link_document' => $pdfFilePath,
@@ -267,8 +271,8 @@ class DtHistDocController extends Controller
                         DtHistCatMut::where('doc_id', $id)->create([
                             'description' => $request->input('description'),
                             'doc_id' => $request->input('doc_id'),
-                            'vc_created_user' => $request->input('vc_created_user'),
-                            'comp_id' => $request->input('comp_id'),
+                            'vc_created_user' => $user->code_emp,
+                            'comp_id' => $user->comp_id,
                             'revisi' => $request->input('revisi_record'),
                             'id_sebelum' => $request->input('catmut'),
                             'link_document' => $pdfFilePath,

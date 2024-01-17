@@ -43,25 +43,9 @@
             </div>
 
             <div class="mb-3">
-                <label for="vc_modified_user" class="form-label">User Create</label>
-                <select id="vc_modified_user" name="vc_modified_user" class="form-select">
-                    @foreach ($users as $user)
-                        <option value="{{ $user->code_emp }}" {{ $document->vc_modified_user == $user->code_emp ? 'selected' : '' }}>
-                            {{ $user->username }}
-                        </option>
-                    @endforeach
-                </select>
+                <label for="dep_terkait" class="form-label">Departement Terkait</label>
+                <input type="text" name="dep_terkait" class="form-control" id="dep_terkait" value="{{$document->dep_terkait}}">
             </div>
-
-            <div class="mb-3">
-                <label for="comp_id" class="form-label">Company</label>
-                <select id="comp_id" name="comp_id" class="form-select">
-                    @foreach ($companies as $company)
-                        <option value="{{ $company->id }}" {{ $document->comp_id == $company->id ? 'selected' : '' }}>{{ $company->short }}</option>
-                    @endforeach
-                </select>
-            </div>
-
             <button type="submit" class="btn btn-primary">Update</button>
         </form>
     </div>

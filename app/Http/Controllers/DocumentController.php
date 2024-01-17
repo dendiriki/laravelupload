@@ -8,7 +8,9 @@ use App\Models\Type; // Ganti dengan model yang sesuai untuk mst_doctype
 use App\Models\User;
 use App\Models\Company;
 use App\Models\Document; // Model untuk mst_document
+use App\Models\Dep;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth; // Pastikan ini diimpor
 
 class DocumentController extends Controller
 {
@@ -23,23 +25,23 @@ class DocumentController extends Controller
 
     public function create()
     {
+        $deps = Dep::all();
         $types = Type::all();
         $isos = ISO::all();
         $users = User::all();
         $companies = Company::all();
 
-        return view('documents.create', compact('types', 'isos', 'users', 'companies'));
+        return view('documents.create', compact('types', 'isos', 'users', 'companies','deps'));
     }
 
     public function store(Request $request)
     {
+        $user = Auth::user();
         // Validasi request
         $request->validate([
             'description' => 'required',
             'iso_id' => 'required',
             'dt_modified_date' => 'required',
-            'vc_created_user' => 'required',
-            'comp_id' => 'required',
         ]);
 
         // Mengganti karakter non-alphanumeric menjadi underscore
@@ -68,11 +70,12 @@ class DocumentController extends Controller
             'doctype_id' => $request->doctype_id,
             'iso_id' => $request->iso_id,
             'dt_created_date' => $request->dt_modified_date,
-            'vc_created_user' => $request->vc_created_user,
+            'vc_created_user' => $user->code_emp,
             'dt_modified_date' => $request->dt_modified_date,
-            'vc_modified_user' => $request->vc_created_user,
-            'comp_id' => $request->comp_id,
+            'vc_modified_user' => $user->code_emp,
+            'comp_id' =>  $user->comp_id,
             'path' => $folderPath, // Path yang telah disimpan sebelumnya
+            'dep_terkait' =>$request->dep_terkait
         ];
 
         // Menyimpan data ISO
@@ -95,16 +98,18 @@ class DocumentController extends Controller
 
     public function update(Request $request, $id)
     {
+        $user = Auth::user();
         $document = Document::findOrFail($id);
 
         // Lakukan perubahan pada $document sesuai dengan $request
         $document->description = $request->input('description');
         $document->doctype_id = $request->input('doctype_id');
         $document->iso_id = $request->input('iso_id');
-        $document->vc_created_user = $request->input('vc_modified_user');
+        $document->vc_created_user = $user->code_emp;
         $document->dt_modified_date = $request->input('dt_modified_date');
-        $document->vc_modified_user = $request->input('vc_modified_user');
-        $document->comp_id = $request->input('comp_id');
+        $document->vc_modified_user = $user->code_emp;
+        $document->comp_id =  $user->comp_id;
+        $document->dep_terkait = $request->input('dep_terkait');
 
         // Simpan perubahan
         $document->save();

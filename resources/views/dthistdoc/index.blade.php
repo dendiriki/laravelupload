@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container">
-        <h2>Data DtHistDoc</h2>
+        <h2>Isi Document</h2>
 
         <div class="row">
             <div class="col-md-6" style="margin-left: auto;">
@@ -23,7 +23,7 @@
                     <th>No.</th>
                     <th>Description</th>
                     <th>Created</th>
-                    <th>Create</th>
+                    <th>Departement</th>
                     <th>Nomer document</th>
                     <th>Actions</th> <!-- Kolom untuk tombol aksi -->
                 </tr>
@@ -34,7 +34,7 @@
                         <td>{{ $loop->iteration + ($dtHistDocs->currentPage() - 1) * $dtHistDocs->perPage() }}</td>
                         <td>{{ $dtHistDoc->description }}</td>
                         <td>{{ $dtHistDoc->created_at }}</td>
-                        <td>{{ $dtHistDoc->createdBy->username }}</td>
+                        <td>{{ $dtHistDoc->document->dep_terkait }}</td>
                         <td>{{ $dtHistDoc->doc_name }}</td>
                         <td>
                             <!-- Tombol Edit -->

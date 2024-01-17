@@ -47,19 +47,10 @@
             </div>
 
             <div class="mb-3">
-                <label for="vc_created_user" class="form-label">User Create</label>
-                <select id="vc_created_user" name="vc_created_user" class="form-select">
-                    @foreach ($users as $user)
-                        <option value="{{ $user->code_emp }}">{{ $user->username }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label for="comp_id" class="form-label">Company</label>
-                <select id="comp_id" name="comp_id" class="form-select">
-                    @foreach ($companies as $company)
-                        <option value="{{ $company->id }}">{{ $company->short }}</option>
+                <label for="dep_terkait" class="form-label">Departement Terkait</label>
+                <select id="dep_terkait" name="dep_terkait" class="form-select">
+                    @foreach ($deps as $dep)
+                        <option value="{{ $dep->short }}">{{ $dep->short }}</option>
                     @endforeach
                 </select>
             </div>

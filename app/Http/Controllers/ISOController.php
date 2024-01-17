@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Company;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth; // Pastikan ini diimpor
 
 class ISOController extends Controller
 {
@@ -28,7 +29,7 @@ class ISOController extends Controller
     public function store(Request $request)
     {
 
-
+        $user = Auth::user();
 
         $folderISO = $request->description;
 
@@ -53,7 +54,16 @@ class ISOController extends Controller
             }
         }
 
-        ISO::create($request->all());
+
+            ISO::create([
+                'description' => $request->description,
+                'dt_created_date' => $request->dt_created_date,
+                'vc_created_user' => $user->code_emp, // Menggunakan username dari user yang login
+                'dt_modified_date' => $request->dt_created_date,
+                'vc_modified_user' => $user->code_emp, // Menggunakan username dari user yang login
+                'comp_id' => $user->comp_id, // Menggunakan comp_id dari user yang login
+                'path' =>  $folderName
+        ]);
 
         return redirect()->route('isos.index')->with('success', 'ISO created successfully!');
     }
@@ -68,9 +78,15 @@ class ISOController extends Controller
 
     public function update(Request $request, $id)
     {
+        $user = Auth::user();
         $iso = ISO::findOrFail($id);
 
-        $iso->update($request->all());
+        $iso->update([
+            'description' => $request->description,
+            'dt_modified_date' => now(),
+            'vc_modified_user' => $user->code_emp, // Menggunakan username dari user yang login
+            'comp_id' => $user->comp_id, // Menggunakan comp_id dari user yang login
+        ]);
 
         return redirect()->route('isos.index')->with('success', 'ISO updated successfully!');
     }
