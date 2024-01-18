@@ -54,8 +54,8 @@ class DtHistDocController extends Controller
 
         $document = Document::where('id', $request->doc_id)->value('path');
 
-        // Ambil data dari formulir
-        $pathupload = $document; // Tentukan path sesuai kebutuhan Anda
+        // Normalisasi path dengan realpath()
+        $pathupload = realpath($document);
 
         // Definisi nama-nama file yang diharapkan
         $expectedFiles = ['cover', 'isi', 'attachment', 'record'];
@@ -75,8 +75,12 @@ class DtHistDocController extends Controller
 
                 // Buat folder jika belum ada
                 $folderPath = "$pathupload/$expectedFile";
-                if (!Storage::exists($folderPath)) {
-                    Storage::makeDirectory($folderPath);
+
+                // Ganti karakter backslash (\) dengan forward slash (/) pada folderPath
+                $folderPath = str_replace('\\', '/', $folderPath);
+
+                if (!Storage::disk('external')->exists($folderPath)) {
+                    Storage::disk('external')->makeDirectory($folderPath);
                 }
 
                 // Generate nama acak untuk file
@@ -84,67 +88,67 @@ class DtHistDocController extends Controller
 
                 // Simpan file PDF ke folder dengan nama acak
                 $pdfFilePath = $folderPath . '/' . $randomFileName . '.pdf';
-                Storage::putFileAs($folderPath, $pdfFile, $randomFileName . '.pdf');
+                Storage::disk('external')->putFileAs($folderPath, $pdfFile, $randomFileName . '.pdf');
 
                 // Simpan nama file dalam bentuk acak di kolom nodoc
                 $nodoc = $randomFileName;
 
                 // Menyimpan nama file PDF ke dalam model yang sesuai
-        switch ($expectedFile) {
-                case 'cover':
-                    DtHistCover::create([
-                        'description' => $request->input('description'),
-                        'doc_id' => $request->input('doc_id'),
-                        'vc_created_user' => $user->code_emp,
-                        'comp_id' => $user->comp_id,
-                        'revisi' => $request->input('revisi_cover'),
-                        'link_document' => $pdfFilePath,
-                        'nodoc' => $nodoc,
-                        'doc_name' => $request->input('doc_name'),
-                        'tgl_berlaku' => $request->input('tgl_berlaku'),
-                    ]);
-                    break;
-                case 'isi':
-                    DtHistDoc::create([
-                        'description' => $request->input('description'),
-                        'doc_id' => $request->input('doc_id'),
-                        'vc_created_user' => $user->code_emp,
-                        'comp_id' => $user->comp_id,
-                        'revisi' => $request->input('revisi_isi'),
-                        'link_document' => $pdfFilePath,
-                        'nodoc' => $nodoc,
-                        'doc_name' => $request->input('doc_name'),
-                        'tgl_berlaku' => $request->input('tgl_berlaku'),
-                    ]);
-                    break;
-                case 'attachment':
-                    DtHistLampiran::create([
-                        'description' => $request->input('description'),
-                        'doc_id' => $request->input('doc_id'),
-                        'vc_created_user' => $user->code_emp,
-                        'comp_id' => $user->comp_id,
-                        'revisi' => $request->input('revisi_attachment'),
-                        'link_document' => $pdfFilePath,
-                        'nodoc' => $nodoc,
-                        'doc_name' => $request->input('doc_name'),
-                        'tgl_berlaku' => $request->input('tgl_berlaku'),
-                    ]);
-                    break;
-                case 'record':
-                    DtHistCatMut::create([
-                        'description' => $request->input('description'),
-                        'doc_id' => $request->input('doc_id'),
-                        'vc_created_user' => $user->code_emp,
-                        'comp_id' => $user->comp_id,
-                        'revisi' => $request->input('revisi_record'),
-                        'link_document' => $pdfFilePath,
-                        'nodoc' => $nodoc,
-                        'doc_name' => $request->input('doc_name'),
-                        'tgl_berlaku' => $request->input('tgl_berlaku'),
-                    ]);
-                    break;
+                switch ($expectedFile) {
+                    case 'cover':
+                        DtHistCover::create([
+                            'description' => $request->input('description'),
+                            'doc_id' => $request->input('doc_id'),
+                            'vc_created_user' => $user->code_emp,
+                            'comp_id' => $user->comp_id,
+                            'revisi' => $request->input('revisi_cover'),
+                            'link_document' => $pdfFilePath,
+                            'nodoc' => $nodoc,
+                            'doc_name' => $request->input('doc_name'),
+                            'tgl_berlaku' => $request->input('tgl_berlaku'),
+                        ]);
+                        break;
+                    case 'isi':
+                        DtHistDoc::create([
+                            'description' => $request->input('description'),
+                            'doc_id' => $request->input('doc_id'),
+                            'vc_created_user' => $user->code_emp,
+                            'comp_id' => $user->comp_id,
+                            'revisi' => $request->input('revisi_isi'),
+                            'link_document' => $pdfFilePath,
+                            'nodoc' => $nodoc,
+                            'doc_name' => $request->input('doc_name'),
+                            'tgl_berlaku' => $request->input('tgl_berlaku'),
+                        ]);
+                        break;
+                    case 'attachment':
+                        DtHistLampiran::create([
+                            'description' => $request->input('description'),
+                            'doc_id' => $request->input('doc_id'),
+                            'vc_created_user' => $user->code_emp,
+                            'comp_id' => $user->comp_id,
+                            'revisi' => $request->input('revisi_attachment'),
+                            'link_document' => $pdfFilePath,
+                            'nodoc' => $nodoc,
+                            'doc_name' => $request->input('doc_name'),
+                            'tgl_berlaku' => $request->input('tgl_berlaku'),
+                        ]);
+                        break;
+                    case 'record':
+                        DtHistCatMut::create([
+                            'description' => $request->input('description'),
+                            'doc_id' => $request->input('doc_id'),
+                            'vc_created_user' => $user->code_emp,
+                            'comp_id' => $user->comp_id,
+                            'revisi' => $request->input('revisi_record'),
+                            'link_document' => $pdfFilePath,
+                            'nodoc' => $nodoc,
+                            'doc_name' => $request->input('doc_name'),
+                            'tgl_berlaku' => $request->input('tgl_berlaku'),
+                        ]);
+                        break;
                     default:
-                    break;
+                        break;
                 }
 
                 Session::flash('success', "File $expectedFile berhasil diunggah ke folder: $folderPath");
@@ -155,19 +159,36 @@ class DtHistDocController extends Controller
         return redirect()->route('dthistdoc.index')->with('success', 'Data berhasil ditambahkan!');
     }
 
+
+
     public function edit($id)
     {
-        $cover = DtHistCover::all();
-        $lampiran = DtHistLampiran::all();
-        $catmut = DtHistCatMut::all();
-        $doc = DtHistDoc::all();
+        // Ambil data DtHistDoc berdasarkan $id
         $dtHistDoc = DtHistDoc::findOrFail($id);
+
+        // Ambil data cover yang memiliki doc_id sama dengan $id
+        $cover = DtHistCover::where('doc_id', $dtHistDoc->doc_id)->get();
+
+        // Ambil data lampiran yang memiliki doc_id sama dengan $id
+        $lampiran = DtHistLampiran::where('doc_id', $dtHistDoc->doc_id)->get();
+
+        // Ambil data catmutu yang memiliki doc_id sama dengan $id
+        $catmut = DtHistCatMut::where('doc_id', $dtHistDoc->doc_id)->get();
+
+        // Ambil data doc yang memiliki doc_id sama dengan $id
+        $doc = DtHistDoc::where('doc_id', $dtHistDoc->doc_id)->get();
+
+        // Ambil data Document berdasarkan doc_id pada DtHistDoc
         $documents = Document::find($dtHistDoc->doc_id);
+
+        // Ambil data user dan company
         $users = User::all();
         $companies = Company::all();
 
-        return view('dthistdoc.edit', compact('dtHistDoc', 'documents', 'users', 'companies','cover','lampiran','catmut','doc'));
+        // Kirim data ke view
+        return view('dthistdoc.edit', compact('dtHistDoc', 'documents', 'users', 'companies', 'cover', 'lampiran', 'catmut', 'doc'));
     }
+
 
     public function update(Request $request, $id)
     {
@@ -206,8 +227,8 @@ class DtHistDocController extends Controller
 
                 // Buat folder jika belum ada
                 $folderPath = "$pathupload/$expectedFile";
-                if (!Storage::exists($folderPath)) {
-                    Storage::makeDirectory($folderPath);
+                if (!Storage::disk('external')->exists($folderPath)) {
+                    Storage::disk('external')->makeDirectory($folderPath);
                 }
 
                 // Generate nama acak untuk file
@@ -306,8 +327,8 @@ class DtHistDocController extends Controller
         foreach ($expectedFiles as $expectedFile) {
             $folderPath = "$document/$expectedFile";
 
-            if (Storage::exists($folderPath)) {
-                Storage::deleteDirectory($folderPath);
+            if (Storage::disk('external')->exists($folderPath)) {
+                Storage::disk('external')->deleteDirectory($folderPath);
             }
         }
 
@@ -364,9 +385,10 @@ class DtHistDocController extends Controller
         $filePath = "$document/$expectedFiles/$nodoc.pdf";
 
          // Hapus file jika ada
-         if (Storage::exists($filePath)) {
-           Storage::delete($filePath);
-      }
+        // Hapus file jika ada
+    if (Storage::disk('external')->exists($filePath)) {
+        Storage::disk('external')->delete($filePath);
+    }
 
         $tableName->delete();
 

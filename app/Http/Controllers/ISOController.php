@@ -26,9 +26,9 @@ class ISOController extends Controller
         return view('isos.create', compact('users', 'companies'));
     }
 
+
     public function store(Request $request)
     {
-
         $user = Auth::user();
 
         $folderISO = $request->description;
@@ -36,37 +36,31 @@ class ISOController extends Controller
         $folderPath = "uploads/" . preg_replace('/[^a-zA-Z0-9]/', '_', $folderISO);
 
         $uploadsFolder = "uploads/";
-        // dd("Masuk ke fungsi store"); // Tambahkan ini
-        // Mengambil bagian setelah "uploads/"
         $folderName = str_replace($uploadsFolder, '', $folderPath);
 
-        // dd("Berhasil mencapai sini"); // Tambahkan ini
-
-        if (!Storage::exists($folderPath)) {
-            if (Storage::makeDirectory($folderPath)) {
-                // Folder berhasil dibuat
-                $request->merge(['path' => $folderName]); // Menggabungkan path ke data request
-                // dd("Folder berhasil dibuat"); // Tambahkan ini
-            } else {
-                dd("Gagal membuat folder"); // Tambahkan ini
-                // Gagal membuat folder
-                return redirect()->route('isos.create')->with('error', 'Failed to create folder');
+        try {
+            // Gunakan penyimpanan eksternal
+            if (!Storage::disk('external')->exists($folderPath)) {
+                Storage::disk('external')->makeDirectory($folderPath);
             }
-        }
-
 
             ISO::create([
                 'description' => $request->description,
                 'dt_created_date' => $request->dt_created_date,
-                'vc_created_user' => $user->code_emp, // Menggunakan username dari user yang login
+                'vc_created_user' => $user->code_emp,
                 'dt_modified_date' => $request->dt_created_date,
-                'vc_modified_user' => $user->code_emp, // Menggunakan username dari user yang login
-                'comp_id' => $user->comp_id, // Menggunakan comp_id dari user yang login
-                'path' =>  $folderName
-        ]);
+                'vc_modified_user' => $user->code_emp,
+                'comp_id' => $user->comp_id,
+                'path' => $folderName
+            ]);
 
-        return redirect()->route('isos.index')->with('success', 'ISO created successfully!');
+            return redirect()->route('isos.index')->with('success', 'ISO created successfully!');
+        } catch (\Exception $e) {
+            return redirect()->route('isos.create')->with('error', 'Failed to create ISO: ' . $e->getMessage());
+        }
     }
+
+
     public function edit($id)
     {
         $iso = ISO::findOrFail($id);
@@ -98,8 +92,9 @@ class ISOController extends Controller
         // Hapus folder terkait
         $folderPath = "uploads/" . str_replace(' ', '_', $iso->path);
 
-        if (Storage::exists($folderPath)) {
-            Storage::deleteDirectory($folderPath);
+        if (Storage::disk('external')->exists($folderPath)) {
+            // Hapus folder terkait
+            Storage::disk('external')->deleteDirectory($folderPath);
         }
 
         // Hapus ISO dari database

@@ -56,6 +56,11 @@ return [
             'throw' => false,
         ],
 
+        'external' => [
+            'driver' => 'local',
+            'root' => '//ind-fps06/DATA_DIGITAL', // Sesuaikan dengan path penyimpanan eksternal
+        ],
+
     ],
 
     /*
