@@ -12,13 +12,22 @@ class DtHistDoc extends Model
         'description', 'tgl_perubahan', 'tgl_berlaku', 'doc_id', 'revisi', 'id_sebelum', 'link_document', 'vc_created_user', 'comp_id', 'nodoc','doc_name'
     ];
 
-    public function scopeFilter($query){
-
-        if(request('search')){
-            return $query->where('description','like', '%' . request('search') . '%');
+    public function scopeFilter($query)
+    {
+        if (request('search')) {
+            $query->where('description', 'like', '%' . request('search') . '%');
         }
 
+        // Tambahkan filter berdasarkan ISO
+        if (request('iso')) {
+            $query->whereHas('document', function ($query) {
+                $query->where('iso_id', request('iso'));
+            });
+        }
+
+        return $query;
     }
+
 
     // Relasi self-join ke revisi sebelumnya
     public function previousRevision()

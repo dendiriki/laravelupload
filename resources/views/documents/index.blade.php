@@ -9,7 +9,15 @@
                 <form action="/documents">
                     <div class="input-group mb-3">
                         <input type="text" class="form-control" placeholder="Search Documents..." name="search"
-                            value="{{ request('search') }}">
+                               value="{{ request('search') }}">
+                        <select class="form-select" name="iso">
+                            <option value="">Select ISO</option>
+                            @foreach ($isos as $iso)
+                                <option value="{{ $iso->id }}" {{ request('iso') == $iso->id ? 'selected' : '' }}>
+                                    {{ $iso->description }}
+                                </option>
+                            @endforeach
+                        </select>
                         <button class="btn btn-primary" type="submit">Search</button>
                     </div>
                 </form>
@@ -32,7 +40,7 @@
                     <th>Type</th>
                     <th>ISO</th>
                     <th>Date Created</th>
-                    <th>Date Modified</th>
+                    <th>Nomer Doc</th>
                     <th>Created By</th>
                     <th>Action</th> <!-- Tambah kolom untuk Action -->
                 </tr>
@@ -40,12 +48,12 @@
             <tbody>
                 @foreach ($documents as $document)
                     <tr>
-                        <td>{{ $document->id }}</td>
+                        <td>{{ $loop->iteration + ($documents->currentPage() - 1) * $documents->perPage() }}</td>
                         <td>{{ $document->description }}</td>
                         <td>{{ $document->type->short }}</td>
                         <td>{{ $document->iso->description }}</td>
                         <td>{{ $document->dt_created_date }}</td>
-                        <td>{{ $document->dt_modified_date }}</td>
+                        <td>{{ $document->doc_name }}</td>
                         <td>{{ $document->createdBy->username }}</td>
                         <td>
                             <a href="{{ route('documents.edit', ['id' => $document->id]) }}"

@@ -24,6 +24,16 @@
             </div>
 
             <div class="mb-3">
+                <label for="doc_name" class="form-label">Nomer Doc</label>
+                <input type="text" name="doc_name" class="form-control @error('doc_name') is-invalid @enderror" id="doc_name">
+                @error('doc_name')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+            </div>
+
+            <div class="mb-3">
                 <label for="dt_modified_date" class="form-label">Date</label>
                 <input type="date" name="dt_modified_date" class="form-control" id="dt_modified_date">
             </div>
@@ -32,7 +42,7 @@
                 <label for="doctype_id" class="form-label">Type</label>
                 <select id="doctype_id" name="doctype_id" class="form-select">
                     @foreach ($types as $type)
-                        <option value="{{ $type->id }}">{{ $type->description }}</option>
+                        <option value="{{ $type->id }}">{{ $type->short }}</option>
                     @endforeach
                 </select>
             </div>

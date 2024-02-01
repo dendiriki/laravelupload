@@ -20,6 +20,11 @@
             </div>
 
             <div class="mb-3">
+                <label for="doc_name" class="form-label">Nomer Doc</label>
+                <input type="text" name="doc_name" class="form-control" id="doc_name" value="{{ $document->doc_name }}">
+            </div>
+
+            <div class="mb-3">
                 <label for="dt_modified_date" class="form-label">Date</label>
                 <input type="date" name="dt_modified_date" class="form-control" id="dt_modified_date" value="{{ $document->dt_modified_date }}">
             </div>

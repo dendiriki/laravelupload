@@ -16,12 +16,14 @@ class DocumentController extends Controller
 {
     public function index()
     {
+        $isos = ISO::all(); // Mendapatkan semua data ISO
         $documents = Document::with(['type', 'iso', 'createdBy', 'company'])
-            ->orderBy('dt_created_date', 'desc')->filter() // Urutkan berdasarkan dt_created_date secara descending
+            ->orderBy('dt_created_date', 'desc')->filter()
             ->paginate(6);
 
-        return view('documents.index', compact('documents'));
+        return view('documents.index', compact('documents', 'isos'));
     }
+
 
     public function create()
     {
@@ -42,6 +44,7 @@ class DocumentController extends Controller
             'description' => 'required',
             'iso_id' => 'required',
             'dt_modified_date' => 'required',
+            'doc_name' => ['required','unique:mst_document'],
         ]);
 
         // Mengganti karakter non-alphanumeric menjadi underscore
@@ -75,7 +78,8 @@ class DocumentController extends Controller
             'vc_modified_user' => $user->code_emp,
             'comp_id' =>  $user->comp_id,
             'path' => $folderPath, // Path yang telah disimpan sebelumnya
-            'dep_terkait' =>$request->dep_terkait
+            'dep_terkait' =>$request->dep_terkait,
+            'doc_name' => $request->doc_name
         ];
 
         // Menyimpan data ISO
@@ -110,6 +114,7 @@ class DocumentController extends Controller
         $document->vc_modified_user = $user->code_emp;
         $document->comp_id =  $user->comp_id;
         $document->dep_terkait = $request->input('dep_terkait');
+        $document->doc_name->input('doc_name');
 
         // Simpan perubahan
         $document->save();

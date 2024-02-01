@@ -12,19 +12,9 @@
                 <label for="doc_id" class="form-label">Doc Name</label>
                 <select id="doc-select" name="doc_id" class="form-select" onfocus='this.size=8;' onblur='this.size=1;' onchange='this.size=1; this.blur();'>
                     @foreach ($documents as $document)
-                        <option value="{{ $document->id }}">{{ $document->description }}</option>
+                        <option value="{{ $document->id }}">{{ $document->description }} - {{ $document->doc_name }} - {{ $document->iso->description }}</option>
                     @endforeach
                 </select>
-            </div>
-
-            <div class="mb-3">
-                <label for="description" class="form-label">Konfirmasi Doc Name</label>
-                <input type="text" id="confirmation-input" name="description" class="form-control">
-            </div>
-
-            <div class="mb-3">
-                <label for="doc_name" class="form-label">Nomer Doc Name</label>
-                <input type="text" id="doc_name" name="doc_name" class="form-control">
             </div>
 
             <div class="mb-3">
@@ -75,18 +65,5 @@
             <button type="submit" class="btn btn-primary">Simpan</button>
         </form>
     </div>
-
-    <script>
-        document.getElementById('doc-select').addEventListener('change', function() {
-            var selectedOption = this.options[this.selectedIndex];
-            var confirmationInput = document.getElementById('confirmation-input');
-
-            if (selectedOption) {
-                confirmationInput.value = selectedOption.textContent;
-            } else {
-                confirmationInput.value = ''; // Atau nilai default jika tidak ada pilihan yang dipilih.
-            }
-        });
-    </script>
 
 @endsection

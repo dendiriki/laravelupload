@@ -9,7 +9,15 @@
                 <form action="/dthistdoc">
                     <div class="input-group mb-3">
                         <input type="text" class="form-control" placeholder="Search Documents..." name="search"
-                            value="{{ request('search') }}">
+                               value="{{ request('search') }}">
+                        <select class="form-select" name="iso">
+                            <option value="">Select ISO</option>
+                            @foreach ($isos as $iso)
+                                <option value="{{ $iso->id }}" {{ request('iso') == $iso->id ? 'selected' : '' }}>
+                                    {{ $iso->description }}
+                                </option>
+                            @endforeach
+                        </select>
                         <button class="btn btn-primary" type="submit">Search</button>
                     </div>
                 </form>
