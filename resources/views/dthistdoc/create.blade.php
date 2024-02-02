@@ -34,7 +34,7 @@
 
             <div class="mb-3">
                 <label for="isiFile" class="form-label">Select Doc PDF:</label>
-                <input type="file" name="isiFile" class="form-control" accept=".pdf" required>
+                <input type="file" name="isiFile" class="form-control" accept=".pdf">
             </div>
 
             <div class="mb-3">
