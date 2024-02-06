@@ -6,12 +6,23 @@ use Illuminate\Http\Request;
 use App\Models\DocDept;
 use App\Models\Dep;
 use App\Models\Document;
+use Illuminate\Support\Facades\DB;
 
 class DocDeptController extends Controller
 {
     public function index()
     {
-        $docDepts = DocDept::with(['document', 'dep'])->orderBy('id', 'desc')->filter()->paginate(6); // Urutkan berdasarkan dt_created_date secara descending
+        $docDepts = DocDept::whereHas('document', function ($query) {
+            $query->whereExists(function ($subquery) {
+                $subquery->select(DB::raw(1))
+                    ->from('mst_document')
+                    ->whereColumn('mst_document.id', 'doc_dept.doc_id');
+            });
+        })
+        ->orderBy('id', 'desc')
+        ->filter()
+        ->paginate(6);
+
         return view('docdept.index', compact('docDepts'));
     }
 

@@ -15,25 +15,40 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth; // Pastikan ini diimpor
 use App\Models\DtHistDoc; // Sesuaikan dengan nama model yang Anda gunakan
+use Illuminate\Support\Facades\DB;
+
 
 class DtHistDocController extends Controller
 {
     public function index()
     {
         $isos = ISO::all();
-        $dtHistDocs = DtHistDoc::where('id_sebelum', null)->latest()->filter()->paginate(6);
+        $dtHistDocs = DtHistDoc::where('id_sebelum', null)
+        ->whereHas('document', function ($query) {
+            $query->whereExists(function ($subquery) {
+                $subquery->select(DB::raw(1))
+                    ->from('mst_document')
+                    ->whereColumn('mst_document.id', 'dt_histdoc.doc_id');
+            });
+        })
+        ->latest()
+        ->filter()
+        ->paginate(6);
+
 
         return view('dthistdoc.index', compact('dtHistDocs', 'isos'));
     }
 
     public function create()
     {
-        $documents = Document::all();
+        // Mengurutkan dokumen berdasarkan 'description' dari A-Z
+        $documents = Document::orderBy('description', 'asc')->get();
         $users = User::all();
         $companies = Company::all();
 
         return view('dthistdoc.create', compact('documents', 'users', 'companies'));
     }
+
 
     public function detail ($id){
        $document = Document::find($id);
@@ -54,8 +69,6 @@ class DtHistDocController extends Controller
         $nomer_document = Document::where('id', $request->doc_id)->value('doc_name');
         $nama_document = Document::where('id', $request->doc_id)->value('description');
 
-        // Normalisasi path dengan realpath()
-        $pathupload = realpath($document);
 
         // Definisi nama-nama file yang diharapkan
         $expectedFiles = ['cover', 'isi', 'attachment', 'record'];
@@ -74,7 +87,7 @@ class DtHistDocController extends Controller
                 }
 
                 // Buat folder jika belum ada
-                $folderPath = "$pathupload/$expectedFile";
+                $folderPath = "$document/$expectedFile";
 
                 // Ganti karakter backslash (\) dengan forward slash (/) pada folderPath
                 $folderPath = str_replace('\\', '/', $folderPath);
