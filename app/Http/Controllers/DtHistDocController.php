@@ -28,7 +28,7 @@ class DtHistDocController extends Controller
 
     public function create()
     {
-        $documents = Document::all();
+        $documents = Document::orderBy('description','asc')->get();
         $users = User::all();
         $companies = Company::all();
 
