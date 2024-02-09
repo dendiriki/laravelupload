@@ -68,4 +68,10 @@
             <button type="submit" class="btn btn-primary">Upload</button>
         </form>
     </div>
+
+    @if(session('customError'))
+    <script>
+        alert('{{ session("customError") }}');
+    </script>
+    @endif
 @endsection

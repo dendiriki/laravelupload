@@ -4,19 +4,21 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Dep;
+use App\Models\Company;
 
 class DepController extends Controller
 {
     public function index()
     {
-        $deps = Dep::all();
+        $deps = Dep::with('company')->get(); // Memuat data perusahaan bersamaan dengan data departemen
         return view('dep.index', compact('deps'));
     }
 
+
     public function create()
     {
-        // Tambahkan logic untuk mengambil data yang diperlukan
-        return view('dep.create');
+        $companies = Company::all(); // Mengambil semua perusahaan
+        return view('dep.create', compact('companies'));
     }
 
     public function store(Request $request)
@@ -24,6 +26,7 @@ class DepController extends Controller
         $request->validate([
             'name' => 'required',
             'short' => 'required',
+            'com_id' => 'required|exists:company,id', // Validasi com_id
         ]);
 
         Dep::create($request->all());
@@ -34,12 +37,13 @@ class DepController extends Controller
     public function edit($id)
     {
         $dep = Dep::find($id);
+        $companies = Company::all(); // Mengambil semua perusahaan
 
         if (!$dep) {
             return redirect()->route('dep.index')->with('error', 'Department not found.');
         }
 
-        return view('dep.edit', compact('dep'));
+        return view('dep.edit', compact('dep', 'companies'));
     }
 
     public function update(Request $request, $id)
@@ -47,6 +51,7 @@ class DepController extends Controller
         $request->validate([
             'name' => 'required',
             'short' => 'required',
+            'com_id' => 'required|exists:company,id', // Validasi com_id
         ]);
 
         $dep = Dep::find($id);

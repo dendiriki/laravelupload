@@ -74,6 +74,14 @@
     </div>
     {{ $documents->links() }}
 
+    @if(session('customError'))
+    <script>
+        alert('{{ session("customError") }}');
+    </script>
+    @endif
+
+
+
     <script>
         function confirmDelete() {
             return confirm('Apakah Anda yakin menghapus dokumen ini?. sebelum menghapus dokumen ini pastikan tidak ada isi dokumen yang berkaitan data yang anda hapus ini');

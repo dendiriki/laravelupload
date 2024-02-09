@@ -63,7 +63,7 @@ class DtHistDocController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
-        // Validasi request
+// Validasi request
 
         $document = Document::where('id', $request->doc_id)->value('path');
         $nomer_document = Document::where('id', $request->doc_id)->value('doc_name');
@@ -78,7 +78,7 @@ class DtHistDocController extends Controller
 
             // Cek jika file diunggah
             if ($pdfFile) {
-                // Validasi ekstensi file
+// Validasi ekstensi file
                 $allowedExtensions = ['pdf'];
                 $fileExtension = $pdfFile->getClientOriginalExtension();
 
@@ -96,7 +96,7 @@ class DtHistDocController extends Controller
                     Storage::makeDirectory($folderPath);
                 }
 
-                // Generate nama acak untuk file
+// Generate nama acak untuk file
                 $randomFileName = bin2hex(random_bytes(8));
 
                 // Simpan file PDF ke folder dengan nama acak
@@ -110,19 +110,19 @@ class DtHistDocController extends Controller
                 switch ($expectedFile) {
                     case 'cover':
                         DtHistCover::create([
-                            'description' => $nama_document,
-                            'doc_id' => $request->input('doc_id'),
-                            'vc_created_user' => $user->code_emp,
-                            'comp_id' => $user->comp_id,
-                            'revisi' => $request->input('revisi_cover'),
-                            'link_document' => $pdfFilePath,
-                            'nodoc' => $nodoc,
-                            'doc_name' => $nomer_document,
-                            'tgl_berlaku' => $request->input('tgl_berlaku'),
-                        ]);
-                        break;
-                    case 'isi':
-                        DtHistDoc::create([
+                'description' => $nama_document,
+                'doc_id' => $request->input('doc_id'),
+                'vc_created_user' => $user->code_emp,
+                'comp_id' => $user->comp_id,
+                'revisi' => $request->input('revisi_cover'),
+                'link_document' => $pdfFilePath,
+                'nodoc' => $nodoc,
+                'doc_name' => $nomer_document,
+                'tgl_berlaku' => $request->input('tgl_berlaku'),
+            ]);
+                    break;
+                case 'isi':
+                    DtHistDoc::create([
                             'description' => $nama_document,
                             'doc_id' => $request->input('doc_id'),
                             'vc_created_user' => $user->code_emp,
@@ -133,9 +133,9 @@ class DtHistDocController extends Controller
                             'doc_name' => $nomer_document,
                             'tgl_berlaku' => $request->input('tgl_berlaku'),
                         ]);
-                        break;
-                    case 'attachment':
-                        DtHistLampiran::create([
+                    break;
+                case 'attachment':
+                    DtHistLampiran::create([
                             'description' => $nama_document,
                             'doc_id' => $request->input('doc_id'),
                             'vc_created_user' => $user->code_emp,
@@ -146,9 +146,9 @@ class DtHistDocController extends Controller
                             'doc_name' => $nomer_document,
                             'tgl_berlaku' => $request->input('tgl_berlaku'),
                         ]);
-                        break;
-                    case 'record':
-                        DtHistCatMut::create([
+                    break;
+                case 'record':
+                    DtHistCatMut::create([
                             'description' => $nama_document,
                             'doc_id' => $request->input('doc_id'),
                             'vc_created_user' => $user->code_emp,
@@ -161,8 +161,8 @@ class DtHistDocController extends Controller
                         ]);
                         break;
                     default:
-                        break;
-                }
+                    break;
+            }
 
                 Session::flash('success', "File $expectedFile berhasil diunggah ke folder: $folderPath");
             }

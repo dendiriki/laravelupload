@@ -10,6 +10,7 @@
                     <th>ID</th>
                     <th>Name</th>
                     <th>Short</th>
+                    <th>Company</th> <!-- Kolom baru untuk nama perusahaan -->
                     <th>Action</th>
                 </tr>
             </thead>
@@ -19,8 +20,8 @@
                         <td>{{ $dep->id }}</td>
                         <td>{{ $dep->name }}</td>
                         <td>{{ $dep->short }}</td>
+                        <td>{{ $dep->company ? $dep->company->name : 'No Company' }}</td> <!-- Menampilkan nama perusahaan atau 'No Company' -->
                         <td>
-                            <!-- Tambahkan tombol untuk mengedit dan menghapus data -->
                             <a href="{{ route('dep.edit', $dep->id) }}" class="btn btn-primary">Edit</a>
                             <form action="{{ route('dep.destroy', $dep->id) }}" method="POST" style="display: inline" onsubmit="return confirmDelete()">
                                 @csrf

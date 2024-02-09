@@ -18,5 +18,10 @@ class Company extends Model
     {
         return $this->hasMany(ISO::class, 'comp_id');
     }
+
+    public function deps()
+    {
+        return $this->hasMany('App\Models\Dep', 'com_id');
+    }
 }
 
