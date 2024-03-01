@@ -22,7 +22,6 @@ class DocDeptController extends Controller
         ->orderBy('id', 'desc')
         ->filter()
         ->paginate(6);
-
         return view('docdept.index', compact('docDepts'));
     }
 

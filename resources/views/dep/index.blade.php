@@ -17,7 +17,7 @@
             <tbody>
                 @foreach ($deps as $dep)
                     <tr>
-                        <td>{{ $dep->id }}</td>
+                        <td>{{ $loop->iteration + ($deps->currentPage() - 1) * $deps->perPage() }}</td>
                         <td>{{ $dep->name }}</td>
                         <td>{{ $dep->short }}</td>
                         <td>{{ $dep->company ? $dep->company->name : 'No Company' }}</td> <!-- Menampilkan nama perusahaan atau 'No Company' -->
@@ -34,6 +34,7 @@
             </tbody>
         </table>
     </div>
+    {{ $deps->links() }}
 
     <script>
         function confirmDelete() {

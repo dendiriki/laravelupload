@@ -10,7 +10,7 @@ class DepController extends Controller
 {
     public function index()
     {
-        $deps = Dep::with('company')->get(); // Memuat data perusahaan bersamaan dengan data departemen
+        $deps = Dep::with('company')->paginate(20);
         return view('dep.index', compact('deps'));
     }
 

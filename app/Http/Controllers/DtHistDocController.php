@@ -10,6 +10,7 @@ use App\Models\Document;
 use App\Models\DtHistCover;
 use App\Models\DtHistCatMut;
 use Illuminate\Http\Request;
+use App\Models\Dep;
 use App\Models\DtHistLampiran;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
@@ -23,26 +24,29 @@ class DtHistDocController extends Controller
     public function index()
     {
         $isos = ISO::all();
+        $deps = Dep::all(); // Ambil semua departemen berdasarkan singkatan
+        $companies = Company::all(); // Ambil semua perusahaan
+    
         $dtHistDocs = DtHistDoc::where('id_sebelum', null)
-        ->whereHas('document', function ($query) {
-            $query->whereExists(function ($subquery) {
-                $subquery->select(DB::raw(1))
-                    ->from('mst_document')
-                    ->whereColumn('mst_document.id', 'dt_histdoc.doc_id');
-            });
-        })
-        ->latest()
-        ->filter()
-        ->paginate(6);
-
-
-        return view('dthistdoc.index', compact('dtHistDocs', 'isos'));
+                        ->whereHas('document', function ($query) {
+                            $query->whereExists(function ($subquery) {
+                                $subquery->select(DB::raw(1))
+                                         ->from('mst_document')
+                                         ->whereColumn('mst_document.id', 'dt_histdoc.doc_id');
+                            });
+                        })
+                        ->orderBy('sequence','asc')
+                        ->filter()
+                        ->paginate(20);
+    
+        return view('dthistdoc.index', compact('dtHistDocs', 'isos', 'deps', 'companies'));
     }
+    
 
     public function create()
     {
         // Mengurutkan dokumen berdasarkan 'description' dari A-Z
-        $documents = Document::orderBy('description', 'asc')->get();
+        $documents = Document::orderBy('sequence', 'asc')->get();
         $users = User::all();
         $companies = Company::all();
 
@@ -63,11 +67,19 @@ class DtHistDocController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
-// Validasi request
+
+        $docId = $request->input('doc_id');
+
+        $entryExist = DtHistDoc::where('doc_id',$docId)->exists();
+
+        if($entryExist){
+            return redirect()->back()->with('error','Dokumen yang ingin anda isi sudah ada mohon di perikas kembali atau gunakan fitur revisi');
+        }
 
         $document = Document::where('id', $request->doc_id)->value('path');
         $nomer_document = Document::where('id', $request->doc_id)->value('doc_name');
         $nama_document = Document::where('id', $request->doc_id)->value('description');
+        $sequence = Document::where('id', $request->doc_id)->value('sequence');
 
 
         // Definisi nama-nama file yang diharapkan
@@ -92,8 +104,8 @@ class DtHistDocController extends Controller
                 // Ganti karakter backslash (\) dengan forward slash (/) pada folderPath
                 $folderPath = str_replace('\\', '/', $folderPath);
 
-                if (!Storage::exists($folderPath)) {
-                    Storage::makeDirectory($folderPath);
+                if (!Storage::disk('external')->exists($folderPath)) {
+                    Storage::disk('external')->makeDirectory($folderPath);
                 }
 
 // Generate nama acak untuk file
@@ -101,7 +113,7 @@ class DtHistDocController extends Controller
 
                 // Simpan file PDF ke folder dengan nama acak
                 $pdfFilePath = $folderPath . '/' . $randomFileName . '.pdf';
-                Storage::putFileAs($folderPath, $pdfFile, $randomFileName . '.pdf');
+                Storage::disk('external')->putFileAs($folderPath, $pdfFile, $randomFileName . '.pdf');
 
                 // Simpan nama file dalam bentuk acak di kolom nodoc
                 $nodoc = $randomFileName;
@@ -119,6 +131,7 @@ class DtHistDocController extends Controller
                 'nodoc' => $nodoc,
                 'doc_name' => $nomer_document,
                 'tgl_berlaku' => $request->input('tgl_berlaku'),
+                'sequence' => $sequence
             ]);
                     break;
                 case 'isi':
@@ -132,6 +145,7 @@ class DtHistDocController extends Controller
                             'nodoc' => $nodoc,
                             'doc_name' => $nomer_document,
                             'tgl_berlaku' => $request->input('tgl_berlaku'),
+                            'sequence' => $sequence
                         ]);
                     break;
                 case 'attachment':
@@ -145,6 +159,7 @@ class DtHistDocController extends Controller
                             'nodoc' => $nodoc,
                             'doc_name' => $nomer_document,
                             'tgl_berlaku' => $request->input('tgl_berlaku'),
+                            'sequence' => $sequence
                         ]);
                     break;
                 case 'record':
@@ -158,6 +173,10 @@ class DtHistDocController extends Controller
                             'nodoc' => $nodoc,
                             'doc_name' => $nomer_document,
                             'tgl_berlaku' => $request->input('tgl_berlaku'),
+                            'sequence' => $sequence
+
+
+
                         ]);
                         break;
                     default:
@@ -240,8 +259,8 @@ class DtHistDocController extends Controller
 
                 // Buat folder jika belum ada
                 $folderPath = "$pathupload/$expectedFile";
-                if (!Storage::exists($folderPath)) {
-                    Storage::makeDirectory($folderPath);
+                if (!Storage::disk('external')->exists($folderPath)) {
+                    Storage::disk('external')->makeDirectory($folderPath);
                 }
 
                 // Generate nama acak untuk file
@@ -249,7 +268,7 @@ class DtHistDocController extends Controller
 
                 // Simpan file PDF ke folder dengan nama acak
                 $pdfFilePath = $folderPath . '/' . $randomFileName . '.pdf';
-                Storage::putFileAs($folderPath, $pdfFile, $randomFileName . '.pdf');
+                Storage::disk('external')->putFileAs($folderPath, $pdfFile, $randomFileName . '.pdf');
 
                 // Update nama file dalam bentuk acak di kolom nodoc
                 $nodoc = $randomFileName;
@@ -340,8 +359,8 @@ class DtHistDocController extends Controller
         foreach ($expectedFiles as $expectedFile) {
             $folderPath = "$document/$expectedFile";
 
-            if (Storage::exists($folderPath)) {
-                Storage::deleteDirectory($folderPath);
+            if (Storage::disk('external')->exists($folderPath)) {
+                Storage::disk('external')->deleteDirectory($folderPath);
             }
         }
 
@@ -399,8 +418,8 @@ class DtHistDocController extends Controller
 
          // Hapus file jika ada
         // Hapus file jika ada
-    if (Storage::exists($filePath)) {
-        Storage::delete($filePath);
+    if (Storage::disk('external')->exists($filePath)) {
+        Storage::disk('external')->delete($filePath);
     }
 
         $tableName->delete();

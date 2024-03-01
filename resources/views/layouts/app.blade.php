@@ -35,7 +35,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('types.index') }}">Types</a>
+                            <a class="nav-link" href="{{ route('types.index') }}">Type</a>
 
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('documents.index') }}">Documents</a>

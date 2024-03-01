@@ -19,12 +19,16 @@ class DocumentController extends Controller
     public function index()
     {
         $isos = ISO::all();
+        $deps = Dep::all(); // Ambil data departemen untuk form pencarian
+        $companies = Company::all(); // Pastikan ini sesuai dengan model Company Anda
+    
         $documents = Document::with(['type', 'iso', 'createdBy', 'company'])
-            ->orderBy('dt_created_date', 'desc')->filter()
-            ->paginate(6);
-
-        return view('documents.index', compact('documents', 'isos'));
+            ->orderBy('sequence', 'asc')->filter()
+            ->paginate(20);
+    
+        return view('documents.index', compact('documents', 'isos', 'deps', 'companies'));
     }
+    
 
     public function create()
     {
@@ -34,7 +38,10 @@ class DocumentController extends Controller
         $users = User::all();
         $companies = Company::all();
 
-        return view('documents.create', compact('types', 'isos', 'users', 'companies','deps'));
+        $lastSequence = Document::max('sequence');
+        $recommendSequence = $lastSequence ? $lastSequence + 1 : 1;
+
+        return view('documents.create', compact('types', 'isos', 'users', 'companies','deps','recommendSequence'));
     }
 
     public function store(Request $request)
@@ -67,8 +74,8 @@ class DocumentController extends Controller
         $iso = ISO::where('id', $request->iso_id)->value('path');
         $folderPath = "uploads/" . $iso . "/" . $folderDoc;
 
-        if (!Storage::exists($folderPath)) {
-            Storage::makeDirectory($folderPath);
+        if (!Storage::disk('external')->exists($folderPath)) {
+            Storage::disk('external')->makeDirectory($folderPath);
         }
 
         $user = Auth::user();
@@ -81,6 +88,7 @@ class DocumentController extends Controller
             'comp_id' => $user->comp_id,
             'path' => $folderPath,
             'dep_terkait' => $request->dep_terkait,
+            'sequence' => $request->sequence,
         ];
 
         Document::create($documentData);
@@ -105,7 +113,7 @@ class DocumentController extends Controller
         $validator = Validator::make($request->all(), [
             'doc_name' => [
                 'required',
-                Rule::unique('documents')->ignore($id),
+                Rule::unique('mst_document')->ignore($id),
             ],
         ]);
 
@@ -133,6 +141,7 @@ class DocumentController extends Controller
             'vc_modified_user' => $user->code_emp,
             'comp_id' => $user->comp_id,
             'dep_terkait' => $request->dep_terkait,
+            'sequence' => $request->sequence,
         ];
 
         $document->update($updateData);
@@ -143,7 +152,7 @@ class DocumentController extends Controller
     public function destroy($id)
     {
         $document = Document::findOrFail($id);
-        Storage::deleteDirectory($document->path);
+        Storage::disk('external')->deleteDirectory($document->path);
         $document->delete();
 
         return redirect()->route('documents.index')->with('success', 'Document deleted successfully!');

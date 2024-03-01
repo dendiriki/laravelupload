@@ -28,18 +28,24 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Document Name</th>
-                        <th scope="col">Type</th>
-                        <th scope="col">Actions</th>
+                    <th>ID</th>
+                    <th>Document Name</th>
+                    <th>Document No</th>
+                    <th>ISO</th>
+                    <th>Departement</th>
+                    <th>Company</th>
+                    <th>Action</th> <!-- Tambah kolom untuk Action -->
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($documents as $index => $document)
+                    @foreach ($documents as $document)
                         <tr>
-                            <th scope="row">{{ $index + 1 }}</th>
+                            <td>{{ $document->sequence }}</td>
                             <td>{{ $document->description }}</td>
-                            <td>{{$document->type->short}}</td>
+                            <td>{{ $document->doc_name }}</td>
+                            <td>{{ $document->iso->description}}</td>
+                            <td>{{ $document->dep_terkait }}</td>
+                            <td>{{ $document->Company->name }}</td>
                             <td>
                                 <a href="{{ route('view.folder.contents', ['folder' => $document->id]) }}" class="btn btn-primary">View Folder Contents</a>
                             </td>
