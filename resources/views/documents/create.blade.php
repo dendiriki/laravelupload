@@ -18,6 +18,13 @@
 
         <form action="{{ route('documents.store') }}" method="post" enctype="multipart/form-data">
             @csrf
+
+            <div class="mb-3">
+                <label for="sequence" class="form-label">Sequence</label>
+                <input type="number" name="sequence" class="form-control" id="sequence" value="{{$recommendSequence}}">
+                <div id="sequenceHelp" class="form-text">rekomendasi nilai berikutnya</div>
+            </div>
+
             <div class="mb-3">
                 <label for="description" class="form-label">Name Doc</label>
                 <input type="text" name="description" class="form-control" id="description">
