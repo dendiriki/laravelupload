@@ -21,14 +21,14 @@ class DocumentController extends Controller
         $isos = ISO::all();
         $deps = Dep::all(); // Ambil data departemen untuk form pencarian
         $companies = Company::all(); // Pastikan ini sesuai dengan model Company Anda
-    
+
         $documents = Document::with(['type', 'iso', 'createdBy', 'company'])
             ->orderBy('sequence', 'asc')->filter()
             ->paginate(20);
-    
+
         return view('documents.index', compact('documents', 'isos', 'deps', 'companies'));
     }
-    
+
 
     public function create()
     {
@@ -74,8 +74,8 @@ class DocumentController extends Controller
         $iso = ISO::where('id', $request->iso_id)->value('path');
         $folderPath = "uploads/" . $iso . "/" . $folderDoc;
 
-        if (!Storage::disk('external')->exists($folderPath)) {
-            Storage::disk('external')->makeDirectory($folderPath);
+        if (!Storage::exists($folderPath)) {
+            Storage::makeDirectory($folderPath);
         }
 
         $user = Auth::user();
@@ -152,7 +152,7 @@ class DocumentController extends Controller
     public function destroy($id)
     {
         $document = Document::findOrFail($id);
-        Storage::disk('external')->deleteDirectory($document->path);
+        Storage::deleteDirectory($document->path);
         $document->delete();
 
         return redirect()->route('documents.index')->with('success', 'Document deleted successfully!');
