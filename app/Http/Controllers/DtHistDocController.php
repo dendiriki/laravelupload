@@ -45,8 +45,12 @@ class DtHistDocController extends Controller
 
     public function create()
     {
+<<<<<<< HEAD
         // Mengurutkan dokumen berdasarkan 'description' dari A-Z
         $documents = Document::orderBy('sequence', 'asc')->get();
+=======
+        $documents = Document::orderBy('description','asc')->get();
+>>>>>>> main
         $users = User::all();
         $companies = Company::all();
 
@@ -67,6 +71,7 @@ class DtHistDocController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
+<<<<<<< HEAD
 
         $docId = $request->input('doc_id');
 
@@ -81,56 +86,88 @@ class DtHistDocController extends Controller
         $nama_document = Document::where('id', $request->doc_id)->value('description');
         $sequence = Document::where('id', $request->doc_id)->value('sequence');
 
+=======
 
-        // Definisi nama-nama file yang diharapkan
+        // Validasi request dasar
+        $request->validate([
+            'doc_id' => 'required|exists:mst_document,id',
+            'tgl_berlaku' => 'required|date',
+            // Tambahkan validasi lain jika diperlukan
+        ]);
+
+        $document = Document::where('id', $request->doc_id)->firstOrFail();
+        $pathupload = realpath($document->path);
+        $nomer_document = $document->doc_name;
+        $nama_document = $document->description;
+>>>>>>> main
+
         $expectedFiles = ['cover', 'isi', 'attachment', 'record'];
 
         foreach ($expectedFiles as $expectedFile) {
             $pdfFile = $request->file($expectedFile . 'File');
 
-            // Cek jika file diunggah
+            $nodoc = null;
+            $pdfFilePath = null;
+
             if ($pdfFile) {
+<<<<<<< HEAD
 // Validasi ekstensi file
+=======
+>>>>>>> main
                 $allowedExtensions = ['pdf'];
                 $fileExtension = $pdfFile->getClientOriginalExtension();
-
                 if (!in_array($fileExtension, $allowedExtensions)) {
-                    return redirect()->back()->with('error', "Ekstensi file $expectedFile tidak diizinkan. Silakan unggah file PDF.");
+                    return back()->with('error', "Ekstensi file {$expectedFile} tidak diizinkan. Silakan unggah file PDF.");
                 }
 
+<<<<<<< HEAD
                 // Buat folder jika belum ada
                 $folderPath = "$document/$expectedFile";
 
                 // Ganti karakter backslash (\) dengan forward slash (/) pada folderPath
+=======
+                $folderPath = "{$pathupload}/{$expectedFile}";
+>>>>>>> main
                 $folderPath = str_replace('\\', '/', $folderPath);
 
                 if (!Storage::exists($folderPath)) {
                     Storage::makeDirectory($folderPath);
                 }
 
+<<<<<<< HEAD
 // Generate nama acak untuk file
+=======
+>>>>>>> main
                 $randomFileName = bin2hex(random_bytes(8));
-
-                // Simpan file PDF ke folder dengan nama acak
-                $pdfFilePath = $folderPath . '/' . $randomFileName . '.pdf';
                 Storage::putFileAs($folderPath, $pdfFile, $randomFileName . '.pdf');
 
-                // Simpan nama file dalam bentuk acak di kolom nodoc
+                $pdfFilePath = $folderPath . '/' . $randomFileName . '.pdf';
                 $nodoc = $randomFileName;
+            }
 
+<<<<<<< HEAD
                 // Menyimpan nama file PDF ke dalam model yang sesuai
                 switch ($expectedFile) {
                     case 'cover':
                         DtHistCover::create([
+=======
+            // Menyimpan data ke database, termasuk ketika tidak ada file yang diunggah
+            $dataToSave = [
+>>>>>>> main
                 'description' => $nama_document,
                 'doc_id' => $request->input('doc_id'),
                 'vc_created_user' => $user->code_emp,
                 'comp_id' => $user->comp_id,
+<<<<<<< HEAD
                 'revisi' => $request->input('revisi_cover'),
+=======
+                'revisi' => $request->input('revisi_' . $expectedFile),
+>>>>>>> main
                 'link_document' => $pdfFilePath,
                 'nodoc' => $nodoc,
                 'doc_name' => $nomer_document,
                 'tgl_berlaku' => $request->input('tgl_berlaku'),
+<<<<<<< HEAD
                 'sequence' => $sequence
             ]);
                     break;
@@ -184,13 +221,29 @@ class DtHistDocController extends Controller
             }
 
                 Session::flash('success', "File $expectedFile berhasil diunggah ke folder: $folderPath");
+=======
+            ];
+
+            // Tentukan model berdasarkan $expectedFile
+            switch ($expectedFile) {
+                case 'cover':
+                    DtHistCover::create($dataToSave);
+                    break;
+                case 'isi':
+                    DtHistDoc::create($dataToSave);
+                    break;
+                case 'attachment':
+                    DtHistLampiran::create($dataToSave);
+                    break;
+                case 'record':
+                    DtHistCatMut::create($dataToSave);
+                    break;
+>>>>>>> main
             }
-            // Jika file tidak diunggah, tambahkan logika yang sesuai di sini
         }
 
         return redirect()->route('dthistdoc.index')->with('success', 'Data berhasil ditambahkan!');
     }
-
 
 
     public function edit($id)
