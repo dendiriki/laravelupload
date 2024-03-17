@@ -15,6 +15,7 @@
     <div class="chart-actions">
         <button onclick="window.location='{{ route('not.approved.url') }}';">Not Approved</button>
         <button onclick="window.location='{{ route('approved.url') }}';">Approved</button>
+        <button onclick="window.location='{{ route('released.url') }}';">Released</button>
     </div>
 </div>
 
@@ -65,8 +66,13 @@
     background-color: #f44336; /* Warna untuk Not Approved */
 }
 
-.chart-actions button:last-child {
+.chart-actions button:nth-child(2) {
     background-color: #4CAF50; /* Warna untuk Approved */
 }
+
+.chart-actions button:last-child {
+    background-color: #2196F3; /* Warna untuk Release */
+}
+
 </style>
 @endsection

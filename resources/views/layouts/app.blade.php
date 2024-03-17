@@ -58,6 +58,10 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{route('company.index')}}">Company</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('approval.index') }}">Not Approved Documents</a>
+                        </li>
+
                     @endcan
 
                     </li>

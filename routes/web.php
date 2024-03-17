@@ -26,6 +26,7 @@ use App\Http\Controllers\DocTypeController;
 use App\Http\Controllers\DepController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\TiketController;
+use App\Http\Controllers\ApprovalController;
 
 
 
@@ -99,6 +100,8 @@ Route::delete('/companies/destroy/{id}', [CompanyController::class, 'destroy'])-
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
 Route::get('/not-approved-url', [DashboardController::class, 'handleNotApprovedUrl'])->name('not.approved.url');
 Route::get('/approved-url', [DashboardController::class, 'handleApprovedUrl'])->name('approved.url');
+Route::get('tickets/released', [DashboardController::class, 'viewReleasedTickets'])->name('released.url');
+
 
 
 Route::get('/file-list', [FileListController::class, 'index'])->name('file.list')->middleware('auth');
@@ -117,6 +120,18 @@ Route::get('/view-pdfcatmut/{id}', [FileViewController::class, 'viewPdfcatmut'])
 Route::get('/register-document', [TiketController::class, 'registerDocument'])->name('register.document');
 Route::get('/register-revision', [TiketController::class, 'registerRevision'])->name('register.revision');
 Route::post('/documents/store', [TiketController::class, 'store'])->name('documents.store');
+// routes/web.php
+
+Route::put('tickets/{number_ticket}/release', [TiketController::class, 'releaseDocument'])->name('release.document');
+Route::get('/tickets/{ticketNumber}/files', 'App\Http\Controllers\DashboardController@viewTicketFiles')->name('view.ticket.files');
+Route::get('approval', [ApprovalController::class, 'index'])->name('approval.index');
+Route::put('tickets/{number_ticket}/approve', [ApprovalController::class, 'approveDocument'])->name('approve.document');
+Route::get('tickets/{number_ticket}', [DashboardController::class, 'showTicketDetail'])->name('ticket.detail');
+
+
+
+
+
 
 
 

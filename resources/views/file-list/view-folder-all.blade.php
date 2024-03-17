@@ -35,7 +35,7 @@
                     <p>Tanggal Berlaku: {{ $document->tgl_berlaku }}</p>
                     <p>Create By : {{ $document->createdBy->username }}</p>
                     <p>Revisi : {{ $document->revisi }}</p>
-                    <p>Number Doc : {{ $cover->doc_name }}</p>
+                    <p>Number Doc : {{ $document->doc_name }}</p>
                     <a href="{{ route('view.pdfdoc', ['id' => $document->id]) }}" class="btn btn-primary"
                         target="_blank">View File PDF Cover</a>
 
@@ -55,7 +55,7 @@
                     <p>Tanggal Berlaku: {{ $attachment->tgl_berlaku }}</p>
                     <p>Create By : {{ $attachment->createdBy->username }}</p>
                     <p>Revisi : {{ $attachment->revisi }}</p>
-                    <p>Number Doc : {{ $cover->doc_name }}</p>
+                    <p>Number Doc : {{ $attachment->doc_name }}</p>
                     <a href="{{ route('view.pdflampiran', ['id' => $attachment->id]) }}" class="btn btn-primary"
                         target="_blank">View File PDF Cover</a>
 
@@ -75,7 +75,7 @@
                     <p>Tanggal Berlaku: {{ $record->tgl_berlaku }}</p>
                     <p>Create By : {{ $record->createdBy->username }}</p>
                     <p>Revisi : {{ $record->revisi }}</p>
-                    <p>Number Doc : {{ $cover->doc_name }}</p>
+                    <p>Number Doc : {{ $record->doc_name }}</p>
                     <a href="{{ route('view.pdfcatmut', ['id' => $record->id]) }}" class="btn btn-primary"
                         target="_blank">View File PDF Cover</a>
 

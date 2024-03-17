@@ -47,35 +47,82 @@ class TiketController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
+{
+    // Validasi input
+    $request->validate([
+        'document_name' => 'required|string|max:255',
+        'document_file' => 'required|file|max:10240',
+        'description' => 'required|string|min:5',// Max 10 MB
+    ]);
+
+    // Mendapatkan ID user yang sedang login
+    $userId = Auth::id();
+
+    // Mendapatkan departemen dan perusahaan dari user yang sedang login
+    $user = Auth::user();
+    $departmentId = $user->dep_id;
+    $companyId = $user->comp_id;
+
+    $name_document = $request->document_name;
+
+    // Menyimpan file document yang diberikan
+    $documentFilePath = $request->file('document_file')->store("uploads/tiket/$name_document/document");
+
+    $folderpath = "uploads/tiket/$name_document";
+
+    // Menyimpan data tiket
+    $ticketData = [
+        'user_id' => $userId,
+        'department_id' => $departmentId,
+        'company_id' => $companyId,
+        'document_name' => $request->document_name,
+        'document_file' => $folderpath,
+        'document_status' => 'Not Approved',
+        'document_note' => $request->document_note ?? ($request->has('revision') ? 'Revision Document' : 'New Document'),
+        'tanggal' => now(), // Tanggal saat ini
+        'description' => $request->description
+    ];
+
+    // Cek apakah ada deskripsi, jika ada tambahkan ke data tiket
+    if ($request->has('description')) {
+        $ticketData['description'] = $request->description;
+    }
+
+    // Simpan file-file tambahan jika diunggah
+    if ($request->hasFile('record_file')) {
+        $recordFilePath = $request->file('record_file')->store("uploads/tiket/$name_document/record");
+        $ticketData['record_file'] = $recordFilePath;
+    }
+
+    if ($request->hasFile('attachment_file')) {
+        $attachmentFilePath = $request->file('attachment_file')->store("uploads/tiket/$name_document/attachment");
+        $ticketData['attachment_file'] = $attachmentFilePath;
+    }
+
+    if ($request->hasFile('cover_file')) {
+        $coverFilePath = $request->file('cover_file')->store("uploads/tiket/$name_document/cover");
+        $ticketData['cover_file'] = $coverFilePath;
+    }
+
+    // Simpan data tiket
+    Ticket::create($ticketData);
+
+    // Redirect ke halaman yang sesuai, misalnya halaman index atau halaman sukses
+    return redirect()->route('file.list')->with('success', 'Dokumen berhasil dibuat.');
+}
+
+
+    public function releaseDocument($number_ticket)
     {
-         // Validasi input
-         $request->validate([
-            'document_name' => 'required|string|max:255',
-            'document_file' => 'required|file|max:10240', // Max 10 MB
-        ]);
+        // Temukan tiket berdasarkan nomor tiket
+        $ticket = Ticket::where('number_ticket', $number_ticket)->firstOrFail();
 
-        // Mendapatkan ID user yang sedang login
-        $userId = Auth::id();
+        // Lakukan logika untuk melepaskan dokumen
+        // Misalnya, ubah status dokumen menjadi "Released"
+        $ticket->update(['document_status' => 'Released']);
 
-        // Mendapatkan departemen dan perusahaan dari user yang sedang login
-        $user = Auth::user();
-        $departmentId = $user->dep_id;
-        $companyId = $user->comp_id;
-
-        // Menyimpan data tiket
-        Ticket::create([
-            'user_id' => $userId,
-            'department_id' => $departmentId,
-            'company_id' => $companyId,
-            'document_name' => $request->document_name,
-            'document_file' => $request->file('document_file')->store('files'), // Menyimpan file ke direktori 'storage/app/files'
-            'document_status' => 'Not Approved',
-            'document_note' => $request->document_note ?? ($request->has('revision') ? 'Revision Document' : 'New Document'),
-            'tanggal' => now(), // Tanggal saat ini
-        ]);
-
-        // Redirect ke halaman yang sesuai, misalnya halaman index atau halaman sukses
-        return redirect()->route('file.list')->with('success', 'Document created successfully.');
+        // Redirect ke halaman sebelumnya dengan pesan sukses
+        return redirect()->back()->with('success', 'Document released successfully.');
     }
 
     /**
