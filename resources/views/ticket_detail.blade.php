@@ -4,40 +4,68 @@
 
 @section('content')
     <div class="container">
-        <h2>Ticket Detail</h2>
+        <h2 class="mb-4">Ticket Detail</h2>
         <div class="row">
             <div class="col-md-6">
-                <div class="mb-3">
-                    <strong>Number Ticket:</strong> {{ $ticket->number_ticket }}
-                </div>
-                <div class="mb-3">
-                    <strong>User:</strong> {{ $ticket->user->username }}
-                </div>
-                <div class="mb-3">
-                    <strong>Document Name:</strong> {{ $ticket->document_name }}
-                </div>
-                <div class="mb-3">
-                    <strong>Department:</strong> {{ $ticket->department->name }}
-                </div>
-                <div class="mb-3">
-                    <strong>Description:</strong> {{ $ticket->description }}
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Ticket Information</h5>
+                        <table class="table table-striped">
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Number Ticket</th>
+                                    <td>{{ $ticket->number_ticket }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">User</th>
+                                    <td>{{ $ticket->user->username }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Document Name</th>
+                                    <td>{{ $ticket->document_name }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Department</th>
+                                    <td>{{ $ticket->department->name }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Description</th>
+                                    <td>{{ $ticket->description }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="mb-3">
-                    <strong>Company:</strong> {{ $ticket->company->name }}
-                </div>
-                <div class="mb-3">
-                    <strong>Document File:</strong> {{ $ticket->document_file }}
-                </div>
-                <div class="mb-3">
-                    <strong>Document Status:</strong> {{ $ticket->document_status }}
-                </div>
-                <div class="mb-3">
-                    <strong>Document Note:</strong> {{ $ticket->document_note }}
-                </div>
-                <div class="mb-3">
-                    <strong>Tanggal:</strong> {{ $ticket->tanggal }}
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Document Information</h5>
+                        <table class="table table-striped">
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Company</th>
+                                    <td>{{ $ticket->company->name }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Document File</th>
+                                    <td>{{ $ticket->document_file }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Document Status</th>
+                                    <td>{{ $ticket->document_status }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Document Note</th>
+                                    <td>{{ $ticket->document_note }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Tanggal</th>
+                                    <td>{{ $ticket->tanggal }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

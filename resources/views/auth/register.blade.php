@@ -34,6 +34,10 @@
                     <input class="form-check-input" type="radio" name="role" id="View" value="View">
                     <label class="form-check-label" for="View">View</label>
                   </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="role" id="Hod" value="Hod">
+                    <label class="form-check-label" for="Hod">HOD</label>
+                  </div>
             </div>
             <div class="mb-3">
                 <label for="dep_id" class="form-label">Department ID:</label>

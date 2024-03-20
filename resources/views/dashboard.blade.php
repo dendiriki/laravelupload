@@ -3,9 +3,14 @@
 @section('title', 'Dashboard')
 
 @section('content')
-<div class="mt-4">
+
     <h2>Welcome to the Dashboard {{ Auth::user()->username }}</h2>
     <p>This is your dashboard content.</p>
+
+
+    @can('admin')
+<div class="mt-4">
+
     <div class="pie-chart-container">
         <div class="pie-chart" style="--approved-percentage: {{ $approvedPercentage }}%; --not-approved-percentage: {{ $notApprovedPercentage }}%;">
             <div class="chart" onclick="location.href='{{ route('not.approved.url') }}'" style="background: conic-gradient(#f44336 0%, #f44336 var(--not-approved-percentage), #4CAF50 var(--not-approved-percentage), #4CAF50 100%);"></div>
@@ -75,4 +80,6 @@
 }
 
 </style>
+
+@endcan
 @endsection

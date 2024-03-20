@@ -4,12 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Ticket;
+use Illuminate\Support\Facades\Auth;
 
 class ApprovalController extends Controller
 {
     public function index()
     {
-        $notApprovedTickets = Ticket::where('document_status', 'Not Approved')->get();
+        $userDepartmentId = Auth::user()->dep_id;
+
+        $notApprovedTickets = Ticket::where('document_status', 'Not Approved')
+                                    ->where('department_id', $userDepartmentId)
+                                                        ->get();
+
         return view('approved', compact('notApprovedTickets'));
     }
     public function approveDocument($number_ticket)
