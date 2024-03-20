@@ -5,7 +5,7 @@
         <h2>Isi Document</h2>
 
         <div class="row">
-            <div class="col-md-6" style="margin-left: auto;">
+            <div class="col-md-9" style="margin-left: auto;">
                 <form action="/dthistdoc">
                     <div class="input-group mb-3">
                         <input type="text" class="form-control" placeholder="Search Documents..." name="search"
@@ -18,6 +18,26 @@
                                 </option>
                             @endforeach
                         </select>
+                        <!-- Dropdown untuk Departemen -->
+                        <select class="form-select" name="dep">
+                            <option value="">Select Departemen</option>
+                            @foreach ($deps as $dep)
+                                <option value="{{ $dep->short }}" {{ request('dep') == $dep->short ? 'selected' : '' }}>
+                                    {{ $dep->name }}
+                                </option>
+                            @endforeach
+                        </select>
+
+                        <!-- Dropdown untuk Perusahaan -->
+                        <select class="form-select" name="company">
+                            <option value="">Select Company</option>
+                            @foreach ($companies as $company)
+                                <option value="{{ $company->id }}" {{ request('company') == $company->id ? 'selected' : '' }}>
+                                    {{ $company->name }}
+                                </option>
+                            @endforeach
+                        </select>
+
                         <button class="btn btn-primary" type="submit">Search</button>
                     </div>
                 </form>
@@ -28,22 +48,24 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>No.</th>
-                    <th>Description</th>
-                    <th>Created</th>
+                    <th>ID</th>
+                    <th>Document Name</th>
+                    <th>Document No</th>
+                    <th>ISO</th>
                     <th>Departement</th>
-                    <th>Nomer document</th>
-                    <th>Actions</th> <!-- Kolom untuk tombol aksi -->
+                    <th>Company</th>
+                    <th>Action</th> <!-- Tambah kolom untuk Action -->
                 </tr>
             </thead>
             <tbody>
                 @foreach ($dtHistDocs as $key => $dtHistDoc)
                     <tr>
-                        <td>{{ $loop->iteration + ($dtHistDocs->currentPage() - 1) * $dtHistDocs->perPage() }}</td>
+                        <td>{{ $dtHistDoc->sequence }}</td>
                         <td>{{ $dtHistDoc->description }}</td>
-                        <td>{{ $dtHistDoc->created_at }}</td>
+                         <td>{{ $dtHistDoc->doc_name }}</td>
+                         <td>{{ $dtHistDoc->document->iso->description}}</td>
                         <td>{{ $dtHistDoc->document->dep_terkait }}</td>
-                        <td>{{ $dtHistDoc->doc_name }}</td>
+                        <td>{{ $dtHistDoc->Company->name }}</td>
                         <td>
                             <!-- Tombol Edit -->
                             <a href="{{ route('dthistdoc.edit', $dtHistDoc->id) }}" class="btn btn-warning">Revisi</a>

@@ -1,0 +1,1 @@
+New-Item -ItemType SymbolicLink -Path "public\uploads" -Target "\\ind-fps06\DATA_DIGITAL" -Force

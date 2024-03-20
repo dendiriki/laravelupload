@@ -10,21 +10,38 @@ use App\Models\Document;
 use App\Models\DtHistCover;
 use App\Models\DtHistCatMut;
 use Illuminate\Http\Request;
+use App\Models\Dep;
 use App\Models\DtHistLampiran;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth; // Pastikan ini diimpor
 use App\Models\DtHistDoc; // Sesuaikan dengan nama model yang Anda gunakan
+use Illuminate\Support\Facades\DB;
+
 
 class DtHistDocController extends Controller
 {
     public function index()
     {
         $isos = ISO::all();
-        $dtHistDocs = DtHistDoc::where('id_sebelum', null)->latest()->filter()->paginate(6);
+        $deps = Dep::all(); // Ambil semua departemen berdasarkan singkatan
+        $companies = Company::all(); // Ambil semua perusahaan
 
-        return view('dthistdoc.index', compact('dtHistDocs', 'isos'));
+        $dtHistDocs = DtHistDoc::where('id_sebelum', null)
+                        ->whereHas('document', function ($query) {
+                            $query->whereExists(function ($subquery) {
+                                $subquery->select(DB::raw(1))
+                                         ->from('mst_document')
+                                         ->whereColumn('mst_document.id', 'dt_histdoc.doc_id');
+                            });
+                        })
+                        ->orderBy('sequence','asc')
+                        ->filter()
+                        ->paginate(20);
+
+        return view('dthistdoc.index', compact('dtHistDocs', 'isos', 'deps', 'companies'));
     }
+
 
     public function create()
     {
@@ -34,6 +51,7 @@ class DtHistDocController extends Controller
 
         return view('dthistdoc.create', compact('documents', 'users', 'companies'));
     }
+
 
     public function detail ($id){
        $document = Document::find($id);

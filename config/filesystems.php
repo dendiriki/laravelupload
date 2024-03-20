@@ -58,7 +58,7 @@ return [
 
         'external' => [
             'driver' => 'local',
-            'root' => '//ind-fps06/DATA_DIGITAL', // Sesuaikan dengan path penyimpanan eksternal
+            'root' =>  env('APP_STR').'/DATA_DIGITAL/storage', // Sesuaikan dengan path penyimpanan eksternal
         ],
 
     ],

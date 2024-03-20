@@ -13,6 +13,14 @@
                 <label for="short" class="form-label">Short</label>
                 <input type="text" class="form-control" id="short" name="short" required>
             </div>
+            <div class="mb-3">
+                <label for="com_id" class="form-label">Company</label>
+                <select class="form-control" id="com_id" name="com_id" required>
+                    @foreach($companies as $company)
+                        <option value="{{ $company->id }}">{{ $company->name }}</option>
+                    @endforeach
+                </select>
+            </div>
             <button type="submit" class="btn btn-primary">Create</button>
         </form>
     </div>

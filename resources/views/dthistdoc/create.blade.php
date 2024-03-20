@@ -5,6 +5,20 @@
 @section('content')
     <div class="container">
         <h2>Tambah DtHistDoc</h2>
+        @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach($errors->all() as $error)
+                    <li>{{$error}}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+        @if(session('error'))
+        <div class="alert alert-danger">
+            {{session('error')}}
+        </div>
+        @endif
         <form action="{{ route('dthistdoc.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
@@ -12,7 +26,7 @@
                 <label for="doc_id" class="form-label">Doc Name</label>
                 <select id="doc-select" name="doc_id" class="form-select" onfocus='this.size=8;' onblur='this.size=1;' onchange='this.size=1; this.blur();'>
                     @foreach ($documents as $document)
-                        <option value="{{ $document->id }}">{{ $document->description }} - {{ $document->doc_name }} - {{ $document->iso->description }}</option>
+                        <option value="{{ $document->id }}">{{ $document->sequence }} - {{ $document->description }} - {{ $document->doc_name }} - {{ $document->iso->description }}</option>
                     @endforeach
                 </select>
             </div>

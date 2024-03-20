@@ -35,7 +35,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('types.index') }}">Types</a>
+                            <a class="nav-link" href="{{ route('types.index') }}">Type</a>
 
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('documents.index') }}">Documents</a>
@@ -58,7 +58,16 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{route('company.index')}}">Company</a>
                         </li>
+
                     @endcan
+
+                    @can('hod')
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('approval.index') }}">Not Approved Documents</a>
+                    </li>
+                    @endcan
+
+
 
                     </li>
                     <li class="nav-item">

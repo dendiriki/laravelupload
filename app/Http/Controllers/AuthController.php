@@ -29,7 +29,7 @@ class AuthController extends Controller
 
         if ($user) {
             Auth::login($user);
-            return redirect()->intended('/');
+            return redirect()->intended('file-list');
         }
 
         return back()->withErrors(['login' => 'Invalid login credentials']);
