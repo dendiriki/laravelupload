@@ -66,7 +66,7 @@ class TiketController extends Controller
     $name_document = $request->document_name;
 
     // Menyimpan file document yang diberikan
-    $documentFilePath = $request->file('document_file')->store("uploads/tiket/$name_document/document");
+    $documentFilePath = $request->file('document_file')->store("uploads/tiket/$name_document/document",'external');
 
     $folderpath = "uploads/tiket/$name_document";
 

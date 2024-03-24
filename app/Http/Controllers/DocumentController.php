@@ -74,8 +74,8 @@ class DocumentController extends Controller
         $iso = ISO::where('id', $request->iso_id)->value('path');
         $folderPath = "uploads/" . $iso . "/" . $folderDoc;
 
-        if (!Storage::exists($folderPath)) {
-            Storage::makeDirectory($folderPath);
+        if (!Storage::disk('external')->exists($folderPath)) {
+            Storage::disk('external')->makeDirectory($folderPath);
         }
 
         $user = Auth::user();
@@ -152,7 +152,7 @@ class DocumentController extends Controller
     public function destroy($id)
     {
         $document = Document::findOrFail($id);
-        Storage::deleteDirectory($document->path);
+        Storage::disk('external')->deleteDirectory($document->path);
         $document->delete();
 
         return redirect()->route('documents.index')->with('success', 'Document deleted successfully!');

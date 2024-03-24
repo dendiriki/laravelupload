@@ -34,7 +34,7 @@ class FileViewController extends Controller
         })
         ->where('iso_id', $isoId)
         ->filter() // Menggunakan method filter() untuk memasukkan kriteria pencarian
-        ->orderBy('dt_created_date', 'desc')
+        ->orderBy('sequence', 'asc')
         ->paginate(6);
 
         return view('file-list.view-files', compact('documents', 'iso', 'types'));

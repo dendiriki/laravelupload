@@ -40,8 +40,8 @@ class ISOController extends Controller
 
         try {
             // Gunakan penyimpanan eksternal
-            if (!Storage::exists($folderPath)) {
-                Storage::makeDirectory($folderPath);
+            if (!Storage::disk('external')->exists($folderPath)) {
+                Storage::disk('external')->makeDirectory($folderPath);
             }
 
             ISO::create([
@@ -92,9 +92,9 @@ class ISOController extends Controller
         // Hapus folder terkait
         $folderPath = "uploads/" . str_replace(' ', '_', $iso->path);
 
-        if (Storage::exists($folderPath)) {
+        if (Storage::disk('external')->exists($folderPath)) {
             // Hapus folder terkait
-            Storage::deleteDirectory($folderPath);
+            Storage::disk('external')->deleteDirectory($folderPath);
         }
 
         // Hapus ISO dari database

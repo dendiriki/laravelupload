@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Storage;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
 
@@ -74,7 +74,9 @@ class DashboardController extends Controller
         // Loop melalui setiap folder
         foreach ($folderNames as $folderName) {
             // Path folder lengkap
-            $folderPath = storage_path("app/public/{$ticket->document_file}/{$folderName}");
+            // $folderPath = storage_path("app/public/{$ticket->document_file}/{$folderName}");
+            // Menjadi ini:
+            $folderPath = Storage::disk('external')->path("{$ticket->document_file}/{$folderName}");
 
             // Ambil daftar file dari folder tiket jika folder ada
             if (file_exists($folderPath) && is_dir($folderPath)) {
