@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container mt-5">
-        <h1>Types</h1>
+        <h1>Type</h1>
 
         <a href="{{ route('types.create') }}" class="btn btn-primary">Create New Type</a>
 

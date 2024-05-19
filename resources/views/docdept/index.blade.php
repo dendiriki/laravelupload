@@ -31,7 +31,7 @@
                     <tr>
                         <td>{{ $docDept->id }}</td>
                         <td>{{ $docDept->document->description }}</td>
-                        <td>{{ $docDept->dep->name }}</td>
+                        <td>{{ $docDept->dep ? $docDept->dep->name : 'No Department' }}</td>
                         <td>
                             <form action="{{ route('docdept.destroy', $docDept->id) }}" method="POST">
                                 @csrf

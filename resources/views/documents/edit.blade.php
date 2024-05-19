@@ -15,8 +15,18 @@
             @method('PUT')
 
             <div class="mb-3">
+                <label for="sequence" class="form-label">sequence</label>
+                <input type="text" name="sequence" class="form-control" id="sequence" value="{{ $document->sequence }}">
+            </div>
+
+            <div class="mb-3">
                 <label for="description" class="form-label">Name Doc</label>
                 <input type="text" name="description" class="form-control" id="description" value="{{ $document->description }}">
+            </div>
+
+            <div class="mb-3">
+                <label for="doc_name" class="form-label">Nomer Doc</label>
+                <input type="text" name="doc_name" class="form-control" id="doc_name" value="{{ $document->doc_name }}">
             </div>
 
             <div class="mb-3">

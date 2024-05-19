@@ -5,11 +5,40 @@
         <h2>Documents</h2>
 
         <div class="row">
-            <div class="col-md-6" style="margin-left: auto;">
+            <div class="col-md-9" style="margin-left: auto;">
                 <form action="/documents">
-                    <div class="input-group mb-3">
+                    <div class="input-group mb-6">
                         <input type="text" class="form-control" placeholder="Search Documents..." name="search"
-                            value="{{ request('search') }}">
+                               value="{{ request('search') }}">
+                        <select class="form-select" name="iso">
+                            <option value="">Select ISO</option>
+                            @foreach ($isos as $iso)
+                                <option value="{{ $iso->id }}" {{ request('iso') == $iso->id ? 'selected' : '' }}>
+                                    {{ $iso->description }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <!-- Tambahkan ini untuk Departemen -->
+                        <select class="form-select" name="dep">
+                        <option value="">Select Departemen</option>
+                        @foreach ($deps as $dep)
+                            <option value="{{ $dep->short }}" {{ request('dep') == $dep->short ? 'selected' : '' }}>
+                                {{ $dep->name }} ({{ $dep->short }})
+                            </option>
+                        @endforeach
+                    </select>
+
+
+                        <!-- Tambahkan ini untuk Perusahaan -->
+                        <select class="form-select" name="company">
+                            <option value="">Select Company</option>
+                            @foreach ($companies as $company)
+                                <option value="{{ $company->id }}" {{ request('company') == $company->id ? 'selected' : '' }}>
+                                    {{ $company->name }}
+                                </option>
+                            @endforeach
+                        </select>
+
                         <button class="btn btn-primary" type="submit">Search</button>
                     </div>
                 </form>
@@ -28,25 +57,26 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Description</th>
+                    <th>Document Name</th>
+                    <th>Document No</th>
                     <th>Type</th>
                     <th>ISO</th>
-                    <th>Date Created</th>
-                    <th>Date Modified</th>
-                    <th>Created By</th>
+                    <th>Departement</th>
+                    <th>Company</th>
                     <th>Action</th> <!-- Tambah kolom untuk Action -->
                 </tr>
             </thead>
             <tbody>
                 @foreach ($documents as $document)
                     <tr>
-                        <td>{{ $document->id }}</td>
+                    <td>{{ $document->sequence }}</td>
                         <td>{{ $document->description }}</td>
+                        <td>{{ $document->doc_name }}</td>
                         <td>{{ $document->type->short }}</td>
                         <td>{{ $document->iso->description }}</td>
-                        <td>{{ $document->dt_created_date }}</td>
-                        <td>{{ $document->dt_modified_date }}</td>
-                        <td>{{ $document->createdBy->username }}</td>
+                        <td>{{ $document->dep_terkait }}</td>
+                        <td>{{ $document->company->name}}</td>
+                        <!-- <td>{{ $document->createdBy ? $document->createdBy->username : 'N/A' }}</td> -->
                         <td>
                             <a href="{{ route('documents.edit', ['id' => $document->id]) }}"
                                 class="btn btn-primary">Edit</a>
@@ -65,6 +95,12 @@
         </table>
     </div>
     {{ $documents->links() }}
+
+    @if(session('customError'))
+    <script>
+        alert('{{ session("customError") }}');
+    </script>
+    @endif
 
     <script>
         function confirmDelete() {

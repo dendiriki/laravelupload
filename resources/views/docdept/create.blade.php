@@ -9,7 +9,7 @@
                 <label for="doc_id" class="form-label">Document</label>
                 <select name="doc_id" id="doc_id" class="form-control" onfocus='this.size=8;' onblur='this.size=1;' onchange='this.size=1; this.blur();'>
                     @foreach ($documents as $document)
-                        <option value="{{ $document->id }}">{{ $document->description }}</option>
+                        <option value="{{ $document->id }}">{{ $document->sequence }}. {{ $document->description }}</option>
                     @endforeach
                 </select>
             </div>

@@ -4,24 +4,31 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ISO;
-use App\Models\Type; // Ganti dengan model yang sesuai untuk mst_doctype
+use App\Models\Type;
 use App\Models\User;
 use App\Models\Company;
-use App\Models\Document; // Model untuk mst_document
+use App\Models\Document;
 use App\Models\Dep;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Auth; // Pastikan ini diimpor
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class DocumentController extends Controller
 {
     public function index()
     {
-        $documents = Document::with(['type', 'iso', 'createdBy', 'company'])
-            ->orderBy('dt_created_date', 'desc')->filter() // Urutkan berdasarkan dt_created_date secara descending
-            ->paginate(6);
+        $isos = ISO::all();
+        $deps = Dep::all(); // Ambil data departemen untuk form pencarian
+        $companies = Company::all(); // Pastikan ini sesuai dengan model Company Anda
 
-        return view('documents.index', compact('documents'));
+        $documents = Document::with(['type', 'iso', 'createdBy', 'company'])
+            ->orderBy('sequence', 'asc')->filter()
+            ->paginate(20);
+
+        return view('documents.index', compact('documents', 'isos', 'deps', 'companies'));
     }
+
 
     public function create()
     {
@@ -31,122 +38,131 @@ class DocumentController extends Controller
         $users = User::all();
         $companies = Company::all();
 
-        return view('documents.create', compact('types', 'isos', 'users', 'companies','deps'));
+        $lastSequence = Document::max('sequence');
+        $recommendSequence = $lastSequence ? $lastSequence + 1 : 1;
+
+        return view('documents.create', compact('types', 'isos', 'users', 'companies','deps','recommendSequence'));
     }
 
     public function store(Request $request)
     {
-        $user = Auth::user();
-        // Validasi request
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'description' => 'required',
             'iso_id' => 'required',
             'dt_modified_date' => 'required',
+            'doc_name' => ['required', Rule::unique('mst_document')],
         ]);
 
-        // Mengganti karakter non-alphanumeric menjadi underscore
-        $folderDoc = preg_replace('/[^a-zA-Z0-9]/', '_', $request->description);
-
-        // Mengambil description dari ISO berdasarkan iso_id
-        $iso = ISO::where('id', $request->iso_id)->value('path');
-
-        // Menentukan path folder
-        $folderPath = "uploads/" . $iso . "/" . $folderDoc;
-
-        // Mengecek apakah folder sudah ada, jika tidak maka buat folder baru
-        if (!Storage::exists($folderPath)) {
-            if (Storage::makeDirectory($folderPath)) {
-                // Folder berhasil dibuat, simpan path ke dalam $request
-                $request->merge(['path' => $folderDoc]);
-            } else {
-                // Gagal membuat folder, kembali ke halaman create dengan pesan error
-                return redirect()->route('documents.create')->with('error', 'Failed to create folder');
+        $validator->after(function ($validator) use ($request) {
+            $exists = Document::where('description', $request->description)
+                              ->where('iso_id', $request->iso_id)
+                              ->exists();
+            if ($exists) {
+                $validator->errors()->add('description_iso_id', 'The combination of document name and ISO ID must be unique.');
             }
+        });
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                             ->withErrors($validator)
+                             ->withInput()
+                             ->with('customError', 'The combination of document name and ISO ID must be unique.');
         }
 
-        // Simpan dokumen
-        $documentData = [
-            'description' => $request->description,
+
+        $folderDoc = preg_replace('/[^a-zA-Z0-9]/', '_', $request->description);
+        $iso = ISO::where('id', $request->iso_id)->value('path');
+        $folderPath = "uploads/" . $iso . "/" . $folderDoc;
+
+        if (!Storage::disk('external')->exists($folderPath)) {
+            Storage::disk('external')->makeDirectory($folderPath);
+        }
+
+        $user = Auth::user();
+        $documentData = $request->only(['description', 'iso_id', 'dt_modified_date', 'doc_name']) + [
             'doctype_id' => $request->doctype_id,
-            'iso_id' => $request->iso_id,
-            'dt_created_date' => $request->dt_modified_date,
+            'dt_created_date' => now(), // Assuming now() is the creation time
             'vc_created_user' => $user->code_emp,
             'dt_modified_date' => $request->dt_modified_date,
             'vc_modified_user' => $user->code_emp,
-            'comp_id' =>  $user->comp_id,
-            'path' => $folderPath, // Path yang telah disimpan sebelumnya
-            'dep_terkait' =>$request->dep_terkait
+            'comp_id' => $user->comp_id,
+            'path' => $folderPath,
+            'dep_terkait' => $request->dep_terkait,
+            'sequence' => $request->sequence,
         ];
 
-        // Menyimpan data ISO
         Document::create($documentData);
 
-        // Redirect ke index dengan pesan sukses
         return redirect()->route('documents.index')->with('success', 'Document created successfully!');
     }
 
     public function edit($id)
     {
         $document = Document::findOrFail($id);
+        $deps = Dep::all();
         $types = Type::all();
         $isos = ISO::all();
         $users = User::all();
         $companies = Company::all();
 
-        return view('documents.edit', compact('document', 'types', 'isos', 'users', 'companies'));
+        return view('documents.edit', compact('document', 'types', 'isos', 'users', 'companies', 'deps'));
     }
 
     public function update(Request $request, $id)
     {
-        $user = Auth::user();
+        $validator = Validator::make($request->all(), [
+            'doc_name' => [
+                'required',
+                Rule::unique('mst_document')->ignore($id),
+            ],
+        ]);
+
+        $validator->after(function ($validator) use ($request, $id) {
+            $exists = Document::where('description', $request->description)
+                              ->where('iso_id', $request->iso_id)
+                              ->where('id', '!=', $id)
+                              ->exists();
+            if ($exists) {
+                $validator->errors()->add('description_iso_id', 'The combination of description and ISO ID must be unique.');
+            }
+        });
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                             ->withErrors($validator)
+                             ->withInput();
+        }
+
         $document = Document::findOrFail($id);
+        $user = Auth::user();
+        $updateData = $request->only(['description', 'iso_id', 'dt_modified_date', 'doc_name']) + [
+            'doctype_id' => $request->doctype_id,
+            'dt_modified_date' => now(), // Assuming now() is the update time
+            'vc_modified_user' => $user->code_emp,
+            'comp_id' => $user->comp_id,
+            'dep_terkait' => $request->dep_terkait,
+            'sequence' => $request->sequence,
+        ];
 
-        // Lakukan perubahan pada $document sesuai dengan $request
-        $document->description = $request->input('description');
-        $document->doctype_id = $request->input('doctype_id');
-        $document->iso_id = $request->input('iso_id');
-        $document->vc_created_user = $user->code_emp;
-        $document->dt_modified_date = $request->input('dt_modified_date');
-        $document->vc_modified_user = $user->code_emp;
-        $document->comp_id =  $user->comp_id;
-        $document->dep_terkait = $request->input('dep_terkait');
-
-        // Simpan perubahan
-        $document->save();
+        $document->update($updateData);
 
         return redirect()->route('documents.index')->with('success', 'Document updated successfully!');
     }
 
-
     public function destroy($id)
     {
-        // Ambil data dokumen berdasarkan ID
         $document = Document::findOrFail($id);
-
-        // Ambil path folder dokumen
-        $folderPath = $document->path;
-
-        // Hapus folder dan isinya
-        if (Storage::exists($folderPath)) {
-            Storage::deleteDirectory($folderPath);
-        }
-
-        // Hapus data dokumen dari database
+        Storage::disk('external')->deleteDirectory($document->path);
         $document->delete();
 
-        // Redirect ke index dengan pesan sukses
         return redirect()->route('documents.index')->with('success', 'Document deleted successfully!');
     }
 
     public function fetchDataForApi()
     {
         $documents = Document::all();
-
-
-            return response()->json($documents)
-        ->header('Access-Control-Allow-Origin', '*')
-        ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-
+        return response()->json($documents)
+                         ->header('Access-Control-Allow-Origin', '*')
+                         ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     }
-
 }

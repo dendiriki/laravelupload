@@ -18,7 +18,7 @@ class User extends Authenticatable
     public $incrementing = false; // Menyatakan apakah primary key auto-increment atau tidak
 
     protected $fillable = [
-        'code_emp', 'username', 'password', 'role', 'dep_id', 'comp_id',
+        'code_emp', 'username', 'password', 'role', 'dep_id', 'comp_id','status','document_number',
     ];
 
     protected $hidden = [
@@ -35,6 +35,10 @@ class User extends Authenticatable
         return Document::where('id', $this->dep_id)->get();
     }
 
+    public function comp()
+    {
+        return $this->belongsTo(company::class, 'comp_id');
+    }
 
 
     // Definisikan relasi ke tabel departemen

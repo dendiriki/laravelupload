@@ -25,7 +25,8 @@ use App\Http\Controllers\DocDeptController;
 use App\Http\Controllers\DocTypeController;
 use App\Http\Controllers\DepController;
 use App\Http\Controllers\CompanyController;
-
+use App\Http\Controllers\TiketController;
+use App\Http\Controllers\ApprovalController;
 
 
 
@@ -56,7 +57,7 @@ Route::delete('/types/destroy/{id}', [TypeController::class, 'destroy'])->name('
 
 Route::get('/documents', [DocumentController::class, 'index'])->name('documents.index')->middleware('admin');
 Route::get('/documents/create', [DocumentController::class, 'create'])->name('documents.create')->middleware('admin');
-Route::post('/documents', [DocumentController::class, 'store'])->name('documents.store')->middleware('admin');
+Route::post('/documents', [DocumentController::class, 'store'])->name('document.store')->middleware('admin');
 Route::get('/documents/edit/{id}', [DocumentController::class, 'edit'])->name('documents.edit')->middleware('admin');
 Route::put('/documents/update/{id}', [DocumentController::class, 'update'])->name('documents.update')->middleware('admin');
 Route::delete('/documents/destroy/{id}', [DocumentController::class, 'destroy'])->name('documents.destroy')->middleware('admin');
@@ -97,6 +98,18 @@ Route::delete('/companies/destroy/{id}', [CompanyController::class, 'destroy'])-
 
 //view
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
+Route::get('/not-approved-url', [DashboardController::class, 'handleNotApprovedUrl'])->name('not.approved.url');
+Route::get('/approved-url', [DashboardController::class, 'handleApprovedUrl'])->name('approved.url');
+Route::get('tickets/released', [DashboardController::class, 'viewReleasedTickets'])->name('released.url');
+// Tambahkan di bawah route yang sudah ada
+Route::get('/tickets/{ticketNumber}/edit-description', [DashboardController::class, 'editDescription'])->name('tickets.editDescription');
+Route::post('/tickets/{ticketNumber}/update-description', [DashboardController::class, 'updateDescription'])->name('tickets.updateDescription');
+Route::get('/new-document', [DashboardController::class,'showNewDocumentForm'])->name('new.document');
+
+
+
+
+
 Route::get('/file-list', [FileListController::class, 'index'])->name('file.list')->middleware('auth');
 Route::get('/view-files/{isoId}', [FileViewController::class, 'viewFiles'])->name('view.files')->middleware('auth');
 Route::get('/view-folder-contents/{folder}', [FileViewController::class, 'viewDocument'])->name('view.folder.contents')->middleware('auth');
@@ -110,6 +123,38 @@ Route::get('/view-pdfcatmut/{id}', [FileViewController::class, 'viewPdfcatmut'])
 
 
 
+Route::get('/register-document', [TiketController::class, 'registerDocument'])->name('register.document');
+Route::get('/register-revision', [TiketController::class, 'registerRevision'])->name('register.revision');
+Route::post('/documents/store', [TiketController::class, 'store'])->name('documents.store');
+// routes/web.php
+
+Route::put('tickets/{number_ticket}/release', [TiketController::class, 'releaseDocument'])->name('release.document');
+Route::get('/tickets/{ticketNumber}/files', 'App\Http\Controllers\DashboardController@viewTicketFiles')->name('view.ticket.files');
+Route::get('approval', [ApprovalController::class, 'index'])->name('approval.index');
+Route::put('tickets/{number_ticket}/approve', [ApprovalController::class, 'approveDocument'])->name('approve.document');
+Route::get('tickets/{number_ticket}', [DashboardController::class, 'showTicketDetail'])->name('ticket.detail');
+// Route untuk form reject
+Route::get('/tickets/{ticketNumber}/reject', [ApprovalController::class, 'showRejectForm'])->name('tickets.rejectForm');
+// Route untuk menghandle submission form reject
+Route::put('/tickets/{ticketNumber}/reject', [ApprovalController::class, 'rejectTicket'])->name('tickets.reject');
+
+Route::get('/chart-department', [DashboardController::class,'departmentChart'])->name('chart.page');
+Route::get('/dashboard-tickets', [DashboardController::class, 'dashboardticket'])->name('tickets.dashboard');
+
+Route::get('/departments/overview', [DashboardController::class, 'showDepartmentsWithTickets'])->name('departments.overview');
+
+
+// Route untuk approve user
+Route::post('/approve/{code_emp}', [AuthController::class, 'approveUser'])->name('approveUser');
+
+// Route untuk reject user
+Route::delete('/reject/{code_emp}', [AuthController::class, 'rejectUser'])->name('rejectUser');
+
+// Route untuk melihat detail user
+Route::get('/user/{code_emp}', [AuthController::class, 'userDetail'])->name('userDetail');
+
+
+Route::get('/viewapproved', [AuthController::class, 'viewapproved'])->name('viewapproved');
 
 
 
