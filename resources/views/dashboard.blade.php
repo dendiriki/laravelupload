@@ -44,9 +44,9 @@
         </div>
     </div>
     <div class="chart-actions">
-        <button class="custom-button" onclick="window.location='{{ route('not.approved.url') }}';" style="background-color: #E53935;">Not Approved</button>
-        <button class="custom-button" onclick="window.location='{{ route('approved.url') }}';" style="background-color: #43A047;">Approved</button>
-        <button class="custom-button" onclick="window.location='{{ route('released.url') }}';" style="background-color: #1E88E5;">Released</button>
+        <button class="custom-button" onclick="window.location='{{ route('not.approved.url') }}';" style="background-color: #E53935;">Approvel Process</button>
+        <button class="custom-button" onclick="window.location='{{ route('approved.url') }}';" style="background-color: #43A047;">Release Process</button>
+        <button class="custom-button" onclick="window.location='{{ route('released.url') }}';" style="background-color: #1E88E5;">Release List</button>
     </div>
 </div>
 <br><br><br>

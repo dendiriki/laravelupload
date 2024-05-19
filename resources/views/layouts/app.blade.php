@@ -1,5 +1,3 @@
-<!-- resources/views/layouts/app.blade.php -->
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -26,8 +24,63 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     @can('admin')
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a>
+                        <!-- Dropdown Menu for Dashboard -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDashboardDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Dashboard
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDashboardDropdown">
+                                <li><a class="dropdown-item" href="{{ route('dashboard') }}">Main Dashboard</a></li>
+                                <li><a class="dropdown-item" href="{{ route('not.approved.url') }}">Document Approval Process</a></li>
+                                <li><a class="dropdown-item" href="{{ route('approved.url') }}">Document Release Process</a></li>
+                            </ul>
+                        </li>
+                        @endcan
+                        @can('hod')
+                        <!-- Dropdown Menu for Dashboard -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDashboardDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Dashboard
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDashboardDropdown">
+                                <li><a class="dropdown-item" href="{{ route('not.approved.url') }}">Document Approval Process</a></li>
+                            </ul>
+                        </li>
+                        @endcan
+                        <!-- Dropdown Menu for Document Data -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDocumentDataDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Document Data
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDocumentDataDropdown">
+                                @can('admin')
+                                <li><a class="dropdown-item" href="{{ route('documents.index') }}">Document Master List</a></li>
+                                <li><a class="dropdown-item" href="{{ route('dthistdoc.index') }}">Document Detail</a></li>
+                                <li><a class="dropdown-item" href="{{ route('types.index') }}">Type of Document</a></li>
+                                @endcan
+                                <li><a class="dropdown-item" href="{{ route('file.list')}}">Document List</a></li>
+                            </ul>
+                        </li>
+
+                        @can('admin')
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDashboardDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Departement
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDashboardDropdown">
+                                <li><a class="dropdown-item" href="{{ route('dep.index') }}">List Departement</a></li>
+                                <li><a class="dropdown-item" href="{{ route('dep.create') }}">Create Departement</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDashboardDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Plant
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDashboardDropdown">
+                                <li><a class="dropdown-item" href="{{ route('company.index') }}">List Plant</a></li>
+                                <li><a class="dropdown-item" href="{{ route('company.create') }}">Create Plant</a></li>
+                            </ul>
                         </li>
 
                         <li class="nav-item">
@@ -36,6 +89,7 @@
 
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('types.index') }}">Type</a>
+                        </li>
 
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('documents.index') }}">Documents</a>
@@ -56,32 +110,29 @@
                             <a class="nav-link" href="{{ route('viewapproved') }}">User</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{route('company.index')}}">Company</a>
+                            <a class="nav-link" href="{{ route('company.index') }}">Company</a>
                         </li>
 
                     @endcan
 
                     @can('hod')
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('approval.index') }}">Not Approved Documents</a>
-                    </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('approval.index') }}">Not Approved Documents</a>
+                        </li>
                     @endcan
 
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('new.document') }}">New Document</a>
                     </li>
 
-                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('file.list') }}">File List</a>
                     </li>
                     <!-- Tambahkan item navbar sesuai kebutuhan -->
                 </ul>
                 <ul class="navbar-nav ms-auto">
-
                     @if (Auth::check())
                         <!-- Tampilkan user info dan logout button -->
-
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                             @csrf
                         </form>
@@ -99,7 +150,6 @@
                         </li>
                     @endif
                 </ul>
-
             </div>
         </div>
     </nav>
