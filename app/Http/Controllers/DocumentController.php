@@ -50,34 +50,41 @@ class DocumentController extends Controller
             'description' => 'required',
             'iso_id' => 'required',
             'dt_modified_date' => 'required',
+            'doctype_id' => 'required',
             'doc_name' => ['required', Rule::unique('mst_document')],
         ]);
 
+        // Custom validation rule for the unique combination of description and iso_id
         $validator->after(function ($validator) use ($request) {
-            $exists = Document::where('description', $request->description)
-                              ->where('iso_id', $request->iso_id)
-                              ->exists();
-            if ($exists) {
-                $validator->errors()->add('description_iso_id', 'The combination of document name and ISO ID must be unique.');
+            if ($request->filled(['description', 'iso_id'])) {
+                $exists = Document::where('description', $request->description)
+                                  ->where('iso_id', $request->iso_id)
+                                  ->exists();
+                if ($exists) {
+                    $validator->errors()->add('description_iso_id', 'The combination of document name and ISO ID must be unique.');
+                }
             }
         });
 
+        // If validation fails
         if ($validator->fails()) {
             return redirect()->back()
                              ->withErrors($validator)
                              ->withInput()
-                             ->with('customError', 'The combination of document name and ISO ID must be unique.');
+                             ->with('customError', 'Please check your input.');
         }
 
-
+        // Create folder path
         $folderDoc = preg_replace('/[^a-zA-Z0-9]/', '_', $request->description);
         $iso = ISO::where('id', $request->iso_id)->value('path');
         $folderPath = "uploads/" . $iso . "/" . $folderDoc;
 
-        if (!Storage::disk('external')->exists($folderPath)) {
-            Storage::disk('external')->makeDirectory($folderPath);
+        // Create folder if not exists
+        if (!Storage::exists($folderPath)) {
+            Storage::makeDirectory($folderPath);
         }
 
+        // Get user data
         $user = Auth::user();
         $documentData = $request->only(['description', 'iso_id', 'dt_modified_date', 'doc_name']) + [
             'doctype_id' => $request->doctype_id,
@@ -88,13 +95,15 @@ class DocumentController extends Controller
             'comp_id' => $user->comp_id,
             'path' => $folderPath,
             'dep_terkait' => $request->dep_terkait,
-            'sequence' => $request->sequence,
         ];
 
+        // Save document data
         Document::create($documentData);
 
         return redirect()->route('documents.index')->with('success', 'Document created successfully!');
     }
+
+
 
     public function edit($id)
     {
@@ -152,7 +161,7 @@ class DocumentController extends Controller
     public function destroy($id)
     {
         $document = Document::findOrFail($id);
-        Storage::disk('external')->deleteDirectory($document->path);
+        Storage::deleteDirectory($document->path);
         $document->delete();
 
         return redirect()->route('documents.index')->with('success', 'Document deleted successfully!');

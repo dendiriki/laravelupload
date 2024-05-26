@@ -9,11 +9,11 @@
 
 @can('admin')
 <div class="mt-4">
-       <!-- Position a button container in the top-right corner of the chart container -->
-       <div class="d-flex justify-content-between">
+    <!-- Position a button container in the top-right corner of the chart container -->
+    <div class="d-flex justify-content-between">
         <h3></h3>
         <a href="{{ route('chart.page') }}" class="btn btn-info">DOCUMENT BY DEPARTMENT WISE</a>
-        </div>
+    </div>
     <div class="pie-chart-container">
         <div class="pie-chart" style="--new-document-percentage: {{ $newDocumentPercentage }}%; --revision-document-percentage: {{ $revisionDocumentPercentage }}%;">
             <div class="chart" style="background: conic-gradient(
@@ -23,6 +23,14 @@
                 #e1a901 100%
             );"></div>
             <div class="chart-text">{{ $newDocumentCount }} New Document<br>{{ $revisionDocumentCount }} Revision Document</div>
+        </div>
+    </div>
+    <div class="chart-legend">
+        <div class="legend-item">
+            <span class="legend-color" style="background-color: #2243fc;"></span> New Document
+        </div>
+        <div class="legend-item">
+            <span class="legend-color" style="background-color: #e1a901;"></span> Revision Document
         </div>
     </div>
     <div class="chart-actions">
@@ -44,7 +52,7 @@
         </div>
     </div>
     <div class="chart-actions">
-        <button class="custom-button" onclick="window.location='{{ route('not.approved.url') }}';" style="background-color: #E53935;">Approvel Process</button>
+        <button class="custom-button" onclick="window.location='{{ route('not.approved.url') }}';" style="background-color: #E53935;">Approval Process</button>
         <button class="custom-button" onclick="window.location='{{ route('approved.url') }}';" style="background-color: #43A047;">Release Process</button>
         <button class="custom-button" onclick="window.location='{{ route('released.url') }}';" style="background-color: #1E88E5;">Release List</button>
     </div>
@@ -79,6 +87,25 @@
         text-align: center;
         z-index: 2;
         color: #fff;
+    }
+
+    .chart-legend {
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        margin-right: 15px;
+    }
+
+    .legend-color {
+        width: 20px;
+        height: 20px;
+        display: inline-block;
+        margin-right: 5px;
     }
 
     .chart-actions {
@@ -119,34 +146,25 @@
         color: #333;
     }
 
-    .chart-actions {
-    text-align: center;
-    margin-top: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
+    .custom-button {
+        padding: 10px 20px;
+        margin: 5px;
+        border: none;
+        border-radius: 4px;
+        color: white;
+        cursor: pointer;
+        font-size: 16px;
+        text-align: center;
+        min-width: 160px;
+        background-color: #1976D2;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        transition: background-color 0.3s, box-shadow 0.2s;
+    }
 
-.custom-button {
-    padding: 10px 20px;
-    margin: 5px; /* Menambahkan sedikit margin di sekitar tombol */
-    border: none;
-    border-radius: 4px;
-    color: white;
-    cursor: pointer;
-    font-size: 16px;
-    text-align: center;
-    min-width: 160px; /* Menetapkan lebar minimum untuk memastikan semua tombol memiliki ukuran yang sama */
-    background-color: #1976D2; /* Warna default */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Menambahkan bayangan untuk efek kedalaman */
-    transition: background-color 0.3s, box-shadow 0.2s;
-}
-
-.custom-button:hover {
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* Meningkatkan bayangan saat di-hover */
-    opacity: 0.9; /* Menambahkan efek transparansi saat di-hover */
-}
-    </style>
-
+    .custom-button:hover {
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        opacity: 0.9;
+    }
+</style>
 
 @endsection

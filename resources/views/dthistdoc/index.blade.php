@@ -45,6 +45,7 @@
         </div>
 
         <a href="{{ route('dthistdoc.create') }}" class="btn btn-primary">Tambah Data</a>
+
         <table class="table">
             <thead>
                 <tr>
@@ -60,7 +61,7 @@
             <tbody>
                 @foreach ($dtHistDocs as $key => $dtHistDoc)
                     <tr>
-                        <td>{{ $dtHistDoc->sequence }}</td>
+                        <td>{{ $dtHistDoc->id }}</td>
                         <td>{{ $dtHistDoc->description }}</td>
                          <td>{{ $dtHistDoc->doc_name }}</td>
                          <td>{{ $dtHistDoc->document->iso->description}}</td>

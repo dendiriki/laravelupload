@@ -9,6 +9,12 @@ class Document extends Model
     protected $table = 'mst_document';
     protected $guarded = [];
     public $timestamps = false; // Menonaktifkan fitur timestamps
+
+    public function dtHistDocs()
+    {
+        return $this->hasMany(DtHistDoc::class, 'doc_id');
+    }
+
     public function scopeFilter($query)
     {
         return $query
@@ -29,9 +35,6 @@ class Document extends Model
                 $query->where('comp_id', request('company'));
             });
     }
-    
-    
-
 
     public function type()
     {
@@ -63,11 +66,8 @@ class Document extends Model
         return $this->hasOne(DocDept::class, 'doc_id', 'id');
     }
 
-    // Di dalam model Document
     public function dep()
     {
         return $this->belongsTo(Dep::class, 'dep_terkait', 'id'); // Asumsikan 'dep_terkait' menyimpan ID departemen
     }
-
-
 }

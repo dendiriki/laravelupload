@@ -26,21 +26,17 @@ class FileViewController extends Controller
             return redirect()->route('file.list');
         }
 
-        $user = Auth::user();
         $types = Type::all();
 
-        $documents = Document::whereHas('docDept', function ($query) use ($user) {
-            $query->where('dep_id', $user->dep_id);
-        })
-        ->where('iso_id', $isoId)
-        ->filter() // Menggunakan method filter() untuk memasukkan kriteria pencarian
-        ->orderBy('sequence', 'asc')
-        ->paginate(6);
+        // Ambil hanya dokumen yang memiliki entri terkait di DtHistDoc dan iso_id yang sesuai
+        $documents = Document::where('iso_id', $isoId)
+            ->whereHas('dtHistDocs')
+            ->filter()
+            ->orderBy('id', 'asc')
+            ->paginate(6);
 
         return view('file-list.view-files', compact('documents', 'iso', 'types'));
     }
-
-
 
 
     public function viewDocument($folder)

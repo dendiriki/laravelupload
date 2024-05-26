@@ -7,17 +7,13 @@ use App\Models\ISO;
 use App\Models\User;
 use App\Models\Company;
 use App\Models\Document;
-use App\Models\DtHistCover;
-use App\Models\DtHistCatMut;
 use Illuminate\Http\Request;
 use App\Models\Dep;
-use App\Models\DtHistLampiran;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Auth; // Pastikan ini diimpor
-use App\Models\DtHistDoc; // Sesuaikan dengan nama model yang Anda gunakan
+use Illuminate\Support\Facades\Auth;
+use App\Models\DtHistDoc;
 use Illuminate\Support\Facades\DB;
-
 
 class DtHistDocController extends Controller
 {
@@ -35,210 +31,74 @@ class DtHistDocController extends Controller
                                          ->whereColumn('mst_document.id', 'dt_histdoc.doc_id');
                             });
                         })
-                        ->orderBy('sequence','asc')
+                        ->orderBy('id','asc')
                         ->filter()
                         ->paginate(20);
 
         return view('dthistdoc.index', compact('dtHistDocs', 'isos', 'deps', 'companies'));
     }
 
-
-    public function create()
+    public function create(Request $request)
     {
-        $documents = Document::orderBy('sequence','asc')->get();
-        $users = User::all();
+        $isos = ISO::all();
+        $deps = Dep::all();
         $companies = Company::all();
 
-        return view('dthistdoc.create', compact('documents', 'users', 'companies'));
+        $documents = Document::orderBy('sequence', 'asc')
+                             ->filter()
+                             ->when($request->search, function ($query, $search) {
+                                 $query->where('description', 'like', "%{$search}%");
+                             })
+                             ->when($request->iso, function ($query, $iso) {
+                                 $query->where('iso_id', $iso);
+                             })
+                             ->when($request->dep, function ($query, $dep) {
+                                 $query->where('dep_terkait', $dep);
+                             })
+                             ->when($request->company, function ($query, $company) {
+                                 $query->where('comp_id', $company);
+                             })
+                             ->get();
+
+        return view('dthistdoc.create', compact('documents', 'isos', 'deps', 'companies'));
     }
 
 
-    public function detail ($id){
-       $document = Document::find($id);
-       $dtHistDoc = DtHistDoc::where('doc_id', $id)->get();
-       $dtHistCover = DtHistCover::where('doc_id', $id)->get();
-       $dtHistLampiran = DtHistLampiran::where('doc_id', $id)->get();
-       $dtHistCatMut = DtHistCatMut::where('doc_id', $id)->get();
 
-       return view('dthistdoc.detail', compact ('dtHistDoc', 'dtHistCover', 'dtHistLampiran','dtHistCatMut','document'));
+    public function detail($id)
+    {
+        $document = Document::find($id);
+        $dtHistDoc = DtHistDoc::where('doc_id', $id)->get();
+
+        return view('dthistdoc.detail', compact('dtHistDoc', 'document'));
     }
 
     public function store(Request $request)
     {
-        $user = Auth::user();
 
+        $rules=[
+            'tgl_berlaku' => ['required'],
+            'revisi_isi' => ['required'],
+            'isiFile' => ['required']
+            ];
+
+        $this->validate($request,$rules);
+
+
+        $user = Auth::user();
         $docId = $request->input('doc_id');
 
-        $entryExist = DtHistDoc::where('doc_id',$docId)->exists();
-
-        if($entryExist){
-            return redirect()->back()->with('error','Dokumen yang ingin anda isi sudah ada mohon di perikas kembali atau gunakan fitur revisi');
+        // Cek apakah dokumen sudah ada
+        $entryExist = DtHistDoc::where('doc_id', $docId)->exists();
+        if ($entryExist) {
+            return redirect()->back()->with('error', 'Dokumen yang ingin anda isi sudah ada, mohon diperiksa kembali atau gunakan fitur revisi.');
         }
 
+        // Ambil informasi dokumen
         $document = Document::where('id', $request->doc_id)->value('path');
         $nomer_document = Document::where('id', $request->doc_id)->value('doc_name');
         $nama_document = Document::where('id', $request->doc_id)->value('description');
         $sequence = Document::where('id', $request->doc_id)->value('sequence');
-
-
-        // Definisi nama-nama file yang diharapkan
-        $expectedFiles = ['cover', 'isi', 'attachment', 'record'];
-
-        foreach ($expectedFiles as $expectedFile) {
-            $pdfFile = $request->file($expectedFile . 'File');
-
-            // Cek jika file diunggah
-            if ($pdfFile) {
-// Validasi ekstensi file
-                $allowedExtensions = ['pdf'];
-                $fileExtension = $pdfFile->getClientOriginalExtension();
-
-                if (!in_array($fileExtension, $allowedExtensions)) {
-                    return redirect()->back()->with('error', "Ekstensi file $expectedFile tidak diizinkan. Silakan unggah file PDF.");
-                }
-
-                // Buat folder jika belum ada
-                $folderPath = "$document/$expectedFile";
-
-                // Ganti karakter backslash (\) dengan forward slash (/) pada folderPath
-                $folderPath = str_replace('\\', '/', $folderPath);
-
-                if (!Storage::disk('external')->exists($folderPath)) {
-                    Storage::disk('external')->makeDirectory($folderPath);
-                }
-
-// Generate nama acak untuk file
-                $randomFileName = bin2hex(random_bytes(8));
-
-                // Simpan file PDF ke folder dengan nama acak
-                $pdfFilePath = $folderPath . '/' . $randomFileName . '.pdf';
-                Storage::disk('external')->putFileAs($folderPath, $pdfFile, $randomFileName . '.pdf');
-
-                // Simpan nama file dalam bentuk acak di kolom nodoc
-                $nodoc = $randomFileName;
-
-                // Menyimpan nama file PDF ke dalam model yang sesuai
-                switch ($expectedFile) {
-                    case 'cover':
-                        DtHistCover::create([
-                'description' => $nama_document,
-                'doc_id' => $request->input('doc_id'),
-                'vc_created_user' => $user->code_emp,
-                'comp_id' => $user->comp_id,
-                'revisi' => $request->input('revisi_cover'),
-                'link_document' => $pdfFilePath,
-                'nodoc' => $nodoc,
-                'doc_name' => $nomer_document,
-                'tgl_berlaku' => $request->input('tgl_berlaku'),
-                'sequence' => $sequence
-            ]);
-                    break;
-                case 'isi':
-                    DtHistDoc::create([
-                            'description' => $nama_document,
-                            'doc_id' => $request->input('doc_id'),
-                            'vc_created_user' => $user->code_emp,
-                            'comp_id' => $user->comp_id,
-                            'revisi' => $request->input('revisi_isi'),
-                            'link_document' => $pdfFilePath,
-                            'nodoc' => $nodoc,
-                            'doc_name' => $nomer_document,
-                            'tgl_berlaku' => $request->input('tgl_berlaku'),
-                            'sequence' => $sequence
-                        ]);
-                    break;
-                case 'attachment':
-                    DtHistLampiran::create([
-                            'description' => $nama_document,
-                            'doc_id' => $request->input('doc_id'),
-                            'vc_created_user' => $user->code_emp,
-                            'comp_id' => $user->comp_id,
-                            'revisi' => $request->input('revisi_attachment'),
-                            'link_document' => $pdfFilePath,
-                            'nodoc' => $nodoc,
-                            'doc_name' => $nomer_document,
-                            'tgl_berlaku' => $request->input('tgl_berlaku'),
-                            'sequence' => $sequence
-                        ]);
-                    break;
-                case 'record':
-                    DtHistCatMut::create([
-                            'description' => $nama_document,
-                            'doc_id' => $request->input('doc_id'),
-                            'vc_created_user' => $user->code_emp,
-                            'comp_id' => $user->comp_id,
-                            'revisi' => $request->input('revisi_record'),
-                            'link_document' => $pdfFilePath,
-                            'nodoc' => $nodoc,
-                            'doc_name' => $nomer_document,
-                            'tgl_berlaku' => $request->input('tgl_berlaku'),
-                            'sequence' => $sequence
-
-
-
-                        ]);
-                        break;
-                    default:
-                    break;
-            }
-
-                Session::flash('success', "File $expectedFile berhasil diunggah ke folder: $folderPath");
-            }
-            // Jika file tidak diunggah, tambahkan logika yang sesuai di sini
-        }
-
-        return redirect()->route('dthistdoc.index')->with('success', 'Data berhasil ditambahkan!');
-    }
-
-
-
-    public function edit($id)
-    {
-        // Ambil data DtHistDoc berdasarkan $id
-        $dtHistDoc = DtHistDoc::findOrFail($id);
-
-        // Ambil data cover yang memiliki doc_id sama dengan $id
-        $cover = DtHistCover::where('doc_id', $dtHistDoc->doc_id)->get();
-
-        // Ambil data lampiran yang memiliki doc_id sama dengan $id
-        $lampiran = DtHistLampiran::where('doc_id', $dtHistDoc->doc_id)->get();
-
-        // Ambil data catmutu yang memiliki doc_id sama dengan $id
-        $catmut = DtHistCatMut::where('doc_id', $dtHistDoc->doc_id)->get();
-
-        // Ambil data doc yang memiliki doc_id sama dengan $id
-        $doc = DtHistDoc::where('doc_id', $dtHistDoc->doc_id)->get();
-
-        // Ambil data Document berdasarkan doc_id pada DtHistDoc
-        $documents = Document::find($dtHistDoc->doc_id);
-
-        // Ambil data user dan company
-        $users = User::all();
-        $companies = Company::all();
-
-        // Kirim data ke view
-        return view('dthistdoc.edit', compact('dtHistDoc', 'documents', 'users', 'companies', 'cover', 'lampiran', 'catmut', 'doc'));
-    }
-
-
-    public function update(Request $request, $id)
-    {
-
-        $user = Auth::user();
-        // Validasi request
-        $request->validate([
-            'description' => 'required',
-            // Sesuaikan aturan validasi lain yang diperlukan
-        ]);
-
-        $document = Document::where('id', $request->doc_id)->value('path');
-        $name = DtHistDoc::where('doc_id', $request->doc_id)->value('doc_name');
-
-
-
-        // dd($name);
-        // Ambil data dari formulir
-        $pathupload = $document; // Tentukan path sesuai kebutuhan Anda
 
         // Definisi nama-nama file yang diharapkan
         $expectedFiles = ['cover', 'isi', 'attachment', 'record'];
@@ -257,9 +117,10 @@ class DtHistDocController extends Controller
                 }
 
                 // Buat folder jika belum ada
-                $folderPath = "$pathupload/$expectedFile";
-                if (!Storage::disk('external')->exists($folderPath)) {
-                    Storage::disk('external')->makeDirectory($folderPath);
+                $folderPath = "documents";
+
+                if (!Storage::exists($folderPath)) {
+                    Storage::makeDirectory($folderPath);
                 }
 
                 // Generate nama acak untuk file
@@ -267,163 +128,133 @@ class DtHistDocController extends Controller
 
                 // Simpan file PDF ke folder dengan nama acak
                 $pdfFilePath = $folderPath . '/' . $randomFileName . '.pdf';
-                Storage::disk('external')->putFileAs($folderPath, $pdfFile, $randomFileName . '.pdf');
+                Storage::putFileAs($folderPath, $pdfFile, $randomFileName . '.pdf');
 
-                // Update nama file dalam bentuk acak di kolom nodoc
+                // Simpan nama file dalam bentuk acak di kolom nodoc
                 $nodoc = $randomFileName;
 
-                // Update nama file PDF ke dalam model yang sesuai
-                switch ($expectedFile) {
-                    case 'cover':
-                        DtHistCover::where('doc_id', $id)->create([
-                            'description' => $request->input('description'),
-                            'doc_id' => $request->input('doc_id'),
-                            'vc_created_user' => $user->code_emp,
-                            'comp_id' => $user->comp_id,
-                            'revisi' => $request->input('revisi_cover'),
-                            'id_sebelum' => $request->input('cover'),
-                            'link_document' => $pdfFilePath,
-                            'nodoc' => $nodoc,
-                            'doc_name' => $name,
-                            'tgl_berlaku' => $request->input('tgl_berlaku'),
-                            // Sisanya seperti sebelumnya
-                        ]);
-                        break;
-                    case 'isi':
-                        DtHistDoc::where('id', $id)->create([
-                            'description' => $request->input('description'),
-                            'doc_id' => $request->input('doc_id'),
-                            'vc_created_user' => $user->code_emp,
-                            'comp_id' => $user->comp_id,
-                            'revisi' => $request->input('revisi_isi'),
-                            'id_sebelum' => $request->input('doc'),
-                            'link_document' => $pdfFilePath,
-                            'nodoc' => $nodoc,
-                            'doc_name' => $name,
-                            'tgl_berlaku' => $request->input('tgl_berlaku'),
-                            // Sisanya seperti sebelumnya
-                        ]);
-                        break;
-                    case 'attachment':
-                        DtHistLampiran::where('doc_id', $id)->create([
-                            'description' => $request->input('description'),
-                            'doc_id' => $request->input('doc_id'),
-                            'vc_created_user' => $user->code_emp,
-                            'comp_id' => $user->comp_id,
-                            'revisi' => $request->input('revisi_attachment'),
-                            'id_sebelum' => $request->input('lampiran'),
-                            'link_document' => $pdfFilePath,
-                            'nodoc' => $nodoc,
-                            'doc_name' => $name,
-                            'tgl_berlaku' => $request->input('tgl_berlaku'),
-                            // Sisanya seperti sebelumnya
-                        ]);
-                        break;
-                    case 'record':
-                        DtHistCatMut::where('doc_id', $id)->create([
-                            'description' => $request->input('description'),
-                            'doc_id' => $request->input('doc_id'),
-                            'vc_created_user' => $user->code_emp,
-                            'comp_id' => $user->comp_id,
-                            'revisi' => $request->input('revisi_record'),
-                            'id_sebelum' => $request->input('catmut'),
-                            'link_document' => $pdfFilePath,
-                            'nodoc' => $nodoc,
-                            'doc_name' => $name,
-                            'tgl_berlaku' => $request->input('tgl_berlaku'),
-                            // Sisanya seperti sebelumnya
-                        ]);
-                        break;
-                }
+                // Menyimpan nama file PDF ke dalam model DtHistDoc
+                DtHistDoc::create([
+                    'description' => $nama_document,
+                    'doc_id' => $request->input('doc_id'),
+                    'vc_created_user' => $user->code_emp,
+                    'comp_id' => $user->comp_id,
+                    'revisi' => $request->input('revisi_' . $expectedFile),
+                    'link_document' => $pdfFilePath,
+                    'nodoc' => $nodoc,
+                    'doc_name' => $nomer_document,
+                    'tgl_berlaku' => $request->input('tgl_berlaku'),
+                    'sequence' => $sequence
+                ]);
 
-                Session::flash('success', "File $expectedFile berhasil diperbarui ke folder: $folderPath");
+                Session::flash('success', "File $expectedFile berhasil diunggah ke folder: $folderPath");
             }
-            // Jika file tidak diunggah, tambahkan logika yang sesuai di sini
+        }
+
+        return redirect()->route('dthistdoc.index')->with('success', 'Data berhasil ditambahkan!');
+    }
+
+    public function edit($id)
+    {
+        $dtHistDoc = DtHistDoc::findOrFail($id);
+        $document = Document::find($dtHistDoc->doc_id);
+
+        if (!$document) {
+            return redirect()->back()->with('error', 'Document not found');
+        }
+
+        $dtHistDocs = DtHistDoc::where('doc_id', $dtHistDoc->doc_id)->get();
+        $users = User::all();
+        $companies = Company::all();
+
+        return view('dthistdoc.edit', compact('dtHistDoc', 'document', 'dtHistDocs', 'users', 'companies'));
+    }
+
+
+    public function update(Request $request, $id)
+    {
+        $user = Auth::user();
+        $request->validate([
+            'description' => 'required',
+            'tgl_berlaku' => 'required',
+            'isiFile' => 'required',
+            'revisi_isi' => 'required',
+        ]);
+
+        $dtHistDoc = DtHistDoc::findOrFail($id);
+        $document = Document::find($dtHistDoc->doc_id);
+
+        if (!$document) {
+            return redirect()->back()->with('error', 'Document not found');
+        }
+
+        $folderPath = "documents";
+
+        if (!Storage::exists($folderPath)) {
+            Storage::makeDirectory($folderPath);
+        }
+
+        $pdfFile = $request->file('isiFile');
+
+        if ($pdfFile) {
+            $randomFileName = bin2hex(random_bytes(8));
+            $pdfFilePath = $folderPath . '/' . $randomFileName . '.pdf';
+            Storage::putFileAs($folderPath, $pdfFile, $randomFileName . '.pdf');
+
+            $nodoc = $randomFileName;
+
+            DtHistDoc::create([
+                'description' => $request->input('description'),
+                'doc_id' => $request->input('doc_id'),
+                'vc_created_user' => $user->code_emp,
+                'comp_id' => $user->comp_id,
+                'revisi' => $request->input('revisi_isi'),
+                'link_document' => $pdfFilePath,
+                'nodoc' => $nodoc,
+                'doc_name' => $document->doc_name,
+                'tgl_berlaku' => $request->input('tgl_berlaku'),
+            ]);
+
+            Session::flash('success', "File berhasil diunggah ke folder: $folderPath");
         }
 
         return redirect()->route('dthistdoc.index')->with('success', 'Data berhasil diperbarui!');
     }
 
+
+
+
     public function destroy($id)
     {
         $dtHistDoc = DtHistDoc::findOrFail($id);
+        $folderPath = "documents";
 
-        // Menghapus entri terkait dari tabel DtHistCover, DtHistLampiran, dan DtHistCatMut
-
-
-        // Menghapus file dan folder terkait
-        $document = Document::where('id', $dtHistDoc->doc_id)->value('path');
-        $expectedFiles = ['cover', 'isi', 'attachment', 'record'];
-
-        foreach ($expectedFiles as $expectedFile) {
-            $folderPath = "$document/$expectedFile";
-
-            if (Storage::disk('external')->exists($folderPath)) {
-                Storage::disk('external')->deleteDirectory($folderPath);
-            }
+        if (Storage::exists($folderPath)) {
+            Storage::deleteDirectory($folderPath);
         }
 
-        DtHistCover::where('doc_id', $dtHistDoc->doc_id)->delete();
-        DtHistLampiran::where('doc_id', $dtHistDoc->doc_id)->delete();
-        DtHistCatMut::where('doc_id', $dtHistDoc->doc_id)->delete();
         DtHistDoc::where('doc_id', $dtHistDoc->doc_id)->delete();
-
-        // Mengatur id_sebelum menjadi NULL pada baris yang merujuk ke baris ini
         DtHistDoc::where('id_sebelum', $id)->update(['id_sebelum' => null]);
 
-        // Menghapus data dari database
         $dtHistDoc->delete();
 
         return redirect()->route('dthistdoc.index')->with('success', 'Data dan file terkait berhasil dihapus.');
     }
 
     public function detaildelete($id, $type)
-{
-    // Variabel untuk menyimpan nama tabel dan jenis dokumen
-    $tableName = '';
-    $pdfFolder = '';
-
-    // Tentukan tabel dan folder/file PDF berdasarkan jenis dokumen
-    switch ($type) {
-        case 'dtHistDoc':
-            $tableName = DtHistDoc::findOrFail($id);
-            $expectedFiles = 'isi';
-            break;
-
-        case 'dtHistCover':
-            $tableName = DtHistCover::findOrFail($id);
-            $expectedFiles = 'cover';
-            break;
-
-        case 'dtHistLampiran':
-            $tableName = DtHistLampiran::findOrFail($id);
-            $expectedFiles = 'attachment';
-            break;
-
-        case 'dtHistCatMut':
-            $tableName = DtHistCatMut::findOrFail($id);
-            $expectedFiles = 'record';
-            break;
-
-        default:
-            // Tindakan default jika jenis dokumen tidak dikenali
-            return redirect()->route('dthistdoc.index')->with('error', 'Jenis dokumen tidak valid.');
-    }
-
+    {
+        $tableName = DtHistDoc::findOrFail($id);
+        $expectedFiles = 'isi';
         $document = Document::where('id', $tableName->doc_id)->value('path');
         $nodoc = $tableName->nodoc;
+        $filePath = "documents/$nodoc.pdf";
 
-        $filePath = "$document/$expectedFiles/$nodoc.pdf";
-
-         // Hapus file jika ada
-        // Hapus file jika ada
-    if (Storage::disk('external')->exists($filePath)) {
-        Storage::disk('external')->delete($filePath);
-    }
+        if (Storage::exists($filePath)) {
+            Storage::delete($filePath);
+        }
 
         $tableName->delete();
 
-    return redirect()->route('dthistdoc.index')->with('success', 'Data dan file terkait berhasil dihapus.');
-}
-
+        return redirect()->route('dthistdoc.index')->with('success', 'Data dan file terkait berhasil dihapus.');
+    }
 }

@@ -1,5 +1,3 @@
-<!-- resources/views/auth/register.blade.php -->
-
 @extends('layouts.app') <!-- Sesuaikan dengan nama layout yang Anda gunakan -->
 
 @section('content')
@@ -15,6 +13,10 @@
             <div class="mb-3">
                 <label for="username" class="form-label">Username:</label>
                 <input type="text" name="username" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" name="email" class="form-control" required>
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Password:</label>

@@ -18,7 +18,7 @@ class User extends Authenticatable
     public $incrementing = false; // Menyatakan apakah primary key auto-increment atau tidak
 
     protected $fillable = [
-        'code_emp', 'username', 'password', 'role', 'dep_id', 'comp_id','status','document_number',
+        'code_emp', 'username', 'password', 'role', 'dep_id', 'comp_id','status','document_number','email',
     ];
 
     protected $hidden = [

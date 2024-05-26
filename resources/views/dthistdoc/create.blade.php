@@ -1,83 +1,111 @@
-<!-- resources/views/dthistdoc/create.blade.php -->
-
 @extends('layouts.app')
 
 @section('content')
     <div class="container">
         <h2>Tambah DtHistDoc</h2>
+
         @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
                 @foreach($errors->all() as $error)
-                    <li>{{$error}}</li>
+                    <li>{{ $error }}</li>
                 @endforeach
             </ul>
         </div>
         @endif
+
         @if(session('error'))
         <div class="alert alert-danger">
-            {{session('error')}}
+            {{ session('error') }}
         </div>
         @endif
+
+        <!-- Form Filter -->
+        <div class="row mb-3">
+            <div class="col-md-9" style="margin-left: auto;">
+                <form action="{{ route('dthistdoc.create') }}" method="get">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Search Documents..." name="search" value="{{ request('search') }}">
+                        <select class="form-select" name="iso">
+                            <option value="">Select ISO</option>
+                            @foreach ($isos as $iso)
+                                <option value="{{ $iso->id }}" {{ request('iso') == $iso->id ? 'selected' : '' }}>
+                                    {{ $iso->description }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <!-- Dropdown untuk Departemen -->
+                        <select class="form-select" name="dep">
+                            <option value="">Select Departemen</option>
+                            @foreach ($deps as $dep)
+                                <option value="{{ $dep->short }}" {{ request('dep') == $dep->short ? 'selected' : '' }}>
+                                    {{ $dep->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <!-- Dropdown untuk Perusahaan -->
+                        <select class="form-select" name="company">
+                            <option value="">Select Company</option>
+                            @foreach ($companies as $company)
+                                <option value="{{ $company->id }}" {{ request('company') == $company->id ? 'selected' : '' }}>
+                                    {{ $company->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <button class="btn btn-primary" type="submit">Filter</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <form action="{{ route('dthistdoc.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <div class="mb-3">
                 <label for="doc_id" class="form-label">Doc Name</label>
-                <select id="doc-select" name="doc_id" class="form-select" onfocus='this.size=8;' onblur='this.size=1;' onchange='this.size=1; this.blur();'>
+                <select id="doc-select" name="doc_id" class="form-select @error('doc_id') is-invalid @enderror">
                     @foreach ($documents as $document)
-                        <option value="{{ $document->id }}">{{ $document->sequence }} - {{ $document->description }} - {{ $document->doc_name }} - {{ $document->iso->description }}</option>
+                        <option value="{{ $document->id }}">{{ $document->id }} - {{ $document->description }} - {{ $document->doc_name }} - {{ $document->iso->description }}</option>
                     @endforeach
                 </select>
+                @error('doc_id')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
             </div>
 
             <div class="mb-3">
                 <label for="tgl_berlaku" class="form-label">Tanggal Berlaku</label>
-                <input type="date" name="tgl_berlaku" class="form-control" id="tgl_berlaku">
-            </div>
-
-            <div class="mb-3">
-                <label for="coverFile" class="form-label">Select Cover PDF:</label>
-                <input type="file" name="coverFile" class="form-control" accept=".pdf">
-            </div>
-
-            <div class="mb-3">
-                <label for="revisi_cover" class="form-label">Revisi Cover:</label>
-                <input type="text" name="revisi_cover" class="form-control">
+                <input type="date" name="tgl_berlaku" class="form-control @error('tgl_berlaku') is-invalid @enderror" id="tgl_berlaku">
+                @error('tgl_berlaku')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
             </div>
 
             <div class="mb-3">
                 <label for="isiFile" class="form-label">Select Doc PDF:</label>
-                <input type="file" name="isiFile" class="form-control" accept=".pdf">
+                <input type="file" name="isiFile" class="form-control @error('isiFile') is-invalid @enderror" accept=".pdf">
+                @error('isiFile')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
             </div>
 
             <div class="mb-3">
                 <label for="revisi_isi" class="form-label">Revisi Doc:</label>
-                <input type="text" name="revisi_isi" class="form-control">
-            </div>
-
-            <div class="mb-3">
-                <label for="attachmentFile" class="form-label">Select Attachment PDF:</label>
-                <input type="file" name="attachmentFile" class="form-control" accept=".pdf">
-            </div>
-
-            <div class="mb-3">
-                <label for="revisi_attachment" class="form-label">Revisi Attachment:</label>
-                <input type="text" name="revisi_attachment" class="form-control">
-            </div>
-
-            <div class="mb-3">
-                <label for="recordFile" class="form-label">Select Record PDF:</label>
-                <input type="file" name="recordFile" class="form-control" accept=".pdf">
-            </div>
-
-            <div class="mb-3">
-                <label for="revisi_record" class="form-label">Revisi Record:</label>
-                <input type="text" name="revisi_record" class="form-control">
+                <input type="text" name="revisi_isi" class="form-control @error('revisi_isi') is-invalid @enderror">
+                @error('revisi_isi')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
             </div>
 
             <button type="submit" class="btn btn-primary">Simpan</button>
         </form>
     </div>
-
 @endsection

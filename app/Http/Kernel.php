@@ -68,4 +68,10 @@ class Kernel extends HttpKernel
         'admin' => \App\Http\Middleware\Admin::class,
         'hod' => \App\Http\Middleware\Hod::class
     ];
+
+    protected $routeMiddleware = [
+        // ...
+        'check.default.password' => \App\Http\Middleware\CheckDefaultPassword::class,
+    ];
+
 }

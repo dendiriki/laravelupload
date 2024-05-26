@@ -23,17 +23,24 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        $user = User::where('username', $request->input('username'))
-                    ->where('password', $request->input('password'))
-                    ->where('status', "approved")
-                    ->first();
+        $credentials = $request->only('username', 'password');
 
-        if ($user) {
-            Auth::login($user);
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+            if ($user->status !== 'approved') {
+                Auth::logout();
+                return back()->withErrors(['login' => 'Account not approved by admin.']);
+            }
+
+            // Check if the password is the default reset password
+            if (Hash::check('ispat1234567', $user->password)) {
+                return redirect()->route('user.reset-password.form');
+            }
+
             return redirect()->intended('file-list');
         }
 
-        return back()->withErrors(['login' => 'Invalid login credentials or Acount no approve admin']);
+        return back()->withErrors(['login' => 'Invalid login credentials.']);
     }
 
     public function showRegisterForm()
@@ -48,6 +55,7 @@ class AuthController extends Controller
         $request->validate([
             'code_emp' => 'required|string|unique:users',
             'username' => 'required|string|unique:users',
+            'email' => 'required|string|email|unique:users',
             'password' => 'required|string|min:6|confirmed',
             'role' => 'required|string',
             'dep_id' => 'required|string',
@@ -57,7 +65,8 @@ class AuthController extends Controller
         User::create([
             'code_emp' => $request->input('code_emp'),
             'username' => $request->input('username'),
-            'password' => $request->input('password'),
+            'email' => $request->input('email'),
+            'password' => Hash::make($request->input('password')),
             'role' => $request->input('role'),
             'dep_id' => $request->input('dep_id'),
             'comp_id' => $request->input('comp_id'),
@@ -77,23 +86,63 @@ class AuthController extends Controller
         return redirect('/login'); // Redirect ke halaman login
     }
 
+    public function showResetPasswordForm()
+    {
+        $users = User::all();
+        return view('auth.reset_password', compact('users'));
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'code_emp' => 'required|exists:users,code_emp',
+        ]);
+
+        $user = User::where('code_emp', $request->input('code_emp'))->first();
+        if (!$user) {
+            return redirect()->route('admin.reset-password.form')->with('error', 'User not found.');
+        }
+
+        try {
+            $user->password = Hash::make('ispat1234567');
+            $user->save();
+            return redirect()->route('admin.reset-password.form')->with('success', 'Password has been reset successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.reset-password.form')->with('error', 'Failed to reset password: ' . $e->getMessage());
+        }
+    }
+
+    public function showSetNewPasswordForm()
+    {
+        return view('auth.set_new_password');
+    }
+
+    public function setNewPassword(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|string|min:6|confirmed',
+        ]);
+
+        $user = Auth::user();
+        $user->password = Hash::make($request->input('password'));
+        $user->save();
+
+        return redirect('/home')->with('success', 'Password has been changed successfully.');
+    }
+
     public function viewapproved()
     {
-        // Mengambil daftar pengguna yang statusnya 'pending'
         $users = User::where('status', 'pending')->get();
-
         return view('auth.approve_user', compact('users'));
     }
 
-
     public function approveUser($code_emp)
     {
-        $user = User::find($code_emp);
+        $user = User::where('code_emp', $code_emp)->first();
         if (!$user) {
             return redirect()->back()->with('error', 'User not found.');
         }
 
-        // Mengubah status user menjadi "approved"
         $user->status = 'approved';
         $user->save();
 
@@ -102,12 +151,11 @@ class AuthController extends Controller
 
     public function rejectUser($code_emp)
     {
-        $user = User::find($code_emp);
+        $user = User::where('code_emp', $code_emp)->first();
         if (!$user) {
             return redirect()->back()->with('error', 'User not found.');
         }
 
-        // Menghapus user
         $user->delete();
 
         return redirect()->back()->with('success', 'User rejected and deleted successfully.');
@@ -115,7 +163,7 @@ class AuthController extends Controller
 
     public function userDetail($code_emp)
     {
-        $user = User::find($code_emp);
+        $user = User::where('code_emp', $code_emp)->first();
         if (!$user) {
             return redirect()->back()->with('error', 'User not found.');
         }

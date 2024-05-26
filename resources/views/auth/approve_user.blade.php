@@ -1,5 +1,3 @@
-<!-- resources/views/approve_user.blade.php -->
-
 @extends('layouts.app')
 
 @section('content')
@@ -21,6 +19,10 @@
                             {{ session('error') }}
                         </div>
                     @endif
+
+                    <div class="mb-3">
+                        <a href="{{ route('admin.reset-password.form') }}" class="btn btn-warning">Reset User Passwords</a>
+                    </div>
 
                     <table class="table">
                         <thead>

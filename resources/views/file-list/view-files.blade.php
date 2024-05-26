@@ -40,7 +40,7 @@
                 <tbody>
                     @foreach ($documents as $document)
                         <tr>
-                            <td>{{ $document->sequence }}</td>
+                            <td>{{ $document->id }}</td>
                             <td>{{ $document->description }}</td>
                             <td>{{ $document->doc_name }}</td>
                             <td>{{ $document->iso->description}}</td>

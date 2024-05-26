@@ -83,34 +83,20 @@
                             </ul>
                         </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('isos.index') }}">ISOs</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDashboardDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Certification
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDashboardDropdown">
+                                <li><a class="dropdown-item" href="{{ route('isos.index') }}">List Certification</a></li>
+                                <li><a class="dropdown-item" href="{{ route('isos.create') }}">Create Certification</a></li>
+                            </ul>
                         </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('types.index') }}">Type</a>
                         </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('documents.index') }}">Documents</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('dthistdoc.index') }}">Isi Documents</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('docdept.index') }}">Doc Dept</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('dep.index') }}">Dept</a>
-                        </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('viewapproved') }}">User</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('company.index') }}">Company</a>
                         </li>
 
                     @endcan
@@ -125,9 +111,6 @@
                         <a class="nav-link" href="{{ route('new.document') }}">New Document</a>
                     </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('file.list') }}">File List</a>
-                    </li>
                     <!-- Tambahkan item navbar sesuai kebutuhan -->
                 </ul>
                 <ul class="navbar-nav ms-auto">
