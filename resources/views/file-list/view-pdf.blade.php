@@ -8,12 +8,10 @@
     </style>
 
     <div id="pdf_container" tabindex="0">
-        <object id="pdf_object" width="100%" height="800px" type="application/pdf" data="{{ asset("public/" . $cover->link_document) }}#toolbar=0">
+        <object id="pdf_object" width="100%" height="800px" type="application/pdf" data="{{ asset("storage/" . $cover->link_document) }}#toolbar=0">
             <p>Document load was not successful.</p>
         </object>
     </div>
-
-
 
    <!-- Tambahkan script Bootstrap JS (Opsional) -->
 

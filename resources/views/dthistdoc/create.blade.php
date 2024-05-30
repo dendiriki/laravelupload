@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container">
-        <h2>Tambah DtHistDoc</h2>
+        <h2>Tambah isi Document</h2>
 
         @if ($errors->any())
         <div class="alert alert-danger">

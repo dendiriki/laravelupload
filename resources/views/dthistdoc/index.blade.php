@@ -54,19 +54,17 @@
                     <th>Document No</th>
                     <th>ISO</th>
                     <th>Departement</th>
-                    <th>Company</th>
                     <th>Action</th> <!-- Tambah kolom untuk Action -->
                 </tr>
             </thead>
             <tbody>
                 @foreach ($dtHistDocs as $key => $dtHistDoc)
                     <tr>
-                        <td>{{ $dtHistDoc->id }}</td>
+                        <td>{{ $dtHistDoc->doc_id }}</td>
                         <td>{{ $dtHistDoc->description }}</td>
                          <td>{{ $dtHistDoc->doc_name }}</td>
                          <td>{{ $dtHistDoc->document->iso->description}}</td>
                         <td>{{ $dtHistDoc->document->dep_terkait }}</td>
-                        <td>{{ $dtHistDoc->Company->name }}</td>
                         <td>
                             <!-- Tombol Edit -->
                             <a href="{{ route('dthistdoc.edit', $dtHistDoc->id) }}" class="btn btn-warning">Revisi</a>

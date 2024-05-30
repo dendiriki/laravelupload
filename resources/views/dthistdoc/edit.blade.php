@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="container">
-        <h2>Edit DtHistDoc</h2>
+        <h2>Revisi Document</h2>
 
         @if (session('error'))
             <div class="alert alert-danger">

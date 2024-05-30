@@ -15,6 +15,7 @@ use App\Models\DtHistCatMut;
 use App\Models\Histdocbaru;
 use App\Models\Type;
 use Illuminate\Support\Facades\DB;
+use App\Models\Dep;
 
 
 class FileViewController extends Controller
@@ -26,7 +27,7 @@ class FileViewController extends Controller
             return redirect()->route('file.list');
         }
 
-        $types = Type::all();
+        $deps = Dep::all();
 
         // Ambil hanya dokumen yang memiliki entri terkait di DtHistDoc dan iso_id yang sesuai
         $documents = Document::where('iso_id', $isoId)
@@ -35,7 +36,7 @@ class FileViewController extends Controller
             ->orderBy('id', 'asc')
             ->paginate(6);
 
-        return view('file-list.view-files', compact('documents', 'iso', 'types'));
+        return view('file-list.view-files', compact('documents', 'iso', 'deps'));
     }
 
 

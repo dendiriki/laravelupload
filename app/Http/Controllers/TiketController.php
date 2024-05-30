@@ -6,6 +6,9 @@ use App\Models\Ticket;
 use App\Models\Document;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NotifyHODMail;
 
 class TiketController extends Controller
 {
@@ -23,7 +26,7 @@ class TiketController extends Controller
      */
     public function registerRevision()
     {
-        $documents = Document::orderBy('sequence','asc')->get();
+        $documents = Document::orderBy('id','asc')->get();
         $document_status = 'not approve'; // Set status for document revision
         $document_note = 'revision document'; // Set note for document revision
 
@@ -53,18 +56,12 @@ class TiketController extends Controller
         // Validasi input
         $validated = $request->validate([
             'document_name' => 'required|string|max:255',
-            'document_file' => 'nullable|file|max:10240', // Maksimal 10 MB
+            'document_file' => 'required|file|max:10240',
             'description' => 'required|string|min:5',
-            // Tambahkan validasi untuk file tambahan jika perlu
-            'cover_file' => 'nullable|file|max:10240', // Opsional
-            'record_file' => 'nullable|file|max:10240', // Opsional
-            'attachment_file' => 'nullable|file|max:10240', // Opsional
         ]);
 
-         // Mendapatkan ID user yang sedang login
+        // Mendapatkan ID user yang sedang login
         $userId = Auth::id();
-
-        // Mendapatkan departemen dan perusahaan dari user yang sedang login
         $user = Auth::user();
         $departmentId = $user->dep_id;
         $companyId = $user->comp_id;
@@ -72,13 +69,11 @@ class TiketController extends Controller
         $document_name = $request->document_name;
         $cleanedDocumentName = preg_replace('/[^A-Za-z0-9\-_]/', '', str_replace(' ', '-', $document_name));
         $maxTicket = Ticket::max('number_ticket');
-
         $max = $maxTicket + 1;
-         // Menentukan basis path penyimpanan file menggunakan number_ticket / id
+
         $basePath = "uploads/tiket/$cleanedDocumentName/$max";
-        // Membuat instance tiket baru
         $ticket = Ticket::create([
-            'user_id' => Auth::id(),
+            'user_id' => $userId,
             'department_id' => $departmentId,
             'company_id' => $companyId,
             'document_name' => $validated['document_name'],
@@ -87,34 +82,32 @@ class TiketController extends Controller
             'document_note' => $request->input('document_note', 'New Document'),
             'tanggal' => now(),
             'description' => $validated['description'],
-            // File akan diupdate setelah path diketahui
         ]);
 
-
-        // Menyimpan document_file dan update tiket
         if ($request->hasFile('document_file')) {
-            $documentFilePath = $request->file('document_file')->store("$basePath/document",'external');
+            $coverFilePath = $request->file('document_file')->store("$basePath");
         }
 
-        // Menyimpan cover_file jika ada
-        if ($request->hasFile('cover_file')) {
-            $coverFilePath = $request->file('cover_file')->store("$basePath/cover",'external');
-        }
-
-        // Menyimpan record_file jika ada
-        if ($request->hasFile('record_file')) {
-            $recordFilePath = $request->file('record_file')->store("$basePath/record",'external');
-        }
-
-        // Menyimpan attachment_file jika ada
-        if ($request->hasFile('attachment_file')) {
-            $attachmentFilePath = $request->file('attachment_file')->store("$basePath/attachment",'external');
-        }
-
-        // Simpan update-an file ke database
         $ticket->save();
 
-        // Redirect ke halaman yang sesuai, misalnya detail tiket atau halaman sukses
+        // Kirim email ke HOD
+        $hod = User::where('dep_id', $departmentId)->where('role', 'HOD')->first();
+        $user = Auth::user(); // Mendapatkan pengguna yang sedang login
+
+        if ($hod) {
+            $details = [
+                'title' => 'New Document Registration',
+                'body' => 'A new document has been registered and requires your approval.'
+            ];
+
+            Mail::to($hod->email)->send(new NotifyHODMail($details));
+
+            if ($user) {
+                Mail::to($user->email)->send(new NotifyHODMail($details));
+            }
+        }
+
+
         return redirect()->route('new.document', $ticket->id)->with('success', 'Dokumen berhasil dibuat.');
     }
 

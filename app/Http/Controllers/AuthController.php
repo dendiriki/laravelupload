@@ -54,12 +54,12 @@ class AuthController extends Controller
     {
         $request->validate([
             'code_emp' => 'required|string|unique:users',
-            'username' => 'required|string|unique:users',
-            'email' => 'required|string|email|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-            'role' => 'required|string',
-            'dep_id' => 'required|string',
-            'comp_id' => 'required|string',
+            'username' => 'required',
+            'email' => 'required',
+            'password' => 'required',
+            'role' => 'required',
+            'dep_id' => 'required',
+            'comp_id' => 'required',
         ]);
 
         User::create([

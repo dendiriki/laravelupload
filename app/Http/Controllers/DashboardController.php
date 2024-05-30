@@ -78,37 +78,26 @@ class DashboardController extends Controller
     return view('released_tickets', compact('releasedTickets'));
     }
 
-
     public function viewTicketFiles($ticketNumber)
     {
         // Cari tiket berdasarkan nomor tiket
         $ticket = Ticket::where('number_ticket', $ticketNumber)->firstOrFail();
 
-        // Inisialisasi array untuk menyimpan isi setiap folder
-        $folders = [];
+        // Path folder lengkap berdasarkan document_file
+        $filePath = Storage::path($ticket->document_file);
 
-        // Daftar folder yang ingin Anda periksa
-        $folderNames = ['attachment', 'cover', 'document', 'record'];
-
-        // Loop melalui setiap folder
-        foreach ($folderNames as $folderName) {
-            // Path folder lengkap
-            // $folderPath = storage_path("app/public/{$ticket->document_file}/{$folderName}");
-            // Menjadi ini:
-            $folderPath = Storage::disk('external')->path("{$ticket->document_file}/{$folderName}");
-
-            // Ambil daftar file dari folder tiket jika folder ada
-            if (file_exists($folderPath) && is_dir($folderPath)) {
-                $files = array_diff(scandir($folderPath), ['.', '..']);
-                $folders[$folderName] = $files;
-            } else {
-                $folders[$folderName] = [];
-            }
+        // Periksa apakah file ada
+        if (file_exists($filePath)) {
+            $file = basename($filePath);
+        } else {
+            $file = null;
         }
 
         // Kirimkan data file ke view
-        return view('view_ticket_files', compact('ticket', 'folders'));
+        return view('view_ticket_files', compact('ticket', 'file'));
     }
+
+
 
     // Tambahkan dalam DashboardController
 

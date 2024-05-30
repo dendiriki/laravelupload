@@ -10,36 +10,33 @@
 
             <div class="form-group">
                 <label for="document_name">Document Name</label>
-                <input type="text" class="form-control mb-3" id="document_name" name="document_name">
+                <input type="text" class="form-control mb-3 @error('document_name') is-invalid @enderror" id="document_name" name="document_name">
+                @error('document_name')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
             </div>
 
             <div class="form-group">
                 <label for="description">Description</label>
-                <textarea class="form-control mb-3" id="description" name="description" rows="4"></textarea>
-            </div>
-
-            <div class="form-group">
-                <label for="cover_file">Cover File</label>
-                <br>
-                <input type="file" class="form-control-file mt-3 mb-3" id="cover_file" name="cover_file">
+                <textarea class="form-control mb-3 @error('description') is-invalid @enderror" id="description" name="description" rows="4"></textarea>
+                @error('description')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
             </div>
 
             <div class="form-group">
                 <label for="document_file">Document File</label>
                 <br>
-                <input type="file" class="form-control-file mt-3 mb-3" id="document_file" name="document_file">
-            </div>
-
-            <div class="form-group">
-                <label for="record_file">Record File</label>
-                <br>
-                <input type="file" class="form-control-file mt-3 mb-3" id="record_file" name="record_file">
-            </div>
-
-            <div class="form-group">
-                <label for="attachment_file">Attachment File</label>
-                <br>
-                <input type="file" class="form-control-file mt-3 mb-3" id="attachment_file" name="attachment_file">
+                <input type="file" class="form-control-file mt-3 mb-3 @error('document_file') is-invalid @enderror" id="document_file" name="document_file">
+                @error('document_file')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
             </div>
 
             <input type="hidden" name="document_status" value="{{ $document_status }}">

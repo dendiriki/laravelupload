@@ -10,14 +10,14 @@
                     <div class="input-group mb-3">
                         <input type="text" class="form-control" placeholder="Search Documents..." name="search"
                             value="{{ request('search') }}">
-                        <select class="form-select" name="type">
-                            <option value="" selected>All Type</option>
-                            @foreach ($types as $type)
-                                <option value="{{ $type->id }}" {{ request('type') == $type->id ? 'selected' : '' }}>
-                                    {{ $type->short }}
-                                </option>
-                            @endforeach
-                        </select>
+                            <select class="form-select" name="dep">
+                                <option value="">Select Departemen</option>
+                                @foreach ($deps as $dep)
+                                    <option value="{{ $dep->short }}" {{ request('dep') == $dep->short ? 'selected' : '' }}>
+                                        {{ $dep->name }}
+                                    </option>
+                                @endforeach
+                            </select>
                         <button class="btn btn-primary" type="submit">Search</button>
                     </div>
                 </form>
