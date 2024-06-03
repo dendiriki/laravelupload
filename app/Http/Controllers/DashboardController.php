@@ -84,18 +84,20 @@ class DashboardController extends Controller
         $ticket = Ticket::where('number_ticket', $ticketNumber)->firstOrFail();
 
         // Path folder lengkap berdasarkan document_file
-        $filePath = Storage::path($ticket->document_file);
+        $folderPath = storage_path('app/public/' . $ticket->document_file);
 
-        // Periksa apakah file ada
-        if (file_exists($filePath)) {
-            $file = basename($filePath);
-        } else {
-            $file = null;
+        // Inisialisasi array untuk menyimpan daftar file
+        $files = [];
+
+        // Periksa apakah folder ada dan ambil daftar file
+        if (file_exists($folderPath) && is_dir($folderPath)) {
+            $files = array_diff(scandir($folderPath), ['.', '..']);
         }
 
         // Kirimkan data file ke view
-        return view('view_ticket_files', compact('ticket', 'file'));
+        return view('view_ticket_files', compact('ticket', 'files'));
     }
+
 
 
 

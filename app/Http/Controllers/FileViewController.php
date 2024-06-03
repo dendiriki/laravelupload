@@ -39,21 +39,21 @@ class FileViewController extends Controller
         return view('file-list.view-files', compact('documents', 'iso', 'deps'));
     }
 
+    public function viewAllDocument()
+    {
+        $deps = Dep::all();
+
+        // Ambil semua dokumen yang telah difilter
+        $documents = DtHistDoc::with('document')->filter()->orderBy('id', 'asc')->paginate(6);
+
+        return view('file-list.all_documents', compact('documents', 'deps'));
+    }
+
+
 
     public function viewDocument($folder)
     {
         $document = Document::where('id', $folder)->first();
-
-        // $documentFiles = DtHistDoc::where('doc_id', $document->id)->whereDate('tgl_berlaku',$docs)->last();
-        $coverFiles =  DtHistCover::with(['document', 'createdBy'])
-        ->join(DB::raw('(SELECT doc_id, MAX(lastdate) as max_lastdate FROM histcoverlast GROUP BY doc_id) as b'), function ($join) {
-            $join->on('dt_histcover.doc_id', '=', 'b.doc_id')
-                ->on('dt_histcover.tgl_berlaku', '=', 'b.max_lastdate');
-        })
-        ->join('users', 'dt_histcover.vc_created_user', '=', 'users.code_emp')
-        ->where('dt_histcover.doc_id', $document->id)
-        ->select('dt_histcover.*')
-        ->get();
 
         $documentFiles =  DtHistDoc::with(['document', 'createdBy'])
         ->join(DB::raw('(SELECT doc_id, MAX(lastdate) as max_lastdate FROM histdoclast GROUP BY doc_id) as b'), function ($join) {
@@ -65,46 +65,21 @@ class FileViewController extends Controller
         ->select('dt_histdoc.*')
         ->get();
 
-        $attachmentFiles = DtHistLampiran::with(['document', 'createdBy'])
-        ->join(DB::raw('(SELECT doc_id, MAX(lastdate) as max_lastdate FROM histlamlast GROUP BY doc_id) as b'), function ($join) {
-            $join->on('dt_histlampiran.doc_id', '=', 'b.doc_id')
-                ->on('dt_histlampiran.tgl_berlaku', '=', 'b.max_lastdate');
-        })
-        ->join('users', 'dt_histlampiran.vc_created_user', '=', 'users.code_emp')
-        ->where('dt_histlampiran.doc_id', $document->id)
-        ->select('dt_histlampiran.*')
-        ->get();
-
-        $recordFiles = DtHistCatMut::with(['document', 'createdBy'])
-        ->join(DB::raw('(SELECT doc_id, MAX(lastdate) as max_lastdate FROM histcatmutlast GROUP BY doc_id) as b'), function ($join) {
-            $join->on('dt_histcatmut.doc_id', '=', 'b.doc_id')
-                ->on('dt_histcatmut.tgl_berlaku', '=', 'b.max_lastdate');
-        })
-        ->join('users', 'dt_histcatmut.vc_created_user', '=', 'users.code_emp')
-        ->where('dt_histcatmut.doc_id', $document->id)
-        ->select('dt_histcatmut.*')
-        ->get();
-
         // $coverFiles = DtHistCover::where('doc_id', $document->id)->get();
         // $documentFiles = DtHistDoc::where('doc_id', $document->id)->get();
         // $attachmentFiles = DtHistLampiran::where('doc_id', $document->id)->get();
         // $recordFiles = DtHistCatMut::where('doc_id', $document->id)->get();
 
 
-        return view('file-list.view-folder-contents', compact('coverFiles','documentFiles', 'attachmentFiles', 'recordFiles', 'folder','document'));
+        return view('file-list.view-folder-contents', compact('documentFiles','folder','document'));
     }
 
     public function viewDocumentall($folder)
     {
         $document = Document::where('id', $folder)->first();
-
-        $coverFiles = DtHistCover::where('doc_id', $document->id)->get();
         $documentFiles = DtHistDoc::where('doc_id', $document->id)->get();
-        $attachmentFiles = DtHistLampiran::where('doc_id', $document->id)->get();
-        $recordFiles = DtHistCatMut::where('doc_id', $document->id)->get();
 
-
-        return view('file-list.view-folder-all', compact('coverFiles','documentFiles', 'attachmentFiles', 'recordFiles', 'folder','document'));
+        return view('file-list.view-folder-all', compact('documentFiles', 'folder','document'));
     }
 
     public function viewPdf($id)

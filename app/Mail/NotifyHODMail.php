@@ -37,7 +37,7 @@ class NotifyHODMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Notify HOD Mail',
+            subject: 'Notify Digitalisasi Document',
         );
     }
 

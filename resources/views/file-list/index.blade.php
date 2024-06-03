@@ -10,6 +10,8 @@
         </div>
         @endif
 
+        <a href="{{ route('isos.allDocument') }}" class="btn btn-primary mb-3">View All Documents</a>
+
         @if ($isos->isNotEmpty())
             <table class="table">
                 <thead>

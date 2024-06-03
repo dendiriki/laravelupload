@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Ticket;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
+use App\Mail\NotifyHODMail;
+use App\Models\Ticket;
+use App\Models\User;
+use Exception;
 
 class ApprovalController extends Controller
 {
@@ -18,29 +22,58 @@ class ApprovalController extends Controller
 
         return view('approved', compact('notApprovedTickets'));
     }
+
     public function approveDocument($number_ticket)
     {
-        // Temukan tiket berdasarkan nomor tiket
-        $ticket = Ticket::where('number_ticket', $number_ticket)->firstOrFail();
+        try {
+            // Temukan tiket berdasarkan nomor tiket
+            $ticket = Ticket::where('number_ticket', $number_ticket)->firstOrFail();
 
-        // Cek isi dari note_document
-        if ($ticket->document_note === 'revision document') {
-            // Jika isi note_document adalah "new document", beri status "Approved"
-            $ticket->update(['document_status' => 'Approved']);
-            $message = 'Document approved successfully.';
-        } elseif ($ticket->document_note === 'new document') {
-            // Jika isi note_document adalah "revision", beri status "Not Complete"
-            $ticket->update(['document_status' => 'Not Complete']);
-            $message = 'Document approved successfully.';
-        } else {
-            // Untuk kondisi lainnya, mungkin Anda ingin menangani secara khusus atau biarkan statusnya tidak berubah
-            // Misal, redirect kembali dengan pesan error atau informasi
-            return redirect()->back()->with('error', 'Document status cannot be updated due to an unrecognized note.');
+            // Cari HOD berdasarkan departemen tiket
+            $hod = User::where('dep_id', $ticket->department_id)->where('role', 'HOD')->firstOrFail();
+
+            // Ambil nama departemen HOD
+            $departmentName = $hod->department->name;
+
+            // Detail email
+            $details = [
+                'title' => 'Document Status Updated',
+                'body' => "The status of the document with ticket number {$ticket->number_ticket} has been updated by the HOD of the {$departmentName} department."
+            ];
+
+            // Kirim email kepada HOD
+            Mail::to($hod->email)->send(new NotifyHODMail($details));
+
+            // Mengambil semua user dengan role 'admin'
+            $admins = User::where('role', 'admin')->get();
+
+            // Mengirim email kepada setiap admin
+            foreach ($admins as $admin) {
+                Mail::to($admin->email)->send(new NotifyHODMail($details));
+            }
+
+            // Update status dokumen setelah email berhasil dikirim
+            if ($ticket->document_note === 'revision document') {
+                // Jika isi note_document adalah "revision document", beri status "Approved"
+                $ticket->update(['document_status' => 'Approved']);
+                $message = 'Document approved successfully.';
+            } elseif ($ticket->document_note === 'new document') {
+                // Jika isi note_document adalah "new document", beri status "Not Complete"
+                $ticket->update(['document_status' => 'Not Complete']);
+                $message = 'Document approved successfully.';
+            } else {
+                // Untuk kondisi lainnya, mungkin Anda ingin menangani secara khusus atau biarkan statusnya tidak berubah
+                return redirect()->back()->with('error', 'Document status cannot be updated due to an unrecognized note.');
+            }
+
+            // Redirect kembali dengan pesan sukses
+            return redirect()->back()->with('success', $message);
+        } catch (Exception $e) {
+            // Redirect kembali dengan pesan error
+            return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
         }
-
-        // Redirect kembali dengan pesan sukses
-        return redirect()->back()->with('success', $message);
     }
+
 
     public function showRejectForm($ticketNumber)
     {

@@ -96,7 +96,7 @@ class TiketController extends Controller
 
         if ($hod) {
             $details = [
-                'title' => 'New Document Registration',
+                'title' => 'New Document',
                 'body' => 'A new document has been registered and requires your approval.'
             ];
 

@@ -1,13 +1,13 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ISO;
 use App\Models\User;
 use App\Models\Company;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Auth; // Pastikan ini diimpor
+use Illuminate\Support\Facades\Auth;
 
 class ISOController extends Controller
 {
@@ -26,22 +26,23 @@ class ISOController extends Controller
         return view('isos.create', compact('users', 'companies'));
     }
 
-
     public function store(Request $request)
     {
         $user = Auth::user();
 
         $folderISO = $request->description;
-
         $folderPath = "uploads/" . preg_replace('/[^a-zA-Z0-9]/', '_', $folderISO);
 
-        $uploadsFolder = "uploads/";
-        $folderName = str_replace($uploadsFolder, '', $folderPath);
-
         try {
-            // Gunakan penyimpanan eksternal
-            if (!Storage::disk('external')->exists($folderPath)) {
-                Storage::disk('external')->makeDirectory($folderPath);
+            if (!Storage::exists($folderPath)) {
+                Storage::makeDirectory($folderPath);
+            }
+
+            $fileName = null;
+            if ($request->hasFile('file')) {
+                $file = $request->file('file');
+                $fileName = $file->getClientOriginalName();
+                $file->storeAs($folderPath, $fileName);
             }
 
             ISO::create([
@@ -51,7 +52,8 @@ class ISOController extends Controller
                 'dt_modified_date' => $request->dt_created_date,
                 'vc_modified_user' => $user->code_emp,
                 'comp_id' => $user->comp_id,
-                'path' => $folderName
+                'path' => $folderPath,
+                'file_name' => $fileName
             ]);
 
             return redirect()->route('isos.index')->with('success', 'ISO created successfully!');
@@ -59,7 +61,6 @@ class ISOController extends Controller
             return redirect()->route('isos.create')->with('error', 'Failed to create ISO: ' . $e->getMessage());
         }
     }
-
 
     public function edit($id)
     {
@@ -75,11 +76,21 @@ class ISOController extends Controller
         $user = Auth::user();
         $iso = ISO::findOrFail($id);
 
+        $folderPath = $iso->path;
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $fileName = $file->getClientOriginalName();
+            $file->storeAs($folderPath, $fileName, 'external');
+
+            $iso->file_name = $fileName;
+        }
+
         $iso->update([
             'description' => $request->description,
             'dt_modified_date' => now(),
-            'vc_modified_user' => $user->code_emp, // Menggunakan username dari user yang login
-            'comp_id' => $user->comp_id, // Menggunakan comp_id dari user yang login
+            'vc_modified_user' => $user->code_emp,
+            'comp_id' => $user->comp_id,
         ]);
 
         return redirect()->route('isos.index')->with('success', 'ISO updated successfully!');
@@ -89,15 +100,11 @@ class ISOController extends Controller
     {
         $iso = ISO::findOrFail($id);
 
-        // Hapus folder terkait
-        $folderPath = "uploads/" . str_replace(' ', '_', $iso->path);
-
-        if (Storage::disk('external')->exists($folderPath)) {
-            // Hapus folder terkait
-            Storage::disk('external')->deleteDirectory($folderPath);
+        $folderPath = $iso->path;
+        if (Storage::exists($folderPath)) {
+            Storage::deleteDirectory($folderPath);
         }
 
-        // Hapus ISO dari database
         $iso->delete();
 
         return redirect()->route('isos.index')->with('success', 'ISO deleted successfully!');

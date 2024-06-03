@@ -43,6 +43,8 @@ Route::group(['middleware' => ['auth', 'check.default.password']], function () {
     Route::get('/isos/edit/{id}', [ISOController::class, 'edit'])->name('isos.edit')->middleware('admin');
     Route::put('/isos/update/{id}', [ISOController::class, 'update'])->name('isos.update')->middleware('admin');
     Route::delete('/isos/destroy/{id}', [ISOController::class, 'destroy'])->name('isos.destroy')->middleware('admin');
+    Route::get('/isos/all-documents', [ISOController::class, 'viewAllDocuments'])->name('isos.allDocuments')->middleware('admin');
+
 
     Route::get('/types', [TypeController::class, 'index'])->name('types.index')->middleware('admin');
     Route::get('/types/create', [TypeController::class, 'create'])->name('types.create')->middleware('admin');
@@ -105,6 +107,8 @@ Route::group(['middleware' => ['auth', 'check.default.password']], function () {
     Route::get('/view-pdfdoc/{id}', [FileViewController::class, 'viewPdfdoc'])->name('view.pdfdoc');
     Route::get('/view-pdflampiran/{id}', [FileViewController::class, 'viewPdflampiran'])->name('view.pdflampiran');
     Route::get('/view-pdfcatmut/{id}', [FileViewController::class, 'viewPdfcatmut'])->name('view.pdfcatmut');
+    Route::get('/isos/all-document', [FileViewController::class, 'viewAllDocument'])->name('isos.allDocument');
+
 
     Route::get('/register-document', [TiketController::class, 'registerDocument'])->name('register.document');
     Route::get('/register-revision', [TiketController::class, 'registerRevision'])->name('register.revision');

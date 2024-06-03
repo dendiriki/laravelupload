@@ -2,41 +2,35 @@
 
 @section('content')
     <div class="container mt-5">
-        <h1>ISOs</h1>
+        <h1>ISO List</h1>
 
-        <a href="{{ route('isos.create') }}" class="btn btn-primary">Create New ISO</a>
-
-        <ul class="list-group mt-3">
-            @foreach ($isos as $iso)
-                <li class="list-group-item">
-                    <h5 class="mb-1">Description: {{ $iso->description }}</h5>
-                    <p class="mb-1">Created By: {{ $iso->createdBy->username }}</p>
-                    <p class="mb-1">Modified By: {{ $iso->modifiedBy->username }}</p>
-                    <p class="mb-1">Company: {{ $iso->company->short }}</p>
-                    <p class="mb-1">Path: {{ $iso->path }}</p>
-                    <p class="mb-1">Created At: {{ $iso->dt_created_date }}</p>
-                    <p class="mb-1">Updated At: {{ $iso->dt_modified_date }}</p>
-
-                    <div class="d-flex justify-content-end mt-2">
-                        <a href="{{ route('isos.edit', $iso->id) }}" class="btn btn-warning mr-2">Edit</a>
-
-                        <!-- Tombol Delete -->
-                        <form action="{{ route('isos.destroy', $iso->id) }}" method="POST" onsubmit="return confirmDelete()">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                        </form>
-                    </div>
-
-                    <hr>
-                </li>
-            @endforeach
-        </ul>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Description</th>
+                    <th>Created Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($isos as $iso)
+                    <tr>
+                        <td>{{ $iso->id }}</td>
+                        <td>{{ $iso->description }}</td>
+                        <td>{{ $iso->dt_created_date }}</td>
+                        <td>
+                            <a href="{{ route('isos.edit', $iso->id) }}" class="btn btn-warning">Edit</a>
+                            <form action="{{ route('isos.destroy', $iso->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                            <a href="{{ Storage::disk('external')->url($iso->path . '/' . $iso->file_name) }}" target="_blank" class="btn btn-info">View</a>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
     </div>
-
-    <script>
-        function confirmDelete() {
-            return confirm('Apakah Anda yakin menghapus ISO ini ?. sebelum menghapus data ini pastikan tidak ada document atau docdep yang berkaitan dengan iso ini karena akan menyebabkan error nantinya');
-        }
-    </script>
 @endsection
