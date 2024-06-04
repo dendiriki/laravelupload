@@ -12,7 +12,7 @@
                 <table class="table table-hover">
                     <thead class="thead-light">
                         <tr>
-                            <th scope="col">Number Ticket</th>
+                            <th scope="col">No Ticket</th>
                             <th scope="col">User Name</th>
                             <th scope="col">Document Name</th>
                             <th scope="col">Document Status</th>

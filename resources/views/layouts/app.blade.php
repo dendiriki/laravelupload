@@ -82,23 +82,27 @@
                                 <li><a class="dropdown-item" href="{{ route('company.create') }}">Create Plant</a></li>
                             </ul>
                         </li>
+                    @endcan
 
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDashboardDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Certification
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDashboardDropdown">
-                                <li><a class="dropdown-item" href="{{ route('isos.index') }}">List Certification</a></li>
-                                <li><a class="dropdown-item" href="{{ route('isos.create') }}">Create Certification</a></li>
-                            </ul>
-                        </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDashboardDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Certification
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDashboardDropdown">
+                            @can('admin')
+                            <li><a class="dropdown-item" href="{{ route('isos.index') }}">List Certification</a></li>
+                            <li><a class="dropdown-item" href="{{ route('isos.create') }}">Create Certification</a></li>
+                            @endcan
+                            @cannot('admin')
+                            <li><a class="dropdown-item" href="{{ route('iso.view') }}">All Certification</a></li>
+                            @endcannot
+                        </ul>
+                    </li>
 
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('viewapproved') }}">User</a>
-                        </li>
-
+                    @can('admin')
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('viewapproved') }}">User</a>
+                    </li>
                     @endcan
 
                     @can('hod')

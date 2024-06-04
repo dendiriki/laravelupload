@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container mt-5">
-        <h2>Documents</h2>
+        <h2>Document Master List</h2>
 
         <div class="row">
             <div class="col-md-9" style="margin-left: auto;">
@@ -62,7 +62,7 @@
                     <th>Type</th>
                     <th>ISO</th>
                     <th>Departement</th>
-                    <th>Company</th>
+                    {{-- <th>Company</th> --}}
                     <th>Action</th> <!-- Tambah kolom untuk Action -->
                 </tr>
             </thead>
@@ -75,7 +75,7 @@
                         <td>{{ $document->type->short }}</td>
                         <td>{{ $document->iso->description }}</td>
                         <td>{{ $document->dep_terkait }}</td>
-                        <td>{{ $document->company->name}}</td>
+                        {{-- <td>{{ $document->company->name}}</td> --}}
                         <!-- <td>{{ $document->createdBy ? $document->createdBy->username : 'N/A' }}</td> -->
                         <td>
                             <a href="{{ route('documents.edit', ['id' => $document->id]) }}"
@@ -86,7 +86,8 @@
                                 style="display: inline;" onsubmit="return confirmDelete()">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger">Delete</button>
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Ensure this data has no relationships with other tables. Deleting related data will cause errors. Are you sure you want to delete?')"
+                                >Delete</button>
                             </form>
                         </td>
                     </tr>

@@ -39,6 +39,7 @@
                         <th scope="col">ISO</th>
                         <th scope="col">Department</th>
                         <th scope="col">Type</th>
+                        <th scope="col">Revisi</th>
                         <th scope="col">View</th>
                     </tr>
                 </thead>
@@ -50,7 +51,8 @@
                             <td>{{ $document->document->doc_name }}</td>
                             <td>{{ $document->document->iso->description }}</td> {{-- Assuming 'iso' is a column in the DtHistDoc model --}}
                             <td>{{ $document->document->dep_terkait }}</td> {{-- Assuming 'department' is a column in the DtHistDoc model --}}
-                            <td>{{ $document->document->type->short }}</td> {{-- Assuming 'company' is a column in the DtHistDoc model --}}
+                            <td>{{ $document->document->type->short }}</td>
+                            <th>{{ $document->revisi }}</th>
                             <td><a href="{{ route('view.pdfdoc', ['id' => $document->id]) }}" target="_blank" class="btn btn-info">View</a></td>
                         </tr>
                     @endforeach

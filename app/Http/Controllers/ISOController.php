@@ -18,6 +18,13 @@ class ISOController extends Controller
         return view('isos.index', compact('isos'));
     }
 
+    public function user()
+    {
+        $isos = ISO::with(['createdBy', 'modifiedBy', 'company'])->get();
+
+        return view('isos.user', compact('isos'));
+    }
+
     public function create()
     {
         $users = User::all();
@@ -109,4 +116,17 @@ class ISOController extends Controller
 
         return redirect()->route('isos.index')->with('success', 'ISO deleted successfully!');
     }
+
+    public function view($id)
+    {
+        $iso = ISO::findOrFail($id);
+        $pdfPath = storage_path('app/public/' . $iso->path . '/' . $iso->file_name);
+
+        if (!file_exists($pdfPath)) {
+            return redirect()->back()->with('error', 'File tidak ditemukan.');
+        }
+
+        return view('isos.view', compact('iso','pdfPath'));
+    }
+
 }

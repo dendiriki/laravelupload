@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container">
-        <h2>Isi Document</h2>
+        <h2>Document Detail</h2>
 
         <div class="row">
             <div class="col-md-9" style="margin-left: auto;">
@@ -74,7 +74,8 @@
                                 style="display: inline;" onsubmit="return confirmDelete()">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger">Delete</button>
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Ensure this data has no relationships with other tables. Deleting related data will cause errors. Are you sure you want to delete?')"
+                                >Delete</button>
                             </form>
                             <a href="{{ route('dthistdoc.detail', $dtHistDoc->doc_id) }}" class="btn btn-success">Detail</a>
                         </td>

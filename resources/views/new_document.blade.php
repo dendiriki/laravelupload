@@ -18,7 +18,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>Number Ticket</th>
+                    <th>No Ticket</th>
                     <th>Document Name</th>
                     <th>Document Note</th>
                     <th>Document Status</th>

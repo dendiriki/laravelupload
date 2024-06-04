@@ -44,6 +44,9 @@ Route::group(['middleware' => ['auth', 'check.default.password']], function () {
     Route::put('/isos/update/{id}', [ISOController::class, 'update'])->name('isos.update')->middleware('admin');
     Route::delete('/isos/destroy/{id}', [ISOController::class, 'destroy'])->name('isos.destroy')->middleware('admin');
     Route::get('/isos/all-documents', [ISOController::class, 'viewAllDocuments'])->name('isos.allDocuments')->middleware('admin');
+    Route::get('/isos/view/{id}', [ISOController::class, 'view'])->name('isos.view');
+    Route::get('/isos/user/', [ISOController::class, 'user'])->name('iso.view');
+
 
 
     Route::get('/types', [TypeController::class, 'index'])->name('types.index')->middleware('admin');

@@ -44,7 +44,7 @@ class FileViewController extends Controller
         $deps = Dep::all();
 
         // Ambil semua dokumen yang telah difilter
-        $documents = DtHistDoc::with('document')->filter()->orderBy('id', 'asc')->paginate(6);
+        $documents = DtHistDoc::with('document')->filter()->orderBy('doc_id', 'asc')->paginate(6);
 
         return view('file-list.all_documents', compact('documents', 'deps'));
     }

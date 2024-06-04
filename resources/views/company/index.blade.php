@@ -28,7 +28,7 @@
                             <form action="{{ route('company.destroy', $company->id) }}" method="POST" style="display: inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete?')">Delete</button>
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Ensure this data has no relationships with other tables. Deleting related data will cause errors. Are you sure you want to delete?')">Delete</button>
                             </form>
                         </td>
                     </tr>
