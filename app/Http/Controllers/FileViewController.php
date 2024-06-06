@@ -34,7 +34,7 @@ class FileViewController extends Controller
             ->whereHas('dtHistDocs')
             ->filter()
             ->orderBy('id', 'asc')
-            ->paginate(6);
+            ->paginate(20);
 
         return view('file-list.view-files', compact('documents', 'iso', 'deps'));
     }

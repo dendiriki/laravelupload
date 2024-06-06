@@ -16,8 +16,8 @@
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 <span>{{ $file }}</span>
                                 <div class="btn-group" role="group" aria-label="File Actions">
-                                    <a href="{{ asset('storage/' . $ticket->document_file . '/' . $file) }}" class="btn btn-primary btn-sm">View</a>
-                                    <a href="{{ asset('storage/' . $ticket->document_file . '/' . $file) }}" class="btn btn-success btn-sm" download>Download</a>
+                                    <a href="{{ asset('public/' . $ticket->document_file . '/' . $file) }}" class="btn btn-primary btn-sm">View</a>
+                                    <a href="{{ asset('public/' . $ticket->document_file . '/' . $file) }}" class="btn btn-success btn-sm" download>Download</a>
                                 </div>
                             </li>
                         @endforeach
