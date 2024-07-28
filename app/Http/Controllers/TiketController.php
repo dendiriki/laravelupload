@@ -53,6 +53,8 @@ class TiketController extends Controller
      */
     public function store(Request $request)
     {
+
+        
         // Validasi input
         $validated = $request->validate([
             'document_name' => 'required|string|max:255',

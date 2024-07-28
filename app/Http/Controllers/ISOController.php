@@ -88,7 +88,7 @@ class ISOController extends Controller
         if ($request->hasFile('file')) {
             $file = $request->file('file');
             $fileName = $file->getClientOriginalName();
-            $file->storeAs($folderPath, $fileName, 'external');
+            $file->storeAs($folderPath, $fileName);
 
             $iso->file_name = $fileName;
         }
@@ -98,6 +98,7 @@ class ISOController extends Controller
             'dt_modified_date' => now(),
             'vc_modified_user' => $user->code_emp,
             'comp_id' => $user->comp_id,
+            'file_name' => $fileName
         ]);
 
         return redirect()->route('isos.index')->with('success', 'ISO updated successfully!');
@@ -120,13 +121,9 @@ class ISOController extends Controller
     public function view($id)
     {
         $iso = ISO::findOrFail($id);
-        $pdfPath = storage_path('app/public/' . $iso->path . '/' . $iso->file_name);
+     
 
-        if (!file_exists($pdfPath)) {
-            return redirect()->back()->with('error', 'File tidak ditemukan.');
-        }
-
-        return view('isos.view', compact('iso','pdfPath'));
+        return view('isos.view', compact('iso'));
     }
 
 }

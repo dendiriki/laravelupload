@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container mt-5">
-        <h1>Daftar ISO</h1>
+        <h1>Certification</h1>
 
         <table class="table table-bordered">
             <thead>

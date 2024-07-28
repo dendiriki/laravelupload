@@ -25,6 +25,7 @@ class ApprovalController extends Controller
 
     public function approveDocument($number_ticket)
     {
+       
         try {
             // Temukan tiket berdasarkan nomor tiket
             $ticket = Ticket::where('number_ticket', $number_ticket)->firstOrFail();

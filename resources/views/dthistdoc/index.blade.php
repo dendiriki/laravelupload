@@ -62,7 +62,7 @@
                     <tr>
                         <td>{{ $dtHistDoc->doc_id }}</td>
                         <td>{{ $dtHistDoc->description }}</td>
-                         <td>{{ $dtHistDoc->doc_name }}</td>
+                         <td>{{ $dtHistDoc->document->doc_name }}</td>
                          <td>{{ $dtHistDoc->document->iso->description}}</td>
                         <td>{{ $dtHistDoc->document->dep_terkait }}</td>
                         <td>
